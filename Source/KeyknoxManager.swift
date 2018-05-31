@@ -41,10 +41,10 @@ import VirgilSDK
     /// AccessTokenProvider instance used for getting Access Token
     /// when performing queries
     @objc public let accessTokenProvider: AccessTokenProvider
-    
-    @objc init(accessTokenProvider: AccessTokenProvider) {
+
+    @objc public init(accessTokenProvider: AccessTokenProvider) {
         self.accessTokenProvider = accessTokenProvider
-        
+
         super.init()
     }
 }

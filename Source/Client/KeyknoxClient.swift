@@ -50,7 +50,7 @@ import VirgilSDK
     /// Default URL for service
     @objc public static let defaultURL = URL(string: "https://api.virgilsecurity.com")!
     // swiftlint:enable force_unwrapping
-    
+
     /// Initializes a new `KeyknoxClient` instance
     ///
     /// - Parameters:
@@ -59,19 +59,19 @@ import VirgilSDK
     public override init(serviceUrl: URL = KeyknoxClient.defaultURL, connection: HttpConnectionProtocol) {
         super.init(serviceUrl: serviceUrl, connection: connection)
     }
-    
+
     /// Initializes a new `KeyknoxClient` instance
     @objc convenience public init() {
         self.init(serviceUrl: KeyknoxClient.defaultURL)
     }
-    
+
     /// Initializes a new `KeyknoxClient` instance
     ///
     /// - Parameter serviceUrl: URL of service client will use
     @objc convenience public init(serviceUrl: URL) {
         self.init(serviceUrl: serviceUrl, connection: HttpConnection())
     }
-    
+
     /// Handles error from Keyknox Service
     ///
     /// - Parameters:
@@ -82,7 +82,7 @@ import VirgilSDK
         if let body = body, let rawServiceError = try? JSONDecoder().decode(RawServiceError.self, from: body) {
             return ServiceError(httpStatusCode: statusCode, rawServiceError: rawServiceError)
         }
-        
+
         return super.handleError(statusCode: statusCode, body: body)
     }
 }

@@ -39,27 +39,31 @@ import VirgilCryptoApiImpl
 import VirgilSDK
 
 extension KeyknoxManager {
-    open func pushData(data: Data, publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
+    open func pushData(data: Data, publicKeys: [VirgilPublicKey],
+                       privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
         return CallbackOperation { _, completion in
-           
+
         }
     }
-    
-    open func pullData(publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
+
+    open func pullData(publicKeys: [VirgilPublicKey],
+                       privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
         return CallbackOperation { _, completion in
-            
+
         }
     }
-    
-    open func updateRecipients(publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
+
+    open func updateRecipients(publicKeys: [VirgilPublicKey],
+                               privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
         return CallbackOperation { _, completion in
-            
+
         }
     }
-    
-    open func updateRecipients(meta: Data, publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
+
+    open func updateRecipients(meta: Data, publicKeys: [VirgilPublicKey],
+                               privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
         return CallbackOperation { _, completion in
-            
+
         }
     }
 }

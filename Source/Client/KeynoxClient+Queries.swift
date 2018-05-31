@@ -43,31 +43,31 @@ extension KeyknoxClient: KeyknoxClientProtocol {
         guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
             throw KeyknoxClientError.constructingUrl
         }
-        
+
         var params = [
             "meta": meta.base64EncodedString()
         ]
-        
+
         if let data = data {
             params["data"] = data.base64EncodedString()
         }
-        
+
         let request = try ServiceRequest(url: url, method: .put, accessToken: token, params: params)
-        
+
         let response = try self.connection.send(request)
-        
+
         return try self.processResponse(response)
     }
-    
+
     public func pullValue(token: String) throws -> KeyknoxResponse {
         guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
             throw KeyknoxClientError.constructingUrl
         }
-        
+
         let request = try ServiceRequest(url: url, method: .get, accessToken: token)
-        
+
         let response = try self.connection.send(request)
-        
+
         return try self.processResponse(response)
     }
 }

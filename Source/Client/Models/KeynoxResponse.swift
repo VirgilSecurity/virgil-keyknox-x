@@ -45,7 +45,7 @@ import Foundation
         self.data = data
         self.meta = meta
         self.version = version
-        
+
         super.init()
     }
 }
