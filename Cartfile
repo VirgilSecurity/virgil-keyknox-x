@@ -1,0 +1,2 @@
+github "VirgilSecurity/virgil-sdk-x" ~> 5.1.0
+github "VirgilSecurity/virgil-foundation-x" ~> 3.1.2
