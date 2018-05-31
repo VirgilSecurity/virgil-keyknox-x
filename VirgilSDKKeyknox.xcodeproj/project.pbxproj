@@ -6,9 +6,26 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		42B5E01020C00DB80067F13E /* VirgilSDKKeyknox_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox_iOS.framework */; };
+		42B5E01920C00E3A0067F13E /* VirgilSDKKeyknox_iOS_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01720C00E320067F13E /* VirgilSDKKeyknox_iOS_Tests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		42B5E01120C00DB80067F13E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42B5DFEC20C005300067F13E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42B5DFF420C005300067F13E;
+			remoteInfo = "VirgilSDKKeyknox iOS";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VirgilSDKKeyknox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		42B5DFF520C005300067F13E /* VirgilSDKKeyknox_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VirgilSDKKeyknox_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B5DFF920C005300067F13E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VirgilSDKKeyknox iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		42B5E01720C00E320067F13E /* VirgilSDKKeyknox_iOS_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VirgilSDKKeyknox_iOS_Tests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -19,6 +36,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		42B5E00820C00DB80067F13E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42B5E01020C00DB80067F13E /* VirgilSDKKeyknox_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -26,6 +51,7 @@
 			isa = PBXGroup;
 			children = (
 				42B5DFF720C005300067F13E /* VirgilSDKKeyknox */,
+				42B5E01620C00E320067F13E /* Tests */,
 				42B5DFF620C005300067F13E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -33,7 +59,8 @@
 		42B5DFF620C005300067F13E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */,
+				42B5DFF520C005300067F13E /* VirgilSDKKeyknox_iOS.framework */,
+				42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -44,6 +71,14 @@
 				42B5DFF920C005300067F13E /* Info.plist */,
 			);
 			path = VirgilSDKKeyknox;
+			sourceTree = "<group>";
+		};
+		42B5E01620C00E320067F13E /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				42B5E01720C00E320067F13E /* VirgilSDKKeyknox_iOS_Tests.m */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,9 +94,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		42B5DFF420C005300067F13E /* VirgilSDKKeyknox */ = {
+		42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 42B5DFFD20C005300067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox" */;
+			buildConfigurationList = 42B5DFFD20C005300067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox iOS" */;
 			buildPhases = (
 				42B5DFF020C005300067F13E /* Sources */,
 				42B5DFF120C005300067F13E /* Frameworks */,
@@ -72,10 +107,28 @@
 			);
 			dependencies = (
 			);
-			name = VirgilSDKKeyknox;
+			name = "VirgilSDKKeyknox iOS";
 			productName = VirgilSDKKeyknox;
-			productReference = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */;
+			productReference = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox_iOS.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		42B5E00A20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42B5E01320C00DB80067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox iOS Tests" */;
+			buildPhases = (
+				42B5E00720C00DB80067F13E /* Sources */,
+				42B5E00820C00DB80067F13E /* Frameworks */,
+				42B5E00920C00DB80067F13E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				42B5E01220C00DB80067F13E /* PBXTargetDependency */,
+			);
+			name = "VirgilSDKKeyknox iOS Tests";
+			productName = "VirgilSDKKeyknox iOS Tests";
+			productReference = 42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -87,6 +140,9 @@
 				ORGANIZATIONNAME = "Virgil Security";
 				TargetAttributes = {
 					42B5DFF420C005300067F13E = {
+						CreatedOnToolsVersion = 9.3.1;
+					};
+					42B5E00A20C00DB80067F13E = {
 						CreatedOnToolsVersion = 9.3.1;
 					};
 				};
@@ -103,13 +159,21 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				42B5DFF420C005300067F13E /* VirgilSDKKeyknox */,
+				42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */,
+				42B5E00A20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		42B5DFF320C005300067F13E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		42B5E00920C00DB80067F13E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -126,7 +190,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		42B5E00720C00DB80067F13E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42B5E01920C00E3A0067F13E /* VirgilSDKKeyknox_iOS_Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		42B5E01220C00DB80067F13E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */;
+			targetProxy = 42B5E01120C00DB80067F13E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		42B5DFFB20C005300067F13E /* Debug */ = {
@@ -301,6 +381,38 @@
 			};
 			name = Release;
 		};
+		42B5E01420C00DB80067F13E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.virgilsecurity.VirgilSDKKeyknox-iOS-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		42B5E01520C00DB80067F13E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.virgilsecurity.VirgilSDKKeyknox-iOS-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -313,11 +425,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		42B5DFFD20C005300067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox" */ = {
+		42B5DFFD20C005300067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				42B5DFFE20C005300067F13E /* Debug */,
 				42B5DFFF20C005300067F13E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		42B5E01320C00DB80067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox iOS Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42B5E01420C00DB80067F13E /* Debug */,
+				42B5E01520C00DB80067F13E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
