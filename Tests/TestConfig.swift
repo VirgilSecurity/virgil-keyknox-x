@@ -35,36 +35,27 @@
 //
 
 import Foundation
-import VirgilSDK
 
-// MARK: - Queries
-extension KeyknoxClient: KeyknoxClientProtocol {
-    public func pushValue(meta: Data, data: Data, token: String) throws -> KeyknoxResponse {
-        guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
-            throw KeyknoxClientError.constructingUrl
-        }
-
-        let params = [
-            "meta": meta.base64EncodedString(),
-            "data": data.base64EncodedString()
-        ]
-
-        let request = try ServiceRequest(url: url, method: .put, accessToken: token, params: params)
-
-        let response = try self.connection.send(request)
-
-        return try self.processResponse(response)
+@objc public class TestConfig: NSObject, Decodable {
+    @objc public let ApiPublicKeyId: String
+    @objc public let ApiPrivateKey: String
+    @objc public let AppId: String
+    @objc public let ServiceURL: String
+    
+    @objc init(apiPublicKeyId: String, apiPrivateKey: String, appId: String, serviceURL: String) {
+        self.ApiPublicKeyId = apiPublicKeyId
+        self.ApiPrivateKey = apiPrivateKey
+        self.AppId = appId
+        self.ServiceURL = serviceURL
+        
+        super.init()
     }
-
-    public func pullValue(token: String) throws -> KeyknoxResponse {
-        guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
-            throw KeyknoxClientError.constructingUrl
-        }
-
-        let request = try ServiceRequest(url: url, method: .get, accessToken: token)
-
-        let response = try self.connection.send(request)
-
-        return try self.processResponse(response)
+    
+    @objc public static func readFromBundle() -> TestConfig {
+        let bundle = Bundle(for: self)
+        let configFileUrl = bundle.url(forResource: "TestConfig", withExtension: "plist")!
+        let data = try! Data(contentsOf: configFileUrl)
+        
+        return try! PropertyListDecoder().decode(TestConfig.self, from: data)
     }
 }

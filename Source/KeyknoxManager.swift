@@ -41,9 +41,12 @@ import VirgilSDK
     /// AccessTokenProvider instance used for getting Access Token
     /// when performing queries
     @objc public let accessTokenProvider: AccessTokenProvider
+    /// KeyknoxClient instance used for performing queries
+    @objc public let keyknoxClient: KeyknoxClient
 
-    @objc public init(accessTokenProvider: AccessTokenProvider) {
+    @objc public init(accessTokenProvider: AccessTokenProvider, keyknoxClient: KeyknoxClient) {
         self.accessTokenProvider = accessTokenProvider
+        self.keyknoxClient = keyknoxClient
 
         super.init()
     }
