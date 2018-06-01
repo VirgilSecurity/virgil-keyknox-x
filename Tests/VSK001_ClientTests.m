@@ -93,14 +93,14 @@
     NSData *meta = [cipher contentInfoWithError:nil];
     
     NSError *error;
-    VSSKeyknoxResponse *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
+    VSSKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
 
     XCTAssert([response.meta isEqualToData:meta]);
     XCTAssert([response.data isEqualToData:encryptedData]);
     XCTAssert([response.version isEqualToString:@"1.1"]);
 
-    VSSKeyknoxResponse *response2 = [self.keyknoxClient pullValueWithToken:self.tokenStr error:&error];
+    VSSKeyknoxData *response2 = [self.keyknoxClient pullValueWithToken:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
 
     XCTAssert([response2.meta isEqualToData:meta]);
@@ -129,7 +129,7 @@
     NSData *meta = [cipher contentInfoWithError:nil];
     
     NSError *error;
-    VSSKeyknoxResponse *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
+    VSSKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
     
     NSData *signature2 = [signer signData:someData2 privateKey:privateKeyData keyPassword:nil error:nil];
@@ -143,7 +143,7 @@
     NSData *encryptedData2 = [cipher2 encryptData:someData2 embedContentInfo:NO error:nil];
     NSData *meta2 = [cipher2 contentInfoWithError:nil];
     
-    VSSKeyknoxResponse *response2 = [self.keyknoxClient pushValueWithMeta:meta2 data:encryptedData2 token:self.tokenStr error:&error];
+    VSSKeyknoxData *response2 = [self.keyknoxClient pushValueWithMeta:meta2 data:encryptedData2 token:self.tokenStr error:&error];
     XCTAssert(response2 != nil && error == nil);
     
     XCTAssert([response2.meta isEqualToData:meta2]);

@@ -13,7 +13,7 @@
 		42B5E02520C011380067F13E /* KeyknoxClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01E20C011380067F13E /* KeyknoxClientProtocol.swift */; };
 		42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01F20C011380067F13E /* KeyknoxClient.swift */; };
 		42B5E02720C011380067F13E /* KeynoxClient+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E02020C011380067F13E /* KeynoxClient+Queries.swift */; };
-		42B5E02820C011380067F13E /* KeynoxResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E02220C011380067F13E /* KeynoxResponse.swift */; };
+		42B5E02820C011380067F13E /* KeyknoxData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E02220C011380067F13E /* KeyknoxData.swift */; };
 		42B5E0A720C0117E0067F13E /* VirgilCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E08320C011690067F13E /* VirgilCrypto.framework */; };
 		42B5E0A820C0117E0067F13E /* VirgilCryptoAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E05C20C011640067F13E /* VirgilCryptoAPI.framework */; };
 		42B5E0A920C0117E0067F13E /* VirgilCryptoApiImpl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E09120C011690067F13E /* VirgilCryptoApiImpl.framework */; };
@@ -357,7 +357,7 @@
 		42B5E01E20C011380067F13E /* KeyknoxClientProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxClientProtocol.swift; sourceTree = "<group>"; };
 		42B5E01F20C011380067F13E /* KeyknoxClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxClient.swift; sourceTree = "<group>"; };
 		42B5E02020C011380067F13E /* KeynoxClient+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KeynoxClient+Queries.swift"; sourceTree = "<group>"; };
-		42B5E02220C011380067F13E /* KeynoxResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeynoxResponse.swift; sourceTree = "<group>"; };
+		42B5E02220C011380067F13E /* KeyknoxData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxData.swift; sourceTree = "<group>"; };
 		42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VirgilSDK.xcodeproj; path = "Carthage/Checkouts/virgil-sdk-x/VirgilSDK.xcodeproj"; sourceTree = "<group>"; };
 		42B5E05020C011640067F13E /* VirgilCryptoAPI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VirgilCryptoAPI.xcodeproj; path = "Carthage/Checkouts/virgil-cryptoapi-x/VirgilCryptoAPI.xcodeproj"; sourceTree = "<group>"; };
 		42B5E06920C011690067F13E /* VirgilCrypto.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VirgilCrypto.xcodeproj; path = "Carthage/Checkouts/virgil-foundation-x/VirgilCrypto.xcodeproj"; sourceTree = "<group>"; };
@@ -460,7 +460,7 @@
 		42B5E02120C011380067F13E /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				42B5E02220C011380067F13E /* KeynoxResponse.swift */,
+				42B5E02220C011380067F13E /* KeyknoxData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -923,7 +923,7 @@
 			files = (
 				42B5E02420C011380067F13E /* KeyknoxManager+Queries.swift in Sources */,
 				42B5E02720C011380067F13E /* KeynoxClient+Queries.swift in Sources */,
-				42B5E02820C011380067F13E /* KeynoxResponse.swift in Sources */,
+				42B5E02820C011380067F13E /* KeyknoxData.swift in Sources */,
 				42B5E02320C011380067F13E /* KeyknoxManager.swift in Sources */,
 				42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */,
 				42B5E02520C011380067F13E /* KeyknoxClientProtocol.swift in Sources */,

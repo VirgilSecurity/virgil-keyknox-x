@@ -40,7 +40,7 @@ import Foundation
 ///
 /// See: KeyknoxClient for default implementation
 @objc(VSSKeyknoxClientProtocol) public protocol KeyknoxClientProtocol: class {
-    @objc func pushValue(meta: Data, data: Data, token: String) throws -> KeyknoxResponse
+    @objc func pushValue(meta: Data, data: Data, token: String) throws -> KeyknoxData
 
-    @objc func pullValue(token: String) throws -> KeyknoxResponse
+    @objc func pullValue(token: String) throws -> KeyknoxData
 }

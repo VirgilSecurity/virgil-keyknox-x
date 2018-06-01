@@ -36,7 +36,7 @@
 
 import Foundation
 
-@objc(VSSKeyknoxResponse) public final class KeyknoxResponse: NSObject, Codable {
+@objc(VSSKeyknoxData) public final class KeyknoxData: NSObject, Codable {
     @objc public let data: Data
     @objc public let meta: Data
     @objc public let version: String

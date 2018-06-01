@@ -39,7 +39,7 @@ import VirgilSDK
 
 // MARK: - Queries
 extension KeyknoxClient: KeyknoxClientProtocol {
-    public func pushValue(meta: Data, data: Data, token: String) throws -> KeyknoxResponse {
+    public func pushValue(meta: Data, data: Data, token: String) throws -> KeyknoxData {
         guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
             throw KeyknoxClientError.constructingUrl
         }
@@ -56,7 +56,7 @@ extension KeyknoxClient: KeyknoxClientProtocol {
         return try self.processResponse(response)
     }
 
-    public func pullValue(token: String) throws -> KeyknoxResponse {
+    public func pullValue(token: String) throws -> KeyknoxData {
         guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
             throw KeyknoxClientError.constructingUrl
         }

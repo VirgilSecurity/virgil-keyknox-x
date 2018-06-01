@@ -40,30 +40,30 @@ import VirgilSDK
 
 extension KeyknoxManager {
     open func pushData(data: Data, publicKeys: [VirgilPublicKey],
-                       privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
+                       privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxData> {
         return CallbackOperation { _, completion in
 
         }
     }
 
     open func pullData(publicKeys: [VirgilPublicKey],
-                       privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
+                       privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxData> {
         return CallbackOperation { _, completion in
 
         }
     }
 
     open func updateRecipients(publicKeys: [VirgilPublicKey],
-                               privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
+                               privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxData> {
         return CallbackOperation { _, completion in
 
         }
     }
-
-    open func updateRecipients(meta: Data, publicKeys: [VirgilPublicKey],
-                               privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxResponse> {
+    
+    open func updateRecipients(keynoxData: KeyknoxData, publicKeys: [VirgilPublicKey],
+                               privateKey: VirgilPrivateKey) -> GenericOperation<KeyknoxData> {
         return CallbackOperation { _, completion in
-
+            
         }
     }
 }
