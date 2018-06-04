@@ -10,6 +10,8 @@
 		425EF8AF20C5368400CE1D4F /* KeyknoxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88920C5368400CE1D4F /* KeyknoxManager.swift */; };
 		425EF8B020C5368400CE1D4F /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */; };
 		425EF8B220C5369100CE1D4F /* KeyknoxManager+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */; };
+		425EF8B920C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */; };
+		425EF8BC20C549F500CE1D4F /* KeyknoxManager+Obj-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8BA20C549CF00CE1D4F /* KeyknoxManager+Obj-C.swift */; };
 		42B5E01020C00DB80067F13E /* VirgilSDKKeyknox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; };
 		42B5E02520C011380067F13E /* KeyknoxClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01E20C011380067F13E /* KeyknoxClientProtocol.swift */; };
 		42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01F20C011380067F13E /* KeyknoxClient.swift */; };
@@ -353,6 +355,8 @@
 		425EF88920C5368400CE1D4F /* KeyknoxManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxManager.swift; sourceTree = "<group>"; };
 		425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Queries.swift"; sourceTree = "<group>"; };
 		425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Operations.swift"; sourceTree = "<group>"; };
+		425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VSK002_KeyknoxManagerTests.m; sourceTree = "<group>"; };
+		425EF8BA20C549CF00CE1D4F /* KeyknoxManager+Obj-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Obj-C.swift"; sourceTree = "<group>"; };
 		42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VirgilSDKKeyknox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B5DFF920C005300067F13E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VirgilSDKKeyknox iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -403,6 +407,7 @@
 				425EF88920C5368400CE1D4F /* KeyknoxManager.swift */,
 				425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */,
 				425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */,
+				425EF8BA20C549CF00CE1D4F /* KeyknoxManager+Obj-C.swift */,
 			);
 			path = KeyknoxManager;
 			sourceTree = "<group>";
@@ -444,6 +449,7 @@
 				42B5E0B820C01E5A0067F13E /* Data */,
 				42B5E0BB20C01E5A0067F13E /* TestConfig.swift */,
 				42B5E0B620C01C9B0067F13E /* VSK001_ClientTests.m */,
+				425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -940,6 +946,7 @@
 				425EF8B020C5368400CE1D4F /* KeyknoxManager+Queries.swift in Sources */,
 				42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */,
 				42B5E02520C011380067F13E /* KeyknoxClientProtocol.swift in Sources */,
+				425EF8BC20C549F500CE1D4F /* KeyknoxManager+Obj-C.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -948,6 +955,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42B5E0B720C01C9B0067F13E /* VSK001_ClientTests.m in Sources */,
+				425EF8B920C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m in Sources */,
 				42B5E0BE20C01E5A0067F13E /* TestConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
