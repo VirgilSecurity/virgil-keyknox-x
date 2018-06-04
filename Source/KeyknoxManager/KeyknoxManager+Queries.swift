@@ -40,9 +40,9 @@ import VirgilCryptoApiImpl
 import VirgilSDK
 
 extension KeyknoxManager {
-    open func pushData(data: Data, publicKeys: [VirgilPublicKey],
-                       privateKey: VirgilPrivateKey) -> GenericOperation<EncryptedKeyknoxData> {
-        let makeAggregateOperation: (Bool) -> GenericOperation<EncryptedKeyknoxData> = { force in
+    open func pushData(_ data: Data, publicKeys: [VirgilPublicKey],
+                       privateKey: VirgilPrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
             return CallbackOperation { _, completion in
                 let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
                 let getTokenOperation = OperationUtils.makeGetTokenOperation(
@@ -54,17 +54,22 @@ extension KeyknoxManager {
                 
                 let pushValueOperation = self.makePushValueOperation()
                 
+                let decryptOperation = self.makeDecryptOperation(publicKeys: publicKeys, privateKey: privateKey)
+                
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
                 
                 encryptOperation.addDependency(extractDataOperations)
                 
                 pushValueOperation.addDependency(encryptOperation)
                 pushValueOperation.addDependency(getTokenOperation)
+                
+                decryptOperation.addDependency(pushValueOperation)
 
-                completionOperation.addDependency(pushValueOperation)
+                completionOperation.addDependency(decryptOperation)
                 
                 let queue = OperationQueue()
-                let operations = [getTokenOperation, extractDataOperations, encryptOperation, pushValueOperation, completionOperation]
+                let operations = [getTokenOperation, extractDataOperations, encryptOperation, pushValueOperation,
+                                  decryptOperation, completionOperation]
                 queue.addOperations(operations, waitUntilFinished: false)
             }
         }
