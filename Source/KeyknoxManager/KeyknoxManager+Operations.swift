@@ -81,8 +81,15 @@ extension KeyknoxManager {
                 let cipher = Cipher()
                 try cipher.setContentInfo(keyknoxData.meta)
                 let privateKeyData = self.crypto.exportPrivateKey(privateKey)
-                let decryptedData = try cipher.decryptData(keyknoxData.data, recipientId: privateKey.identifier,
+                let decryptedData: Data
+                do {
+                    decryptedData = try cipher.decryptData(keyknoxData.data, recipientId: privateKey.identifier,
                                                            privateKey: privateKeyData, keyPassword: nil)
+                }
+                catch {
+                    throw KeyknoxManagerError.decryptionFailed
+                }
+                
                 let meta = try cipher.contentInfo()
 
                 let signedId = try cipher.data(forKey: VirgilCrypto.CustomParamKeySignerId)
@@ -91,7 +98,7 @@ extension KeyknoxManager {
                 let signer = Signer(hash: kHashNameSHA512)
 
                 guard let publicKey = publicKeys.first(where: { $0.identifier == signedId }) else {
-                    throw NSError() // FIXME
+                    throw KeyknoxManagerError.signerNotFound
                 }
 
                 let publicKeyData = self.crypto.exportPublicKey(publicKey)
@@ -100,7 +107,7 @@ extension KeyknoxManager {
                     try signer.verifySignature(signature, data: decryptedData, publicKey: publicKeyData)
                 }
                 catch {
-                    throw NSError() // FIXME
+                    throw KeyknoxManagerError.signatureVerificationFailed
                 }
 
                 let result = DecryptedKeyknoxData(meta: meta, data: decryptedData, version: keyknoxData.version)

@@ -46,7 +46,7 @@
 
 @property (nonatomic) TestConfig *config;
 @property (nonatomic) VSMVirgilCrypto *crypto;
-@property (nonatomic) VSSKeyknoxClient *keyknoxClient;
+@property (nonatomic) VSKKeyknoxClient *keyknoxClient;
 @property (nonatomic) NSString *tokenStr;
 
 @end
@@ -58,7 +58,7 @@
     
     self.config = [TestConfig readFromBundle];
     self.crypto = [[VSMVirgilCrypto alloc] initWithDefaultKeyType:VSCKeyTypeFAST_EC_ED25519 useSHA256Fingerprints:true];
-    self.keyknoxClient = [[VSSKeyknoxClient alloc] initWithServiceUrl:[[NSURL alloc] initWithString:self.config.ServiceURL]];
+    self.keyknoxClient = [[VSKKeyknoxClient alloc] initWithServiceUrl:[[NSURL alloc] initWithString:self.config.ServiceURL]];
     
     VSMVirgilPrivateKey *apiKey = [self.crypto importPrivateKeyFrom:[[NSData alloc] initWithBase64EncodedString:self.config.ApiPrivateKey options:0] password:nil error:nil];
     VSSJwtGenerator *generator = [[VSSJwtGenerator alloc] initWithApiKey:apiKey apiPublicKeyIdentifier:self.config.ApiPublicKeyId accessTokenSigner:[[VSMVirgilAccessTokenSigner alloc] initWithVirgilCrypto:self.crypto] appId:self.config.AppId ttl:600];
@@ -93,14 +93,14 @@
     NSData *meta = [cipher contentInfoWithError:nil];
     
     NSError *error;
-    VSSEncryptedKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
+    VSKEncryptedKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
 
     XCTAssert([response.meta isEqualToData:meta]);
     XCTAssert([response.data isEqualToData:encryptedData]);
     XCTAssert([response.version isEqualToString:@"1.1"]);
 
-    VSSEncryptedKeyknoxData *response2 = [self.keyknoxClient pullValueWithToken:self.tokenStr error:&error];
+    VSKEncryptedKeyknoxData *response2 = [self.keyknoxClient pullValueWithToken:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
 
     XCTAssert([response2.meta isEqualToData:meta]);
@@ -129,7 +129,7 @@
     NSData *meta = [cipher contentInfoWithError:nil];
     
     NSError *error;
-    VSSEncryptedKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
+    VSKEncryptedKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
     
     NSData *signature2 = [signer signData:someData2 privateKey:privateKeyData keyPassword:nil error:nil];
@@ -143,7 +143,7 @@
     NSData *encryptedData2 = [cipher2 encryptData:someData2 embedContentInfo:NO error:nil];
     NSData *meta2 = [cipher2 contentInfoWithError:nil];
     
-    VSSEncryptedKeyknoxData *response2 = [self.keyknoxClient pushValueWithMeta:meta2 data:encryptedData2 token:self.tokenStr error:&error];
+    VSKEncryptedKeyknoxData *response2 = [self.keyknoxClient pushValueWithMeta:meta2 data:encryptedData2 token:self.tokenStr error:&error];
     XCTAssert(response2 != nil && error == nil);
     
     XCTAssert([response2.meta isEqualToData:meta2]);

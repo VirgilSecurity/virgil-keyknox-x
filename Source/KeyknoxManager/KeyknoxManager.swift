@@ -38,7 +38,14 @@ import Foundation
 import VirgilSDK
 import VirgilCryptoApiImpl
 
-@objc(VSSKeyknoxManager) open class KeyknoxManager: NSObject {
+/// Declares error types and codes for CardManager
+@objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
+    case signerNotFound = 1
+    case signatureVerificationFailed = 2
+    case decryptionFailed = 3
+}
+
+@objc(VSKKeyknoxManager) open class KeyknoxManager: NSObject {
     /// AccessTokenProvider instance used for getting Access Token
     /// when performing queries
     @objc public let accessTokenProvider: AccessTokenProvider

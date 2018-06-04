@@ -39,7 +39,7 @@ import Foundation
 /// Protocol for KeyknoxClient
 ///
 /// See: KeyknoxClient for default implementation
-@objc(VSSKeyknoxClientProtocol) public protocol KeyknoxClientProtocol: class {
+@objc(VSKKeyknoxClientProtocol) public protocol KeyknoxClientProtocol: class {
     @objc func pushValue(meta: Data, data: Data, token: String) throws -> EncryptedKeyknoxData
 
     @objc func pullValue(token: String) throws -> EncryptedKeyknoxData

@@ -40,12 +40,12 @@ import VirgilSDK
 /// Declares client error types and codes
 ///
 /// - constructingUrl: constructing url of endpoint failed
-@objc(VSSKeyknoxClientError) public enum KeyknoxClientError: Int, Error {
+@objc(VSKKeyknoxClientError) public enum KeyknoxClientError: Int, Error {
     case constructingUrl = 1
 }
 
 /// Class representing operations with Virgil Keyknox service
-@objc(VSSKeyknoxClient) open class KeyknoxClient: BaseClient {
+@objc(VSKKeyknoxClient) open class KeyknoxClient: BaseClient {
     // swiftlint:disable force_unwrapping
     /// Default URL for service
     @objc public static let defaultURL = URL(string: "https://api.virgilsecurity.com")!

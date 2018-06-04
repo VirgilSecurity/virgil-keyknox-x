@@ -50,6 +50,6 @@ public class KeyknoxData: NSObject, Codable {
     }
 }
 
-@objc(VSSEncryptedKeyknoxData) public class EncryptedKeyknoxData: KeyknoxData { }
+@objc(VSKEncryptedKeyknoxData) public class EncryptedKeyknoxData: KeyknoxData { }
 
-@objc(VSSDecryptedKeyknoxData) public class DecryptedKeyknoxData: KeyknoxData { }
+@objc(VSKDecryptedKeyknoxData) public class DecryptedKeyknoxData: KeyknoxData { }
