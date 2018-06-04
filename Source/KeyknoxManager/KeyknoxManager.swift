@@ -36,6 +36,7 @@
 
 import Foundation
 import VirgilSDK
+import VirgilCryptoApiImpl
 
 @objc(VSSKeyknoxManager) open class KeyknoxManager: NSObject {
     /// AccessTokenProvider instance used for getting Access Token
@@ -43,6 +44,8 @@ import VirgilSDK
     @objc public let accessTokenProvider: AccessTokenProvider
     /// KeyknoxClient instance used for performing queries
     @objc public let keyknoxClient: KeyknoxClient
+    @objc public let retryOnUnauthorized: Bool = false
+    @objc public let crypto = VirgilCrypto()
 
     @objc public init(accessTokenProvider: AccessTokenProvider, keyknoxClient: KeyknoxClient) {
         self.accessTokenProvider = accessTokenProvider

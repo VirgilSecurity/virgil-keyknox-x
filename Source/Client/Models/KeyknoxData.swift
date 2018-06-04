@@ -36,16 +36,20 @@
 
 import Foundation
 
-@objc(VSSKeyknoxData) public final class KeyknoxData: NSObject, Codable {
-    @objc public let data: Data
+public class KeyknoxData: NSObject, Codable {
     @objc public let meta: Data
+    @objc public let data: Data
     @objc public let version: String
 
-    @objc public init(data: Data, meta: Data, version: String) {
-        self.data = data
+    internal init(meta: Data, data: Data, version: String) {
         self.meta = meta
+        self.data = data
         self.version = version
 
         super.init()
     }
 }
+
+@objc(VSSEncryptedKeyknoxData) public class EncryptedKeyknoxData: KeyknoxData { }
+
+@objc(VSSDecryptedKeyknoxData) public class DecryptedKeyknoxData: KeyknoxData { }
