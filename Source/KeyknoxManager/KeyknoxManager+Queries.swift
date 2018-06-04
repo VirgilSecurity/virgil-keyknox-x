@@ -47,33 +47,33 @@ extension KeyknoxManager {
                 let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
                 let getTokenOperation = OperationUtils.makeGetTokenOperation(
                     tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
-                
+
                 let extractDataOperations = self.makeExtractDataOperation(data: data)
-                
+
                 let encryptOperation = self.makeEncryptOperation(publicKeys: publicKeys, privateKey: privateKey)
-                
+
                 let pushValueOperation = self.makePushValueOperation()
-                
+
                 let decryptOperation = self.makeDecryptOperation(publicKeys: publicKeys, privateKey: privateKey)
-                
+
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
-                
+
                 encryptOperation.addDependency(extractDataOperations)
-                
+
                 pushValueOperation.addDependency(encryptOperation)
                 pushValueOperation.addDependency(getTokenOperation)
-                
+
                 decryptOperation.addDependency(pushValueOperation)
 
                 completionOperation.addDependency(decryptOperation)
-                
+
                 let queue = OperationQueue()
                 let operations = [getTokenOperation, extractDataOperations, encryptOperation, pushValueOperation,
                                   decryptOperation, completionOperation]
                 queue.addOperations(operations, waitUntilFinished: false)
             }
         }
-        
+
         if !self.retryOnUnauthorized {
             return makeAggregateOperation(false)
         }
@@ -91,13 +91,13 @@ extension KeyknoxManager {
                     tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
 
                 let pullValueOperation = self.makePullValueOperation()
-                
+
                 let decryptOperation = self.makeDecryptOperation(publicKeys: publicKeys, privateKey: privateKey)
 
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
 
                 pullValueOperation.addDependency(getTokenOperation)
-                
+
                 decryptOperation.addDependency(pullValueOperation)
 
                 completionOperation.addDependency(decryptOperation)
@@ -127,13 +127,13 @@ extension KeyknoxManager {
                 let pullValueOperation = self.makePullValueOperation()
 
                 let decryptOperation = self.makeDecryptOperation(publicKeys: publicKeys, privateKey: privateKey)
-                
+
                 let extractDataOperation = self.makeExtractDataOperation()
-                
+
                 let encryptOperation = self.makeEncryptOperation(publicKeys: publicKeys, privateKey: privateKey)
-                
+
                 let pushValueOperation = self.makePushValueOperation()
-                
+
                 let decryptOperation2 = self.makeDecryptOperation(publicKeys: publicKeys, privateKey: privateKey)
 
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
@@ -168,29 +168,29 @@ extension KeyknoxManager {
                 let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
                 let getTokenOperation = OperationUtils.makeGetTokenOperation(
                     tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
-                
+
                 let extractDataOperation = self.makeExtractDataOperation(data: data)
-                
+
                 let encryptOperation = self.makeEncryptOperation(publicKeys: publicKeys, privateKey: privateKey)
-                
+
                 let pushValueOperation = self.makePushValueOperation()
-                
+
                 let decryptOperation = self.makeDecryptOperation(publicKeys: publicKeys, privateKey: privateKey)
-                
+
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
-                
+
                 encryptOperation.addDependency(extractDataOperation)
                 pushValueOperation.addDependency(encryptOperation)
                 decryptOperation.addDependency(pushValueOperation)
                 completionOperation.addDependency(decryptOperation)
-                
+
                 let queue = OperationQueue()
                 let operations = [getTokenOperation, extractDataOperation, encryptOperation,
                                   pushValueOperation, decryptOperation, completionOperation]
                 queue.addOperations(operations, waitUntilFinished: false)
             }
         }
-        
+
         if !self.retryOnUnauthorized {
             return makeAggregateOperation(false)
         }

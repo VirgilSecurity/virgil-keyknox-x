@@ -38,23 +38,23 @@ import Foundation
 import VirgilCryptoApiImpl
 
 extension KeyknoxManager {
-    @objc open func pushData(_ data: Data, publicKeys: [VirgilPublicKey],
-                       privateKey: VirgilPrivateKey, completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+    @objc open func pushData(_ data: Data, publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
+                             completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.pushData(data, publicKeys: publicKeys, privateKey: privateKey).start(completion: completion)
     }
-    
-    @objc open func pullData(publicKeys: [VirgilPublicKey],
-                       privateKey: VirgilPrivateKey, completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+
+    @objc open func pullData(publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
+                             completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.pullData(publicKeys: publicKeys, privateKey: privateKey).start(completion: completion)
     }
-    
-    @objc open func updateRecipients(publicKeys: [VirgilPublicKey],
-                               privateKey: VirgilPrivateKey, completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+
+    @objc open func updateRecipients(publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
+                                     completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.updateRecipients(publicKeys: publicKeys, privateKey: privateKey).start(completion: completion)
     }
-    
-    @objc open func updateRecipients(data: Data, publicKeys: [VirgilPublicKey],
-                               privateKey: VirgilPrivateKey, completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+
+    @objc open func updateRecipients(data: Data, publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
+                                     completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.updateRecipients(data: data, publicKeys: publicKeys, privateKey: privateKey).start(completion: completion)
     }
 }
