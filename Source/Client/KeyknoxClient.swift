@@ -42,6 +42,7 @@ import VirgilSDK
 /// - constructingUrl: constructing url of endpoint failed
 @objc(VSKKeyknoxClientError) public enum KeyknoxClientError: Int, Error {
     case constructingUrl = 1
+    case entityNotFound = 50002
 }
 
 /// Class representing operations with Virgil Keyknox service

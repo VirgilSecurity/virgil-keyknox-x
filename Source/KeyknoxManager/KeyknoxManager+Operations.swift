@@ -49,6 +49,10 @@ extension KeyknoxManager {
 
                 completion(response, nil)
             }
+            catch let error as ServiceError
+                where error.httpStatusCode == 404 && error.errorCode == KeyknoxClientError.entityNotFound.rawValue {
+                    completion(nil, KeyknoxManagerError.keyknoxIsEmpty)
+            }
             catch {
                 completion(nil, error)
             }
