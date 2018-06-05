@@ -72,11 +72,11 @@ static const NSTimeInterval timeout = 20.;
         completion(jwt, nil);
     }];
     
-    VSKKeyknoxManager *keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient];
+    VSKKeyknoxManager *keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient crypto:self.crypto retryOnUnauthorized:NO];
     
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
     
-    self.keyStorage = [[VSKKeyknoxPrivateKeyStorage alloc] initWithKeyknoxManager:keyknoxManager publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey];
+    self.keyStorage = [[VSKKeyknoxPrivateKeyStorage alloc] initWithKeyknoxManager:keyknoxManager publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey crypto:self.crypto];
 }
 
 - (void)tearDown {
@@ -150,6 +150,116 @@ static const NSTimeInterval timeout = 20.;
     }];
     
     [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
+        if (error != nil)
+            XCTFail(@"Expectation failed: %@", error);
+    }];
+}
+
+- (void)test004_storeMultipleKeys {
+    XCTestExpectation *ex = [self expectationWithDescription:@""];
+    
+    int numberOfKeys = 100;
+    
+    NSMutableArray<VSMVirgilPrivateKey *> *privateKeys = [[NSMutableArray alloc] init];
+    NSMutableArray<VSKKeyEntry *> *keyEntries = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < numberOfKeys; i++) {
+        VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+        
+        [privateKeys addObject:keyPair.privateKey];
+        
+        if (i > 0 && i < numberOfKeys - 1) {
+            NSString *name = [NSString stringWithFormat:@"%d", i];
+            VSKKeyEntry *keyEntry = [[VSKKeyEntry alloc] initWithKey:keyPair.privateKey name: name];
+            [keyEntries addObject:keyEntry];
+        }
+    }
+ 
+    [self.keyStorage storeWithPrivateKey:privateKeys[0] withName:@"first" completion:^(NSError *error) {
+        XCTAssert(error == nil);
+        XCTAssert(self.keyStorage.cache.count == 1);
+        XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+        
+        [self.keyStorage storeWithKeyEntries:keyEntries completion:^(NSError *error) {
+            XCTAssert(error == nil);
+            XCTAssert(self.keyStorage.cache.count == numberOfKeys - 1);
+            XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+            for (int i = 1; i < numberOfKeys - 1; i++) {
+                NSString *name = [NSString stringWithFormat:@"%d", i];
+                XCTAssert([[self.keyStorage loadKeyWithName:name].identifier isEqualToData:privateKeys[i].identifier]);
+            }
+            
+            [self.keyStorage syncWithCompletion:^(NSError *error) {
+                XCTAssert(error == nil);
+                XCTAssert(self.keyStorage.cache.count == numberOfKeys - 1);
+                XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+                for (int i = 1; i < numberOfKeys - 1; i++) {
+                    NSString *name = [NSString stringWithFormat:@"%d", i];
+                    XCTAssert([[self.keyStorage loadKeyWithName:name].identifier isEqualToData:privateKeys[i].identifier]);
+                }
+                
+                [self.keyStorage storeWithPrivateKey:privateKeys[numberOfKeys - 1] withName:@"last" completion:^(NSError *error) {
+                    XCTAssert(error == nil);
+                    XCTAssert(self.keyStorage.cache.count == numberOfKeys);
+                    XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+                    for (int i = 1; i < numberOfKeys - 1; i++) {
+                        NSString *name = [NSString stringWithFormat:@"%d", i];
+                        XCTAssert([[self.keyStorage loadKeyWithName:name].identifier isEqualToData:privateKeys[i].identifier]);
+                    }
+                    XCTAssert([[self.keyStorage loadKeyWithName:@"last"].identifier isEqualToData:privateKeys[numberOfKeys - 1].identifier]);
+                    
+                    [self.keyStorage syncWithCompletion:^(NSError *error) {
+                        XCTAssert(error == nil);
+                        XCTAssert(self.keyStorage.cache.count == numberOfKeys);
+                        XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+                        for (int i = 1; i < numberOfKeys - 1; i++) {
+                            NSString *name = [NSString stringWithFormat:@"%d", i];
+                            XCTAssert([[self.keyStorage loadKeyWithName:name].identifier isEqualToData:privateKeys[i].identifier]);
+                        }
+                        XCTAssert([[self.keyStorage loadKeyWithName:@"last"].identifier isEqualToData:privateKeys[numberOfKeys - 1].identifier]);
+                    
+                        [ex fulfill];
+                    }];
+                }];
+            }];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:timeout + numberOfKeys / 4 handler:^(NSError *error) {
+        if (error != nil)
+            XCTFail(@"Expectation failed: %@", error);
+    }];
+}
+
+- (void)test005_deleteAllKeys {
+    XCTestExpectation *ex = [self expectationWithDescription:@""];
+    
+    int numberOfKeys = 100;
+    
+    NSMutableArray<VSKKeyEntry *> *keyEntries = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < numberOfKeys; i++) {
+        VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+        NSString *name = [NSString stringWithFormat:@"%d", i];
+        VSKKeyEntry *keyEntry = [[VSKKeyEntry alloc] initWithKey:keyPair.privateKey name: name];
+        [keyEntries addObject:keyEntry];
+    }
+    
+    [self.keyStorage storeWithKeyEntries:keyEntries completion:^(NSError *error) {
+        [self.keyStorage deleteAllKeysWithCompletion:^(NSError *error) {
+            XCTAssert(error == nil);
+            XCTAssert(self.keyStorage.cache.count == 0);
+            
+            [self.keyStorage syncWithCompletion:^(NSError *error) {
+                XCTAssert(error == nil);
+                XCTAssert(self.keyStorage.cache.count == 0);
+                
+                [ex fulfill];
+            }];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:timeout + numberOfKeys / 4 handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
     }];

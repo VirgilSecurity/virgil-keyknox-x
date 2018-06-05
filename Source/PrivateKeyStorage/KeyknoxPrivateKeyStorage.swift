@@ -57,31 +57,41 @@ import VirgilSDK
 
         super.init()
     }
-        
-    open func store(privateKey: VirgilPrivateKey, withName name: String) -> GenericOperation<Void> {
-        return CallbackOperation { _, completion in
-            guard self.cache[name] == nil else {
-                completion(nil, NSError()) // FIXME
-                return
-            }
-            
-            do {
-                try self.queue.sync {
-                    self.cache[name] = privateKey
+}
 
-                    let data = try self.serializeDict(self.cache)
-                    
-                    let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
-                    
-                    self.cache = try self.parseData(response.data)
+extension KeyknoxPrivateKeyStorage {
+    open func store(keyEntries: [(key: VirgilPrivateKey, name: String)]) -> GenericOperation<Void> {
+        return CallbackOperation { _, completion in
+            self.queue.async {
+                for entry in keyEntries {
+                    guard self.cache[entry.name] == nil else {
+                        completion(nil, NSError()) // FIXME
+                        return
+                    }
                 }
                 
-                completion((), nil)
-            }
-            catch {
-                completion(nil, error)
+                for entry in keyEntries {
+                    self.cache[entry.name] = entry.key
+                }
+                
+                do {
+                    let data = try self.serializeDict(self.cache)
+                
+                    let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
+                
+                    self.cache = try self.parseData(response.data)
+                    
+                    completion((), nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
             }
         }
+    }
+    
+    open func store(privateKey: VirgilPrivateKey, withName name: String) -> GenericOperation<Void> {
+        return self.store(keyEntries: [(privateKey, name)])
     }
     
     @objc open func loadKey(withName name: String) -> VirgilPrivateKey? {
@@ -98,68 +108,74 @@ import VirgilSDK
     
     open func deleteKeys(withNames names: [String]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            for name in names {
-                guard self.cache[name] != nil else {
-                    completion(nil, NSError()) // FIXME
-                    return
+            self.queue.async {
+                for name in names {
+                    guard self.cache[name] != nil else {
+                        completion(nil, NSError()) // FIXME
+                        return
+                    }
                 }
-            }
-            
-            do {
-                try self.queue.sync {
+                
+                do {
                     for name in names {
                         self.cache.removeValue(forKey: name)
                     }
+                
+                    let data = try self.serializeDict(self.cache)
+                
+                    let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
+                
+                    self.cache = try self.parseData(response.data)
+                
+                    completion((), nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
+            }
+        }
+    }
+    
+    open func deleteAllKeys() -> GenericOperation<Void> {
+        return CallbackOperation { _, completion in
+            self.queue.async {
+                do {
+                    self.cache = [:]
                     
                     let data = try self.serializeDict(self.cache)
                     
                     let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
                     
                     self.cache = try self.parseData(response.data)
+                    
+                    completion((), nil)
                 }
-                
-                completion((), nil)
-            }
-            catch {
-                completion(nil, error)
-            }
-            
-        }
-    }
-
-    open func deleteAllKeys() -> GenericOperation<Void> {
-        return CallbackOperation { _, completion in
-            do {
-                try self.queue.sync {
-                    let _ = try self.keyknoxManager.pushData(Data(), publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
-                    self.cache = [:]
+                catch {
+                    completion(nil, error)
                 }
-            }
-            catch {
-                completion(nil, error)
             }
         }
     }
     
     open func sync() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            do {
-                try self.queue.sync {
+            self.queue.async {
+                do {
                     let data = try self.keyknoxManager.pullData(publicKeys: self.publicKeys,
-                                                            privateKey: self.privateKey)
+                                                                privateKey: self.privateKey)
                         .startSync().getResult()
-
+                
                     self.cache = try self.parseData(data.data)
+                    
+                    completion((), nil)
                 }
-
-                completion((), nil)
-            }
-            catch KeyknoxManagerError.keyknoxIsEmpty {
-                completion((), nil)
-            }
-            catch {
-                completion(nil, error)
-            }
+                catch KeyknoxManagerError.keyknoxIsEmpty {
+                    completion((), nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
+        }
         }
     }
     

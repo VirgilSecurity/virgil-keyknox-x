@@ -37,9 +37,27 @@
 import Foundation
 import VirgilCryptoApiImpl
 
+@objc(VSKKeyEntry) public final class KeyEntry: NSObject {
+    @objc public let key: VirgilPrivateKey
+    @objc public let name: String
+    
+    @objc public init(key: VirgilPrivateKey, name: String) {
+        self.key = key
+        self.name = name
+        
+        super.init()
+    }
+}
+
 extension KeyknoxPrivateKeyStorage {
     @objc open func sync(completion: @escaping (Error?) -> ()) {
         self.sync().start { res, error in
+            completion(error)
+        }
+    }
+    
+    @objc open func store(keyEntries: [KeyEntry], completion: @escaping (Error?) -> ()) {
+        self.store(keyEntries: keyEntries.map { ($0.key, $0.name) }).start { res, error in
             completion(error)
         }
     }
@@ -62,7 +80,7 @@ extension KeyknoxPrivateKeyStorage {
         }
     }
     
-    open func deleteAllKeys(completion: @escaping (Error?) -> ()) {
+    @objc open func deleteAllKeys(completion: @escaping (Error?) -> ()) {
         self.deleteAllKeys().start { res, error in
             completion(error)
         }

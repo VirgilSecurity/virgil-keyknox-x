@@ -72,9 +72,9 @@ static const NSTimeInterval timeout = 20.;
         completion(jwt, nil);
     }];
     
-    self.keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient];
+    self.keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient crypto:self.crypto retryOnUnauthorized:NO];
     
-    self.numberOfKeys = 4;
+    self.numberOfKeys = 50;
 }
 
 - (void)tearDown {
