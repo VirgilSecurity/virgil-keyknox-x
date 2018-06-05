@@ -55,7 +55,8 @@ import VirgilCryptoApiImpl
     @objc public let crypto: VirgilCrypto
     @objc public let retryOnUnauthorized: Bool
 
-    @objc public init(accessTokenProvider: AccessTokenProvider, keyknoxClient: KeyknoxClient, crypto: VirgilCrypto = VirgilCrypto(), retryOnUnauthorized: Bool = false) {
+    @objc public init(accessTokenProvider: AccessTokenProvider, keyknoxClient: KeyknoxClient,
+                      crypto: VirgilCrypto = VirgilCrypto(), retryOnUnauthorized: Bool = false) {
         self.accessTokenProvider = accessTokenProvider
         self.keyknoxClient = keyknoxClient
         self.crypto = crypto

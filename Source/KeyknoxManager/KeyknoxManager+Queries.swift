@@ -56,7 +56,7 @@ extension KeyknoxManager {
                 pushValueOperation.addDependency(encryptOperation)
                 pushValueOperation.addDependency(getTokenOperation)
                 decryptOperation.addDependency(pushValueOperation)
-                
+
                 let operations = [getTokenOperation, extractDataOperations, encryptOperation, pushValueOperation,
                                   decryptOperation]
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
@@ -89,7 +89,7 @@ extension KeyknoxManager {
 
                 pullValueOperation.addDependency(getTokenOperation)
                 decryptOperation.addDependency(pullValueOperation)
-                
+
                 let operations = [getTokenOperation, pullValueOperation, decryptOperation]
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
                 operations.forEach {
@@ -120,9 +120,11 @@ extension KeyknoxManager {
                 let pullValueOperation = self.makePullValueOperation()
                 let decryptOperation = self.makeDecryptOperation(publicKeys: publicKeys, privateKey: privateKey)
                 let extractDataOperation = self.makeExtractDataOperation()
-                let encryptOperation = self.makeEncryptOperation(publicKeys: newPublicKeys ?? publicKeys, privateKey: newPrivateKey ?? privateKey)
+                let encryptOperation = self.makeEncryptOperation(publicKeys: newPublicKeys ?? publicKeys,
+                                                                 privateKey: newPrivateKey ?? privateKey)
                 let pushValueOperation = self.makePushValueOperation()
-                let decryptOperation2 = self.makeDecryptOperation(publicKeys: newPublicKeys ?? publicKeys, privateKey: newPrivateKey ?? privateKey)
+                let decryptOperation2 = self.makeDecryptOperation(publicKeys: newPublicKeys ?? publicKeys,
+                                                                  privateKey: newPrivateKey ?? privateKey)
 
                 pullValueOperation.addDependency(getTokenOperation)
                 decryptOperation.addDependency(pullValueOperation)
@@ -131,7 +133,7 @@ extension KeyknoxManager {
                 pushValueOperation.addDependency(getTokenOperation)
                 pushValueOperation.addDependency(encryptOperation)
                 decryptOperation2.addDependency(pushValueOperation)
-                
+
                 let operations = [getTokenOperation, pullValueOperation, decryptOperation,
                                   extractDataOperation, encryptOperation, pushValueOperation, decryptOperation2]
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
@@ -168,7 +170,7 @@ extension KeyknoxManager {
                 pushValueOperation.addDependency(getTokenOperation)
                 pushValueOperation.addDependency(encryptOperation)
                 decryptOperation.addDependency(pushValueOperation)
-                
+
                 let operations = [extractDataOperation, encryptOperation, getTokenOperation,
                                   pushValueOperation, decryptOperation]
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)

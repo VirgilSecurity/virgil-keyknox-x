@@ -40,48 +40,49 @@ import VirgilCryptoApiImpl
 @objc(VSKKeyEntry) public final class KeyEntry: NSObject {
     @objc public let key: VirgilPrivateKey
     @objc public let name: String
-    
+
     @objc public init(key: VirgilPrivateKey, name: String) {
         self.key = key
         self.name = name
-        
+
         super.init()
     }
 }
 
 extension KeyknoxPrivateKeyStorage {
     @objc open func sync(completion: @escaping (Error?) -> ()) {
-        self.sync().start { res, error in
+        self.sync().start { _, error in
             completion(error)
         }
     }
-    
+
     @objc open func store(keyEntries: [KeyEntry], completion: @escaping (Error?) -> ()) {
-        self.store(keyEntries: keyEntries.map { ($0.key, $0.name) }).start { res, error in
+        self.store(keyEntries: keyEntries.map { ($0.key, $0.name) }).start { _, error in
             completion(error)
         }
     }
-    
-    @objc open func store(privateKey: VirgilPrivateKey, withName name: String, completion: @escaping (Error?) -> ()) {
-        self.store(privateKey: privateKey, withName: name).start { res, error in
+
+    @objc open func store(privateKey: VirgilPrivateKey, withName name: String,
+                          completion: @escaping (Error?) -> ()) {
+        self.store(privateKey: privateKey, withName: name).start { _, error in
             completion(error)
         }
     }
-    
+
     @objc open func deleteKey(withName name: String, completion: @escaping (Error?) -> ()) {
-        self.deleteKey(withName: name).start { res, error in
+        self.deleteKey(withName: name).start { _, error in
             completion(error)
         }
     }
-    
+
     @objc open func deleteKeys(withNames names: [String], completion: @escaping (Error?) -> ()) {
-        self.deleteKeys(withNames: names).start { res, error in
+        self.deleteKeys(withNames: names).start { _, error in
             completion(error)
         }
     }
-    
+
     @objc open func deleteAllKeys(completion: @escaping (Error?) -> ()) {
-        self.deleteAllKeys().start { res, error in
+        self.deleteAllKeys().start { _, error in
             completion(error)
         }
     }

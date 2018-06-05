@@ -47,16 +47,19 @@ extension KeyknoxManager {
                              completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.pullData(publicKeys: publicKeys, privateKey: privateKey).start(completion: completion)
     }
-    
+
     @objc open func updateRecipients(publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
-                               newPublicKeys: [VirgilPublicKey]? = nil, newPrivateKey: VirgilPrivateKey? = nil,
-                               completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+                                     newPublicKeys: [VirgilPublicKey]? = nil,
+                                     newPrivateKey: VirgilPrivateKey? = nil,
+                                     completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.updateRecipients(publicKeys: publicKeys, privateKey: privateKey,
                               newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start(completion: completion)
     }
-    
-    @objc open func updateRecipients(data: Data, newPublicKeys: [VirgilPublicKey], newPrivateKey: VirgilPrivateKey,
+
+    @objc open func updateRecipients(data: Data, newPublicKeys: [VirgilPublicKey],
+                                     newPrivateKey: VirgilPrivateKey,
                                      completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
-        self.updateRecipients(data: data, newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start(completion: completion)
+        self.updateRecipients(data: data, newPublicKeys: newPublicKeys,
+                              newPrivateKey: newPrivateKey).start(completion: completion)
     }
 }

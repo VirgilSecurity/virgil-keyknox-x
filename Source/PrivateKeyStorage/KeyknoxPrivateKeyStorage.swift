@@ -43,10 +43,10 @@ import VirgilSDK
     @objc public let keyknoxManager: KeyknoxManager
     @objc public let publicKeys: [VirgilPublicKey]
     @objc public let privateKey: VirgilPrivateKey
-    @objc private(set) public var cache: Dictionary<String, VirgilPrivateKey> = [:]
-    
+    @objc private(set) public var cache: [String: VirgilPrivateKey] = [:]
+
     private let queue = DispatchQueue(label: "KeyknoxPrivateKeyStorageQueue")
-    
+
     @objc public init(keyknoxManager: KeyknoxManager,
                       publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
                       crypto: VirgilCrypto = VirgilCrypto()) {
@@ -69,18 +69,20 @@ extension KeyknoxPrivateKeyStorage {
                         return
                     }
                 }
-                
+
                 for entry in keyEntries {
                     self.cache[entry.name] = entry.key
                 }
-                
+
                 do {
                     let data = try self.serializeDict(self.cache)
-                
-                    let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
-                
+
+                    let response = try self.keyknoxManager
+                        .pushData(data, publicKeys: self.publicKeys,
+                                  privateKey: self.privateKey).startSync().getResult()
+
                     self.cache = try self.parseData(response.data)
-                    
+
                     completion((), nil)
                 }
                 catch {
@@ -89,23 +91,23 @@ extension KeyknoxPrivateKeyStorage {
             }
         }
     }
-    
+
     open func store(privateKey: VirgilPrivateKey, withName name: String) -> GenericOperation<Void> {
         return self.store(keyEntries: [(privateKey, name)])
     }
-    
+
     @objc open func loadKey(withName name: String) -> VirgilPrivateKey? {
         return self.cache[name]
     }
-    
+
     @objc open func existsKey(withName name: String) -> Bool {
         return self.cache[name] != nil
     }
-    
+
     open func deleteKey(withName name: String) -> GenericOperation<Void> {
         return self.deleteKeys(withNames: [name])
     }
-    
+
     open func deleteKeys(withNames names: [String]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -115,18 +117,20 @@ extension KeyknoxPrivateKeyStorage {
                         return
                     }
                 }
-                
+
                 do {
                     for name in names {
                         self.cache.removeValue(forKey: name)
                     }
-                
+
                     let data = try self.serializeDict(self.cache)
-                
-                    let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
-                
+
+                    let response = try self.keyknoxManager
+                        .pushData(data, publicKeys: self.publicKeys,
+                                  privateKey: self.privateKey).startSync().getResult()
+
                     self.cache = try self.parseData(response.data)
-                
+
                     completion((), nil)
                 }
                 catch {
@@ -135,19 +139,21 @@ extension KeyknoxPrivateKeyStorage {
             }
         }
     }
-    
+
     open func deleteAllKeys() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
                 do {
                     self.cache = [:]
-                    
+
                     let data = try self.serializeDict(self.cache)
-                    
-                    let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
-                    
+
+                    let response = try self.keyknoxManager
+                        .pushData(data, publicKeys: self.publicKeys,
+                                  privateKey: self.privateKey).startSync().getResult()
+
                     self.cache = try self.parseData(response.data)
-                    
+
                     completion((), nil)
                 }
                 catch {
@@ -156,7 +162,7 @@ extension KeyknoxPrivateKeyStorage {
             }
         }
     }
-    
+
     open func sync() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -164,9 +170,9 @@ extension KeyknoxPrivateKeyStorage {
                     let data = try self.keyknoxManager.pullData(publicKeys: self.publicKeys,
                                                                 privateKey: self.privateKey)
                         .startSync().getResult()
-                
+
                     self.cache = try self.parseData(data.data)
-                    
+
                     completion((), nil)
                 }
                 catch KeyknoxManagerError.keyknoxIsEmpty {
@@ -175,19 +181,23 @@ extension KeyknoxPrivateKeyStorage {
                 catch {
                     completion(nil, error)
                 }
-        }
+            }
         }
     }
-    
-    private func serializeDict(_ dict: Dictionary<String, VirgilPrivateKey>) throws -> Data {
-        let exportDict = Dictionary(uniqueKeysWithValues: dict.map { return ($0.key , self.crypto.exportPrivateKey($0.value)) })
-        
+
+    private func serializeDict(_ dict: [String: VirgilPrivateKey]) throws -> Data {
+        let exportDict = Dictionary(uniqueKeysWithValues: dict.map {
+            return ($0.key, self.crypto.exportPrivateKey($0.value))
+        })
+
         return try JSONEncoder().encode(exportDict)
     }
-    
-    private func parseData(_ data: Data) throws -> Dictionary<String, VirgilPrivateKey> {
+
+    private func parseData(_ data: Data) throws -> [String: VirgilPrivateKey] {
         let dict = try JSONDecoder().decode(Dictionary<String, Data>.self, from: data)
-        
-        return Dictionary(uniqueKeysWithValues: try dict.map { return ($0.key , try self.crypto.importPrivateKey(from: $0.value)) })
+
+        return Dictionary(uniqueKeysWithValues: try dict.map {
+            return ($0.key, try self.crypto.importPrivateKey(from: $0.value))
+        })
     }
 }

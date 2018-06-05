@@ -93,7 +93,7 @@ extension KeyknoxManager {
                 catch {
                     throw KeyknoxManagerError.decryptionFailed
                 }
-                
+
                 let meta = try cipher.contentInfo()
 
                 let signedId = try cipher.data(forKey: VirgilCrypto.CustomParamKeySignerId)
