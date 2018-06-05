@@ -52,12 +52,14 @@ import VirgilCryptoApiImpl
     @objc public let accessTokenProvider: AccessTokenProvider
     /// KeyknoxClient instance used for performing queries
     @objc public let keyknoxClient: KeyknoxClient
-    @objc public let retryOnUnauthorized: Bool = false
-    @objc public let crypto = VirgilCrypto()
+    @objc public let crypto: VirgilCrypto
+    @objc public let retryOnUnauthorized: Bool
 
-    @objc public init(accessTokenProvider: AccessTokenProvider, keyknoxClient: KeyknoxClient) {
+    @objc public init(accessTokenProvider: AccessTokenProvider, keyknoxClient: KeyknoxClient, crypto: VirgilCrypto = VirgilCrypto(), retryOnUnauthorized: Bool = false) {
         self.accessTokenProvider = accessTokenProvider
         self.keyknoxClient = keyknoxClient
+        self.crypto = crypto
+        self.retryOnUnauthorized = retryOnUnauthorized
 
         super.init()
     }

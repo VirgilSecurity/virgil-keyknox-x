@@ -39,7 +39,7 @@ import VirgilCryptoApiImpl
 import VirgilSDK
 
 @objc(VSKKeyknoxPrivateKeyStorage) open class KeyknoxPrivateKeyStorage: NSObject {
-    @objc public let crypto = VirgilCrypto()
+    @objc public let crypto: VirgilCrypto
     @objc public let keyknoxManager: KeyknoxManager
     @objc public let publicKeys: [VirgilPublicKey]
     @objc public let privateKey: VirgilPrivateKey
@@ -48,105 +48,95 @@ import VirgilSDK
     private let queue = DispatchQueue(label: "KeyknoxPrivateKeyStorageQueue")
     
     @objc public init(keyknoxManager: KeyknoxManager,
-                      publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey) {
+                      publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
+                      crypto: VirgilCrypto = VirgilCrypto()) {
         self.keyknoxManager = keyknoxManager
         self.publicKeys = publicKeys
         self.privateKey = privateKey
+        self.crypto = crypto
 
         super.init()
     }
         
     open func store(privateKey: VirgilPrivateKey, withName name: String) -> GenericOperation<Void> {
-        return CallbackOperation { _, _ in
-            
-            
-        }
-    }
-    
-    open func loadPrivateKey(withName name: String) -> GenericOperation<VirgilPrivateKey> {
-        return CallbackOperation { _, _ in
-            
-        }
-    }
-    
-    //    - (BOOL)existsKeyEntryWithName:(NSString * __nonnull)name;
-    //
-    //    /**
-    //     Removes VSSKeyEntry with given name
-    //     @param name NSString with VSSKeyEntry name
-    //     @param errorPtr NSError pointer to return error if needed
-    //     @return YES if succeeded, NO otherwise
-    //     */
-    //    - (BOOL)deleteKeyEntryWithName:(NSString * __nonnull)name error:(NSError * __nullable * __nullable)errorPtr;
-    //
-    //    /**
-    //     Configuration.
-    //     See VSSKeyStorageConfiguration
-    //     */
-    //    @property (nonatomic, copy, readonly) VSSKeyStorageConfiguration * __nonnull configuration;
-    //
-    //    /**
-    //     Initializer.
-    //
-    //     @param configuration Configuration
-    //     @return initialized VSSKeyStorage instance
-    //     */
-    //    - (instancetype __nonnull)initWithConfiguration:(VSSKeyStorageConfiguration * __nonnull)configuration NS_DESIGNATED_INITIALIZER;
-    //
-    //    /**
-    //     Updates key entry.
-    //
-    //     @param keyEntry New VSSKeyEntry instance
-    //     @param errorPtr NSError pointer to return error if needed
-    //     @return YES if storing succeeded, NO otherwise
-    //     */
-    //    - (BOOL)updateKeyEntry:(VSSKeyEntry * __nonnull)keyEntry error:(NSError * __nullable * __nullable)errorPtr;
-    //
-    //    /**
-    //     Returns all keys in the storage.
-    //
-    //     @param errorPtr NSError pointer to return error if needed
-    //     @return NSArray with all keys
-    //     */
-    //    - (NSArray<VSSKeyEntry *> * __nullable)getAllKeysWithError:(NSError * __nullable * __nullable)errorPtr;
-    //
-    //    /**
-    //     Returns all keys tags in the storage.
-    //
-    //     @param errorPtr NSError pointer to return error if needed
-    //     @return NSArray with all tags
-    //     */
-    //    - (NSArray<VSSKeyAttrs *> * __nullable)getAllKeysAttrsWithError:(NSError * __nullable * __nullable)errorPtr;
-    //
-    //    /**
-    //     Stores multiple key entries.
-    //
-    //     @param keyEntries NSArray with VSSKeyEntry instances to store
-    //     @param errorPtr NSError pointer to return error if needed
-    //     @return YES if storing succeeded, NO otherwise
-    //     */
-    //    - (BOOL)storeKeyEntries:(NSArray<VSSKeyEntry *> * __nonnull)keyEntries error:(NSError * __nullable * __nullable)errorPtr;
-    //
-    //    /**
-    //     Removes multiple key entries with given names.
-    //
-    //     @param names NSArray with names
-    //     @param errorPtr NSError pointer to return error if needed
-    //     @return YES if succeeded, NO otherwise
-    //     */
-    //    - (BOOL)deleteKeyEntriesWithNames:(NSArray<NSString *> * __nonnull)names error:(NSError * __nullable * __nullable)
-    
-    open func removeAllKeys() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            self.keyknoxManager.pushData(Data(), publicKeys: self.publicKeys, privateKey: self.privateKey).start() { result in
-                switch result {
-                case .success(_):
-                    self.cache = [:]
-                    completion((), nil)
+            guard self.cache[name] == nil else {
+                completion(nil, NSError()) // FIXME
+                return
+            }
+            
+            do {
+                try self.queue.sync {
+                    self.cache[name] = privateKey
 
-                case .failure(let error):
-                    completion(nil, error)
+                    let data = try self.serializeDict(self.cache)
+                    
+                    let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
+                    
+                    self.cache = try self.parseData(response.data)
                 }
+                
+                completion((), nil)
+            }
+            catch {
+                completion(nil, error)
+            }
+        }
+    }
+    
+    @objc open func loadKey(withName name: String) -> VirgilPrivateKey? {
+        return self.cache[name]
+    }
+    
+    @objc open func existsKey(withName name: String) -> Bool {
+        return self.cache[name] != nil
+    }
+    
+    open func deleteKey(withName name: String) -> GenericOperation<Void> {
+        return self.deleteKeys(withNames: [name])
+    }
+    
+    open func deleteKeys(withNames names: [String]) -> GenericOperation<Void> {
+        return CallbackOperation { _, completion in
+            for name in names {
+                guard self.cache[name] != nil else {
+                    completion(nil, NSError()) // FIXME
+                    return
+                }
+            }
+            
+            do {
+                try self.queue.sync {
+                    for name in names {
+                        self.cache.removeValue(forKey: name)
+                    }
+                    
+                    let data = try self.serializeDict(self.cache)
+                    
+                    let response = try self.keyknoxManager.pushData(data, publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
+                    
+                    self.cache = try self.parseData(response.data)
+                }
+                
+                completion((), nil)
+            }
+            catch {
+                completion(nil, error)
+            }
+            
+        }
+    }
+
+    open func deleteAllKeys() -> GenericOperation<Void> {
+        return CallbackOperation { _, completion in
+            do {
+                try self.queue.sync {
+                    let _ = try self.keyknoxManager.pushData(Data(), publicKeys: self.publicKeys, privateKey: self.privateKey).startSync().getResult()
+                    self.cache = [:]
+                }
+            }
+            catch {
+                completion(nil, error)
             }
         }
     }

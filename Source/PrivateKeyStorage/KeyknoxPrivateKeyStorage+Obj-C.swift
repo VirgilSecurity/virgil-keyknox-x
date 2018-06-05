@@ -35,10 +35,35 @@
 //
 
 import Foundation
+import VirgilCryptoApiImpl
 
 extension KeyknoxPrivateKeyStorage {
     @objc open func sync(completion: @escaping (Error?) -> ()) {
         self.sync().start { res, error in
+            completion(error)
+        }
+    }
+    
+    @objc open func store(privateKey: VirgilPrivateKey, withName name: String, completion: @escaping (Error?) -> ()) {
+        self.store(privateKey: privateKey, withName: name).start { res, error in
+            completion(error)
+        }
+    }
+    
+    @objc open func deleteKey(withName name: String, completion: @escaping (Error?) -> ()) {
+        self.deleteKey(withName: name).start { res, error in
+            completion(error)
+        }
+    }
+    
+    @objc open func deleteKeys(withNames names: [String], completion: @escaping (Error?) -> ()) {
+        self.deleteKeys(withNames: names).start { res, error in
+            completion(error)
+        }
+    }
+    
+    open func deleteAllKeys(completion: @escaping (Error?) -> ()) {
+        self.deleteAllKeys().start { res, error in
             completion(error)
         }
     }
