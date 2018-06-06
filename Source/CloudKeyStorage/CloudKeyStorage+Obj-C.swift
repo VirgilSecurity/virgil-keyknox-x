@@ -49,7 +49,7 @@ import VirgilCryptoApiImpl
     }
 }
 
-extension KeyknoxPrivateKeyStorage {
+extension CloudKeyStorage {
     @objc open func sync(completion: @escaping (Error?) -> ()) {
         self.sync().start { _, error in
             completion(error)

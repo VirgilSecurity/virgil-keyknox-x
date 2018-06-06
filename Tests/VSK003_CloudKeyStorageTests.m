@@ -44,16 +44,16 @@
 
 static const NSTimeInterval timeout = 20.;
 
-@interface VSK003_KeyknoxPrivateKeyStorageTests : XCTestCase
+@interface VSK003_CloudKeyStorageTests : XCTestCase
 
 @property (nonatomic) TestConfig *config;
 @property (nonatomic) VSMVirgilCrypto *crypto;
-@property (nonatomic) VSKKeyknoxPrivateKeyStorage *keyStorage;
+@property (nonatomic) VSKCloudKeyStorage *keyStorage;
 @property (nonatomic) NSInteger numberOfKeys;
 
 @end
 
-@implementation VSK003_KeyknoxPrivateKeyStorageTests
+@implementation VSK003_CloudKeyStorageTests
 
 - (void)setUp {
     [super setUp];
@@ -76,7 +76,7 @@ static const NSTimeInterval timeout = 20.;
     
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
     
-    self.keyStorage = [[VSKKeyknoxPrivateKeyStorage alloc] initWithKeyknoxManager:keyknoxManager publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey crypto:self.crypto];
+    self.keyStorage = [[VSKCloudKeyStorage alloc] initWithKeyknoxManager:keyknoxManager publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey crypto:self.crypto];
 }
 
 - (void)tearDown {
