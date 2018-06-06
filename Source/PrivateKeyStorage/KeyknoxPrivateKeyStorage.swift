@@ -45,7 +45,7 @@ import VirgilSDK
     @objc public let privateKey: VirgilPrivateKey
     @objc private(set) public var cache: [String: VirgilPrivateKey] = [:]
 
-    private let queue = DispatchQueue(label: "KeyknoxPrivateKeyStorageQueue")
+    private static let queue = DispatchQueue(label: "KeyknoxPrivateKeyStorageQueue")
 
     @objc public init(keyknoxManager: KeyknoxManager,
                       publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
@@ -62,7 +62,7 @@ import VirgilSDK
 extension KeyknoxPrivateKeyStorage {
     open func store(keyEntries: [(key: VirgilPrivateKey, name: String)]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            self.queue.async {
+            KeyknoxPrivateKeyStorage.queue.async {
                 for entry in keyEntries {
                     guard self.cache[entry.name] == nil else {
                         completion(nil, NSError()) // FIXME
@@ -110,7 +110,7 @@ extension KeyknoxPrivateKeyStorage {
 
     open func deleteKeys(withNames names: [String]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            self.queue.async {
+            KeyknoxPrivateKeyStorage.queue.async {
                 for name in names {
                     guard self.cache[name] != nil else {
                         completion(nil, NSError()) // FIXME
@@ -142,7 +142,7 @@ extension KeyknoxPrivateKeyStorage {
 
     open func deleteAllKeys() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            self.queue.async {
+            KeyknoxPrivateKeyStorage.queue.async {
                 do {
                     self.cache = [:]
 
@@ -165,7 +165,7 @@ extension KeyknoxPrivateKeyStorage {
 
     open func sync() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            self.queue.async {
+            KeyknoxPrivateKeyStorage.queue.async {
                 do {
                     let data = try self.keyknoxManager.pullData(publicKeys: self.publicKeys,
                                                                 privateKey: self.privateKey)
