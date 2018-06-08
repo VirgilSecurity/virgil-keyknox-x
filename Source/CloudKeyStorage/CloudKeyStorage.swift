@@ -38,14 +38,32 @@ import Foundation
 import VirgilCryptoApiImpl
 import VirgilSDK
 
+@objc(VSKCloudEntry) public final class CloudEntry: NSObject, Codable {
+    @objc public let name: String
+    @objc public let data: Data
+    @objc public let creationDate: Date
+    @objc public let modificationDate: Date
+    @objc public let meta: [String: String]?
+
+    @objc public init(name: String, data: Data, creationDate: Date, modificationDate: Date, meta: [String: String]?) {
+        self.name = name
+        self.data = data
+        self.creationDate = creationDate
+        self.modificationDate = modificationDate
+        self.meta = meta
+
+        super.init()
+    }
+}
+
 @objc(VSKCloudKeyStorage) open class CloudKeyStorage: NSObject {
     @objc public let crypto: VirgilCrypto
     @objc public let keyknoxManager: KeyknoxManager
     @objc public let publicKeys: [VirgilPublicKey]
     @objc public let privateKey: VirgilPrivateKey
-    @objc private(set) public var cache: [String: VirgilPrivateKey] = [:]
+    @objc private(set) public var cache: [String: CloudEntry] = [:]
 
-    private static let queue = DispatchQueue(label: "KeyknoxPrivateKeyStorageQueue")
+    private static let queue = DispatchQueue(label: "CloudKeyStorageQueue")
 
     @objc public init(keyknoxManager: KeyknoxManager,
                       publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
@@ -60,7 +78,7 @@ import VirgilSDK
 }
 
 extension CloudKeyStorage {
-    open func store(keyEntries: [(key: VirgilPrivateKey, name: String)]) -> GenericOperation<Void> {
+    open func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 for entry in keyEntries {
@@ -71,7 +89,11 @@ extension CloudKeyStorage {
                 }
 
                 for entry in keyEntries {
-                    self.cache[entry.name] = entry.key
+                    let now = Date()
+                    let cloudEntry = CloudEntry(name: entry.name, data: entry.data,
+                                                creationDate: now, modificationDate: now, meta: entry.meta)
+
+                    self.cache[entry.name] = cloudEntry
                 }
 
                 do {
@@ -92,23 +114,23 @@ extension CloudKeyStorage {
         }
     }
 
-    open func store(privateKey: VirgilPrivateKey, withName name: String) -> GenericOperation<Void> {
-        return self.store(keyEntries: [(privateKey, name)])
+    open func storeEntry(data: Data, name: String, meta: [String: String]? = nil) -> GenericOperation<Void> {
+        return self.storeEntries([KeyEntry(name: name, data: data, meta: meta)])
     }
 
-    @objc open func loadKey(withName name: String) -> VirgilPrivateKey? {
+    @objc open func loadEntry(withName name: String) -> CloudEntry? {
         return self.cache[name]
     }
 
-    @objc open func existsKey(withName name: String) -> Bool {
+    @objc open func existsEntry(withName name: String) -> Bool {
         return self.cache[name] != nil
     }
 
-    open func deleteKey(withName name: String) -> GenericOperation<Void> {
-        return self.deleteKeys(withNames: [name])
+    open func deleteEntry(withName name: String) -> GenericOperation<Void> {
+        return self.deleteEntries(withNames: [name])
     }
 
-    open func deleteKeys(withNames names: [String]) -> GenericOperation<Void> {
+    open func deleteEntries(withNames names: [String]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 for name in names {
@@ -140,7 +162,7 @@ extension CloudKeyStorage {
         }
     }
 
-    open func deleteAllKeys() -> GenericOperation<Void> {
+    open func deleteAllEntries() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 do {
@@ -185,19 +207,11 @@ extension CloudKeyStorage {
         }
     }
 
-    private func serializeDict(_ dict: [String: VirgilPrivateKey]) throws -> Data {
-        let exportDict = Dictionary(uniqueKeysWithValues: dict.map {
-            return ($0.key, self.crypto.exportPrivateKey($0.value))
-        })
-
-        return try JSONEncoder().encode(exportDict)
+    private func serializeDict(_ dict: [String: CloudEntry]) throws -> Data {
+        return try JSONEncoder().encode(dict)
     }
 
-    private func parseData(_ data: Data) throws -> [String: VirgilPrivateKey] {
-        let dict = try JSONDecoder().decode(Dictionary<String, Data>.self, from: data)
-
-        return Dictionary(uniqueKeysWithValues: try dict.map {
-            return ($0.key, try self.crypto.importPrivateKey(from: $0.value))
-        })
+    private func parseData(_ data: Data) throws -> [String: CloudEntry] {
+        return try JSONDecoder().decode(Dictionary<String, CloudEntry>.self, from: data)
     }
 }

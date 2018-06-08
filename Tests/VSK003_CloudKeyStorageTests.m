@@ -103,20 +103,35 @@ static const NSTimeInterval timeout = 20.;
     XCTestExpectation *ex = [self expectationWithDescription:@""];
     
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+    NSData *privateKeyData = [self.crypto exportPrivateKey:keyPair.privateKey];
+    NSString *name = @"test";
+    NSDictionary *meta = @{
+                           @"test_key": @"test_value"
+                           };
     
-    [self.keyStorage storeWithPrivateKey:keyPair.privateKey withName:@"test" completion:^(NSError *error) {
+    [self.keyStorage storeEntryWithData:privateKeyData name:name meta:meta completion:^(NSError *error) {
         XCTAssert(error == nil);
         XCTAssert(self.keyStorage.cache.count == 1);
         
-        VSMVirgilPrivateKey *privateKey = [self.keyStorage loadKeyWithName:@"test"];
+        VSKCloudEntry *entry = [self.keyStorage loadEntryWithName:name];
+        VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:entry.data password:nil error:nil];
         XCTAssert([privateKey.identifier isEqualToData:keyPair.privateKey.identifier]);
+        XCTAssert([entry.name isEqualToString:name]);
+        XCTAssert(entry.creationDate.timeIntervalSinceNow < 5);
+        XCTAssert([entry.creationDate isEqualToDate:entry.modificationDate]);
+        XCTAssert([entry.meta isEqualToDictionary:meta]);
         
         [self.keyStorage syncWithCompletion:^(NSError *error) {
             XCTAssert(error == nil);
             XCTAssert(self.keyStorage.cache.count == 1);
             
-            VSMVirgilPrivateKey *privateKey = [self.keyStorage loadKeyWithName:@"test"];
+            VSKCloudEntry *entry = [self.keyStorage loadEntryWithName:name];
+            VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:entry.data password:nil error:nil];
             XCTAssert([privateKey.identifier isEqualToData:keyPair.privateKey.identifier]);
+            XCTAssert([entry.name isEqualToString:name]);
+            XCTAssert(entry.creationDate.timeIntervalSinceNow < 5);
+            XCTAssert([entry.creationDate isEqualToDate:entry.modificationDate]);
+            XCTAssert([entry.meta isEqualToDictionary:meta]);
             
             [ex fulfill];
         }];
@@ -130,25 +145,26 @@ static const NSTimeInterval timeout = 20.;
 
 - (void)test003_existsKey {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
-    
+
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-    
-    [self.keyStorage storeWithPrivateKey:keyPair.privateKey withName:@"test" completion:^(NSError *error) {
+    NSData *privateKeyData = [self.crypto exportPrivateKey:keyPair.privateKey];
+
+    [self.keyStorage storeEntryWithData:privateKeyData name:@"test" meta:nil completion:^(NSError *error) {
         XCTAssert(error == nil);
         XCTAssert(self.keyStorage.cache.count == 1);
-        
-        XCTAssert([self.keyStorage existsKeyWithName:@"test"]);
-        
+
+        XCTAssert([self.keyStorage existsEntryWithName:@"test"]);
+
         [self.keyStorage syncWithCompletion:^(NSError *error) {
             XCTAssert(error == nil);
             XCTAssert(self.keyStorage.cache.count == 1);
-            
-            XCTAssert([self.keyStorage existsKeyWithName:@"test"]);
-            
+
+            XCTAssert([self.keyStorage existsEntryWithName:@"test"]);
+
             [ex fulfill];
         }];
     }];
-    
+
     [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
@@ -157,74 +173,88 @@ static const NSTimeInterval timeout = 20.;
 
 - (void)test004_storeMultipleKeys {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
-    
+
     int numberOfKeys = 100;
-    
+
     NSMutableArray<VSMVirgilPrivateKey *> *privateKeys = [[NSMutableArray alloc] init];
     NSMutableArray<VSKKeyEntry *> *keyEntries = [[NSMutableArray alloc] init];
-    
+
     for (int i = 0; i < numberOfKeys; i++) {
         VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-        
+
         [privateKeys addObject:keyPair.privateKey];
-        
+
         if (i > 0 && i < numberOfKeys - 1) {
             NSString *name = [NSString stringWithFormat:@"%d", i];
-            VSKKeyEntry *keyEntry = [[VSKKeyEntry alloc] initWithKey:keyPair.privateKey name: name];
+            NSData *data = [self.crypto exportPrivateKey:keyPair.privateKey];
+            VSKKeyEntry *keyEntry = [[VSKKeyEntry alloc] initWithName:name data:data meta:nil];
             [keyEntries addObject:keyEntry];
         }
     }
- 
-    [self.keyStorage storeWithPrivateKey:privateKeys[0] withName:@"first" completion:^(NSError *error) {
+
+    NSData *privateKeyData = [self.crypto exportPrivateKey:privateKeys[0]];
+    [self.keyStorage storeEntryWithData:privateKeyData name:@"first" meta:nil completion:^(NSError *error) {
         XCTAssert(error == nil);
         XCTAssert(self.keyStorage.cache.count == 1);
-        XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
-        
-        [self.keyStorage storeWithKeyEntries:keyEntries completion:^(NSError *error) {
+        VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:@"first"].data password:nil error:nil];
+        XCTAssert([privateKey.identifier isEqualToData:privateKeys[0].identifier]);
+
+        [self.keyStorage storeEntries:keyEntries completion:^(NSError *error) {
             XCTAssert(error == nil);
             XCTAssert(self.keyStorage.cache.count == numberOfKeys - 1);
-            XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+            VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:@"first"].data password:nil error:nil];
+            XCTAssert([privateKey.identifier isEqualToData:privateKeys[0].identifier]);
             for (int i = 1; i < numberOfKeys - 1; i++) {
                 NSString *name = [NSString stringWithFormat:@"%d", i];
-                XCTAssert([[self.keyStorage loadKeyWithName:name].identifier isEqualToData:privateKeys[i].identifier]);
+                VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:name].data password:nil error:nil];
+                XCTAssert([privateKey.identifier isEqualToData:privateKeys[i].identifier]);
             }
-            
+
             [self.keyStorage syncWithCompletion:^(NSError *error) {
                 XCTAssert(error == nil);
                 XCTAssert(self.keyStorage.cache.count == numberOfKeys - 1);
-                XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+                VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:@"first"].data password:nil error:nil];
+                XCTAssert([privateKey.identifier isEqualToData:privateKeys[0].identifier]);
                 for (int i = 1; i < numberOfKeys - 1; i++) {
                     NSString *name = [NSString stringWithFormat:@"%d", i];
-                    XCTAssert([[self.keyStorage loadKeyWithName:name].identifier isEqualToData:privateKeys[i].identifier]);
+                    VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:name].data password:nil error:nil];
+                    XCTAssert([privateKey.identifier isEqualToData:privateKeys[i].identifier]);
                 }
-                
-                [self.keyStorage storeWithPrivateKey:privateKeys[numberOfKeys - 1] withName:@"last" completion:^(NSError *error) {
+
+                NSData *privateKeyData = [self.crypto exportPrivateKey:privateKeys[numberOfKeys - 1]];
+                [self.keyStorage storeEntryWithData:privateKeyData name:@"last" meta:nil completion:^(NSError *error) {
                     XCTAssert(error == nil);
                     XCTAssert(self.keyStorage.cache.count == numberOfKeys);
-                    XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+                    VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:@"first"].data password:nil error:nil];
+                    XCTAssert([privateKey.identifier isEqualToData:privateKeys[0].identifier]);
                     for (int i = 1; i < numberOfKeys - 1; i++) {
                         NSString *name = [NSString stringWithFormat:@"%d", i];
-                        XCTAssert([[self.keyStorage loadKeyWithName:name].identifier isEqualToData:privateKeys[i].identifier]);
+                        VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:name].data password:nil error:nil];
+                        XCTAssert([privateKey.identifier isEqualToData:privateKeys[i].identifier]);
                     }
-                    XCTAssert([[self.keyStorage loadKeyWithName:@"last"].identifier isEqualToData:privateKeys[numberOfKeys - 1].identifier]);
-                    
+                    VSMVirgilPrivateKey *lastPrivateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:@"last"].data password:nil error:nil];
+                    XCTAssert([lastPrivateKey.identifier isEqualToData:privateKeys[numberOfKeys - 1].identifier]);
+
                     [self.keyStorage syncWithCompletion:^(NSError *error) {
                         XCTAssert(error == nil);
                         XCTAssert(self.keyStorage.cache.count == numberOfKeys);
-                        XCTAssert([[self.keyStorage loadKeyWithName:@"first"].identifier isEqualToData:privateKeys[0].identifier]);
+                        VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:@"first"].data password:nil error:nil];
+                        XCTAssert([privateKey.identifier isEqualToData:privateKeys[0].identifier]);
                         for (int i = 1; i < numberOfKeys - 1; i++) {
                             NSString *name = [NSString stringWithFormat:@"%d", i];
-                            XCTAssert([[self.keyStorage loadKeyWithName:name].identifier isEqualToData:privateKeys[i].identifier]);
+                            VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:name].data password:nil error:nil];
+                            XCTAssert([privateKey.identifier isEqualToData:privateKeys[i].identifier]);
                         }
-                        XCTAssert([[self.keyStorage loadKeyWithName:@"last"].identifier isEqualToData:privateKeys[numberOfKeys - 1].identifier]);
-                    
+                        VSMVirgilPrivateKey *lastPrivateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage loadEntryWithName:@"last"].data password:nil error:nil];
+                        XCTAssert([lastPrivateKey.identifier isEqualToData:privateKeys[numberOfKeys - 1].identifier]);
+
                         [ex fulfill];
                     }];
                 }];
             }];
         }];
     }];
-    
+
     [self waitForExpectationsWithTimeout:timeout + numberOfKeys / 4 handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
@@ -233,32 +263,33 @@ static const NSTimeInterval timeout = 20.;
 
 - (void)test005_deleteAllKeys {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
-    
+
     int numberOfKeys = 100;
-    
+
     NSMutableArray<VSKKeyEntry *> *keyEntries = [[NSMutableArray alloc] init];
-    
+
     for (int i = 0; i < numberOfKeys; i++) {
         VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
         NSString *name = [NSString stringWithFormat:@"%d", i];
-        VSKKeyEntry *keyEntry = [[VSKKeyEntry alloc] initWithKey:keyPair.privateKey name: name];
+        NSData *privateKeyData = [self.crypto exportPrivateKey:keyPair.privateKey];
+        VSKKeyEntry *keyEntry = [[VSKKeyEntry alloc] initWithName:name data:privateKeyData meta:nil];
         [keyEntries addObject:keyEntry];
     }
-    
-    [self.keyStorage storeWithKeyEntries:keyEntries completion:^(NSError *error) {
-        [self.keyStorage deleteAllKeysWithCompletion:^(NSError *error) {
+
+    [self.keyStorage storeEntries:keyEntries completion:^(NSError *error) {
+        [self.keyStorage deleteAllEntriesWithCompletion:^(NSError *error) {
             XCTAssert(error == nil);
             XCTAssert(self.keyStorage.cache.count == 0);
-            
+
             [self.keyStorage syncWithCompletion:^(NSError *error) {
                 XCTAssert(error == nil);
                 XCTAssert(self.keyStorage.cache.count == 0);
-                
+
                 [ex fulfill];
             }];
         }];
     }];
-    
+
     [self waitForExpectationsWithTimeout:timeout + numberOfKeys / 4 handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
