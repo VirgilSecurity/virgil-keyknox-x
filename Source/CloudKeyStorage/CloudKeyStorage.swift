@@ -38,30 +38,12 @@ import Foundation
 import VirgilCryptoApiImpl
 import VirgilSDK
 
-@objc(VSKCloudEntry) public final class CloudEntry: NSObject, Codable {
-    @objc public let name: String
-    @objc public let data: Data
-    @objc public let creationDate: Date
-    @objc public let modificationDate: Date
-    @objc public let meta: [String: String]?
-
-    @objc public init(name: String, data: Data, creationDate: Date, modificationDate: Date, meta: [String: String]?) {
-        self.name = name
-        self.data = data
-        self.creationDate = creationDate
-        self.modificationDate = modificationDate
-        self.meta = meta
-
-        super.init()
-    }
-}
-
 @objc(VSKCloudKeyStorage) open class CloudKeyStorage: NSObject {
     @objc public let crypto: VirgilCrypto
     @objc public let keyknoxManager: KeyknoxManager
     @objc public let publicKeys: [VirgilPublicKey]
     @objc public let privateKey: VirgilPrivateKey
-    @objc private(set) public var cache: [String: CloudEntry] = [:]
+    private var cache: [String: CloudEntry] = [:]
 
     private static let queue = DispatchQueue(label: "CloudKeyStorageQueue")
 
@@ -117,9 +99,42 @@ extension CloudKeyStorage {
     open func storeEntry(data: Data, name: String, meta: [String: String]? = nil) -> GenericOperation<Void> {
         return self.storeEntries([KeyEntry(name: name, data: data, meta: meta)])
     }
+    
+    open func updateEntry(data: Data, name: String, meta: [String: String]? = nil) -> GenericOperation<Void> {
+        return CallbackOperation { _, completion in
+            CloudKeyStorage.queue.async {
+                let now = Date()
+                let creationDate = self.cache[name]?.creationDate ?? now
+                    
+                let cloudEntry = CloudEntry(name: name, data: data,
+                                            creationDate: creationDate, modificationDate: now, meta: meta)
+                
+                self.cache[name] = cloudEntry
+                
+                do {
+                    let data = try self.serializeDict(self.cache)
+                    
+                    let response = try self.keyknoxManager
+                        .pushData(data, publicKeys: self.publicKeys,
+                                  privateKey: self.privateKey).startSync().getResult()
+                    
+                    self.cache = try self.parseData(response.data)
+                    
+                    completion((), nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
+            }
+        }
+    }
 
-    @objc open func loadEntry(withName name: String) -> CloudEntry? {
+    @objc open func retrieveEntry(withName name: String) -> CloudEntry? {
         return self.cache[name]
+    }
+    
+    @objc open func retrieveAllEntries() -> [CloudEntry] {
+        return [CloudEntry](self.cache.values)
     }
 
     @objc open func existsEntry(withName name: String) -> Bool {
@@ -185,7 +200,7 @@ extension CloudKeyStorage {
         }
     }
 
-    open func sync() -> GenericOperation<Void> {
+    open func retrieveCloudEntries() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 do {

@@ -35,57 +35,21 @@
 //
 
 import Foundation
-import VirgilCryptoApiImpl
 
-@objc(VSKKeyEntry) public final class KeyEntry: NSObject {
+@objc(VSKCloudEntry) public final class CloudEntry: NSObject, Codable {
     @objc public let name: String
     @objc public let data: Data
+    @objc public let creationDate: Date
+    @objc public let modificationDate: Date
     @objc public let meta: [String: String]?
-
-    @objc public init(name: String, data: Data, meta: [String: String]? = nil) {
+    
+    @objc public init(name: String, data: Data, creationDate: Date, modificationDate: Date, meta: [String: String]?) {
         self.name = name
         self.data = data
+        self.creationDate = creationDate
+        self.modificationDate = modificationDate
         self.meta = meta
-
+        
         super.init()
-    }
-}
-
-extension CloudKeyStorage {
-    @objc open func retrieveCloudEntries(completion: @escaping (Error?) -> ()) {
-        self.retrieveCloudEntries().start { _, error in
-            completion(error)
-        }
-    }
-
-    @objc open func storeEntries(_ keyEntries: [KeyEntry], completion: @escaping (Error?) -> ()) {
-        self.storeEntries(keyEntries).start { _, error in
-            completion(error)
-        }
-    }
-
-    @objc open func storeEntry(data: Data, name: String, meta: [String: String]? = nil,
-                               completion: @escaping (Error?) -> ()) {
-        self.storeEntry(data: data, name: name, meta: meta).start { _, error in
-            completion(error)
-        }
-    }
-
-    @objc open func deleteEntry(withName name: String, completion: @escaping (Error?) -> ()) {
-        self.deleteEntry(withName: name).start { _, error in
-            completion(error)
-        }
-    }
-
-    @objc open func deleteEntries(withNames names: [String], completion: @escaping (Error?) -> ()) {
-        self.deleteEntries(withNames: names).start { _, error in
-            completion(error)
-        }
-    }
-
-    @objc open func deleteAllEntries(completion: @escaping (Error?) -> ()) {
-        self.deleteAllEntries().start { _, error in
-            completion(error)
-        }
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42011DBE20CACC5400B84755 /* CloudEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011DBD20CACC5400B84755 /* CloudEntry.swift */; };
 		425EF8AF20C5368400CE1D4F /* KeyknoxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88920C5368400CE1D4F /* KeyknoxManager.swift */; };
 		425EF8B020C5368400CE1D4F /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */; };
 		425EF8B220C5369100CE1D4F /* KeyknoxManager+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */; };
@@ -356,6 +357,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		42011DBD20CACC5400B84755 /* CloudEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudEntry.swift; sourceTree = "<group>"; };
+		42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSK004_SyncKeyStorageTests.swift; sourceTree = "<group>"; };
 		425EF88920C5368400CE1D4F /* KeyknoxManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxManager.swift; sourceTree = "<group>"; };
 		425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Queries.swift"; sourceTree = "<group>"; };
 		425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Operations.swift"; sourceTree = "<group>"; };
@@ -425,6 +428,7 @@
 			children = (
 				425EF95120C8156D00CE1D4F /* CloudKeyStorage.swift */,
 				425EF95420C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift */,
+				42011DBD20CACC5400B84755 /* CloudEntry.swift */,
 			);
 			path = CloudKeyStorage;
 			sourceTree = "<group>";
@@ -476,6 +480,7 @@
 				42B5E0B620C01C9B0067F13E /* VSK001_ClientTests.m */,
 				425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */,
 				425EF8CF20C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m */,
+				42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -644,6 +649,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = VSK;
+				LastSwiftUpdateCheck = 0940;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Virgil Security";
 				TargetAttributes = {
@@ -663,6 +669,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 42B5DFEB20C005300067F13E;
 			productRefGroup = 42B5DFF620C005300067F13E /* Products */;
@@ -971,6 +978,7 @@
 				425EF95820C8171B00CE1D4F /* SyncKeyStorage.swift in Sources */,
 				425EF95520C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift in Sources */,
 				425EF8B220C5369100CE1D4F /* KeyknoxManager+Operations.swift in Sources */,
+				42011DBE20CACC5400B84755 /* CloudEntry.swift in Sources */,
 				42B5E02720C011380067F13E /* KeynoxClient+Queries.swift in Sources */,
 				425EF95320C8156E00CE1D4F /* CloudKeyStorage.swift in Sources */,
 				42B5E02820C011380067F13E /* KeyknoxData.swift in Sources */,

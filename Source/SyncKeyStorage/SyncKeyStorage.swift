@@ -37,11 +37,46 @@
 import Foundation
 import VirgilSDK
 
+protocol CloudKeyStorageProtocol {
+    func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<Void>
+    func storeEntry(data: Data, name: String, meta: [String: String]?) -> GenericOperation<Void>
+    func updateEntry(data: Data, name: String, meta: [String: String]?) -> GenericOperation<Void>
+    func retrieveAllEntries() -> [CloudEntry]
+    func retrieveEntry(withName name: String) -> CloudEntry?
+    func existsEntry(withName name: String) -> Bool
+    func deleteEntry(withName name: String) -> GenericOperation<Void>
+    func deleteEntries(withNames names: [String]) -> GenericOperation<Void>
+    func deleteAllEntries() -> GenericOperation<Void>
+    func retrieveCloudEntries() -> GenericOperation<Void>
+}
+
+extension CloudKeyStorage: CloudKeyStorageProtocol { }
+
+protocol KeychainStorageProtocol {
+    func store(data: Data, withName name: String, meta: [String: String]?) throws -> KeychainEntry
+    func updateEntry(withName name: String, data: Data, meta: [String: String]?) throws
+    func retrieveEntry(withName name: String) throws -> KeychainEntry
+    func retrieveAllEntries() throws -> [KeychainEntry]
+    func deleteEntry(withName name: String) throws
+}
+
+extension KeychainStorage: KeychainStorageProtocol { }
+
 @objc(VSKSyncKeyStorage) open class SyncKeyStorage: NSObject {
-    private let keychainStorage: KeychainStorage
-    private let cloudKeyStorage: CloudKeyStorage
+    @objc public static let keyknoxMetaKey = "keyknox"
+    @objc public static let keyknoxMetaValue = "1"
+    
+    private let keychainStorage: KeychainStorageProtocol
+    private let cloudKeyStorage: CloudKeyStorageProtocol
 
     private static let queue = DispatchQueue(label: "SyncKeyStorageQueue")
+    
+    internal init(keychainStorage: KeychainStorageProtocol, cloudKeyStorage: CloudKeyStorageProtocol) {
+        self.keychainStorage = keychainStorage
+        self.cloudKeyStorage = cloudKeyStorage
+        
+        super.init()
+    }
 
     @objc public init(cloudKeyStorage: CloudKeyStorage) throws {
         let configuration = try KeychainStorageParams.makeKeychainStorageParams()
@@ -55,12 +90,13 @@ import VirgilSDK
         return CallbackOperation { _, completion in
             SyncKeyStorage.queue.async {
                 do {
-                    try self.cloudKeyStorage.sync().startSync().getResult()
+                    // FIXME: Optimize to run concurrently
+                    try self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
 
                     let keychainEntries = try self.keychainStorage.retrieveAllEntries()
                         .compactMap { entry -> (KeychainEntry?) in
                             // FIXME
-                            guard let meta = entry.meta, meta["keyknox"] == "1" else {
+                            guard let meta = entry.meta, meta[SyncKeyStorage.keyknoxMetaKey] == SyncKeyStorage.keyknoxMetaValue else {
                                 return nil
                             }
 
@@ -68,7 +104,7 @@ import VirgilSDK
                         }
 
                     let keychainSet = Set<String>(keychainEntries.map { $0.name })
-                    let cloudSet = Set<String>(self.cloudKeyStorage.cache.keys)
+                    let cloudSet = Set<String>(self.cloudKeyStorage.retrieveAllEntries().map { $0.name })
 
                     let entriesToDelete = [String](keychainSet.subtracting(cloudSet))
                     let entriesToStore = [String](cloudSet.subtracting(keychainSet))
@@ -79,24 +115,41 @@ import VirgilSDK
                     }
 
                     try entriesToStore.forEach {
-                        guard let cloudEntry = self.cloudKeyStorage.cache[$0] else {
+                        guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: $0) else {
                             throw NSError() // FIXME
                         }
+                        
+                        let meta: [String: String]?
+                        if var cloudMeta = cloudEntry.meta {
+                            cloudMeta[SyncKeyStorage.keyknoxMetaKey] = SyncKeyStorage.keyknoxMetaValue
+                            meta = cloudMeta
+                        }
+                        else {
+                            meta = nil
+                        }
 
-                        // FIXME
-//                        self.keychainStorage.store(data: cloudEntry.,
-//                            withName: <#T##String#>, meta: <#T##[String : String]?#>)
+                        let _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
                     }
 
                     // Determine newest version and either update keychain entry or upload newer version to cloud
                     try entriesToCompare.forEach { name in
                         guard let keychainEntry = keychainEntries.first(where: { $0.name == name }),
-                            let cloudEntry = self.cloudKeyStorage.cache[name] else {
+                            let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: name) else {
                                 throw NSError() // FIXME
                         }
 
-                        // FIXME
-//                        if keychainEntry.modificationDate > cloudEntry.
+                        if keychainEntry.modificationDate < cloudEntry.modificationDate {
+                            let meta: [String: String]?
+                            if var cloudMeta = cloudEntry.meta {
+                                cloudMeta[SyncKeyStorage.keyknoxMetaKey] = SyncKeyStorage.keyknoxMetaValue
+                                meta = cloudMeta
+                            }
+                            else {
+                                meta = nil
+                            }
+                            
+                            try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
+                        }
                     }
 
                     completion((), nil)
