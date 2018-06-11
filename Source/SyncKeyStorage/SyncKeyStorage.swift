@@ -37,7 +37,7 @@
 import Foundation
 import VirgilSDK
 
-protocol CloudKeyStorageProtocol {
+public protocol CloudKeyStorageProtocol {
     func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<Void>
     func storeEntry(data: Data, name: String, meta: [String: String]?) -> GenericOperation<Void>
     func updateEntry(data: Data, name: String, meta: [String: String]?) -> GenericOperation<Void>
@@ -52,7 +52,7 @@ protocol CloudKeyStorageProtocol {
 
 extension CloudKeyStorage: CloudKeyStorageProtocol { }
 
-protocol KeychainStorageProtocol {
+public protocol KeychainStorageProtocol {
     func store(data: Data, withName name: String, meta: [String: String]?) throws -> KeychainEntry
     func updateEntry(withName name: String, data: Data, meta: [String: String]?) throws
     func retrieveEntry(withName name: String) throws -> KeychainEntry
@@ -65,16 +65,16 @@ extension KeychainStorage: KeychainStorageProtocol { }
 @objc(VSKSyncKeyStorage) open class SyncKeyStorage: NSObject {
     @objc public static let keyknoxMetaKey = "keyknox"
     @objc public static let keyknoxMetaValue = "1"
-    
+
     private let keychainStorage: KeychainStorageProtocol
     private let cloudKeyStorage: CloudKeyStorageProtocol
 
     private static let queue = DispatchQueue(label: "SyncKeyStorageQueue")
-    
+
     internal init(keychainStorage: KeychainStorageProtocol, cloudKeyStorage: CloudKeyStorageProtocol) {
         self.keychainStorage = keychainStorage
         self.cloudKeyStorage = cloudKeyStorage
-        
+
         super.init()
     }
 
@@ -96,8 +96,9 @@ extension KeychainStorage: KeychainStorageProtocol { }
                     let keychainEntries = try self.keychainStorage.retrieveAllEntries()
                         .compactMap { entry -> (KeychainEntry?) in
                             // FIXME
-                            guard let meta = entry.meta, meta[SyncKeyStorage.keyknoxMetaKey] == SyncKeyStorage.keyknoxMetaValue else {
-                                return nil
+                            guard let meta = entry.meta,
+                                meta[SyncKeyStorage.keyknoxMetaKey] == SyncKeyStorage.keyknoxMetaValue else {
+                                    return nil
                             }
 
                             return entry
@@ -110,53 +111,63 @@ extension KeychainStorage: KeychainStorageProtocol { }
                     let entriesToStore = [String](cloudSet.subtracting(keychainSet))
                     let entriesToCompare = [String](keychainSet.intersection(cloudSet))
 
-                    try entriesToDelete.forEach {
-                        try self.keychainStorage.deleteEntry(withName: $0)
-                    }
-
-                    try entriesToStore.forEach {
-                        guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: $0) else {
-                            throw NSError() // FIXME
-                        }
-                        
-                        let meta: [String: String]?
-                        if var cloudMeta = cloudEntry.meta {
-                            cloudMeta[SyncKeyStorage.keyknoxMetaKey] = SyncKeyStorage.keyknoxMetaValue
-                            meta = cloudMeta
-                        }
-                        else {
-                            meta = [SyncKeyStorage.keyknoxMetaKey: SyncKeyStorage.keyknoxMetaValue]
-                        }
-
-                        let _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
-                    }
-
-                    // Determine newest version and either update keychain entry or upload newer version to cloud
-                    try entriesToCompare.forEach { name in
-                        guard let keychainEntry = keychainEntries.first(where: { $0.name == name }),
-                            let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: name) else {
-                                throw NSError() // FIXME
-                        }
-
-                        if keychainEntry.modificationDate < cloudEntry.modificationDate {
-                            let meta: [String: String]?
-                            if var cloudMeta = cloudEntry.meta {
-                                cloudMeta[SyncKeyStorage.keyknoxMetaKey] = SyncKeyStorage.keyknoxMetaValue
-                                meta = cloudMeta
-                            }
-                            else {
-                                meta = nil
-                            }
-                            
-                            try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
-                        }
-                    }
+                    try self.deleteEntries(entriesToDelete)
+                    try self.storeEntries(entriesToStore)
+                    try self.compareEntries(entriesToCompare, keychainEntries: keychainEntries)
 
                     completion((), nil)
                 }
                 catch {
                     completion(nil, error)
                 }
+            }
+        }
+    }
+
+    private func deleteEntries(_ entriesToDelete: [String]) throws {
+        try entriesToDelete.forEach {
+            try self.keychainStorage.deleteEntry(withName: $0)
+        }
+    }
+
+    private func storeEntries(_ entriesToStore: [String]) throws {
+        try entriesToStore.forEach {
+            guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: $0) else {
+                throw NSError() // FIXME
+            }
+
+            let meta: [String: String]?
+            if var cloudMeta = cloudEntry.meta {
+                cloudMeta[SyncKeyStorage.keyknoxMetaKey] = SyncKeyStorage.keyknoxMetaValue
+                meta = cloudMeta
+            }
+            else {
+                meta = [SyncKeyStorage.keyknoxMetaKey: SyncKeyStorage.keyknoxMetaValue]
+            }
+
+            _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
+        }
+    }
+
+    private func compareEntries(_ entriesToCompare: [String], keychainEntries: [KeychainEntry]) throws {
+        // Determine newest version and either update keychain entry or upload newer version to cloud
+        try entriesToCompare.forEach { name in
+            guard let keychainEntry = keychainEntries.first(where: { $0.name == name }),
+                let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: name) else {
+                    throw NSError() // FIXME
+            }
+
+            if keychainEntry.modificationDate < cloudEntry.modificationDate {
+                let meta: [String: String]?
+                if var cloudMeta = cloudEntry.meta {
+                    cloudMeta[SyncKeyStorage.keyknoxMetaKey] = SyncKeyStorage.keyknoxMetaValue
+                    meta = cloudMeta
+                }
+                else {
+                    meta = [SyncKeyStorage.keyknoxMetaKey: SyncKeyStorage.keyknoxMetaValue]
+                }
+
+                try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
             }
         }
     }

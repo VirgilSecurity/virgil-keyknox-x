@@ -13,7 +13,6 @@
 		42011E6020CE8FD400B84755 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42011E5E20CE8FD400B84755 /* Main.storyboard */; };
 		42011E6220CE8FD500B84755 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42011E6120CE8FD500B84755 /* Assets.xcassets */; };
 		42011E6520CE8FD500B84755 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42011E6320CE8FD500B84755 /* LaunchScreen.storyboard */; };
-		42011E9520CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011E9420CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift */; };
 		42011E9720CE8FE400B84755 /* VirgilSDKKeyknox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; };
 		42011E9F20CE8FEE00B84755 /* VSK004_SyncKeyStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */; };
 		42011EA020CE901900B84755 /* TestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E0BB20C01E5A0067F13E /* TestConfig.swift */; };
@@ -412,8 +411,6 @@
 		42011E6420CE8FD500B84755 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		42011E6620CE8FD500B84755 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		42011E9220CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VirgilSDKKeyknox AppTests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		42011E9420CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirgilSDKKeyknox_AppTests_iOS.swift; sourceTree = "<group>"; };
-		42011E9620CE8FE400B84755 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		425EF88920C5368400CE1D4F /* KeyknoxManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxManager.swift; sourceTree = "<group>"; };
 		425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Queries.swift"; sourceTree = "<group>"; };
 		425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Operations.swift"; sourceTree = "<group>"; };
@@ -495,15 +492,6 @@
 			path = "KeyknoxTestApp iOS";
 			sourceTree = "<group>";
 		};
-		42011E9320CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS */ = {
-			isa = PBXGroup;
-			children = (
-				42011E9420CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift */,
-				42011E9620CE8FE400B84755 /* Info.plist */,
-			);
-			path = "VirgilSDKKeyknox AppTests iOS";
-			sourceTree = "<group>";
-		};
 		425EF88820C5368400CE1D4F /* KeyknoxManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -543,7 +531,6 @@
 				42B5E01A20C011380067F13E /* Source */,
 				42B5E01620C00E320067F13E /* Tests */,
 				42011E5920CE8FD400B84755 /* KeyknoxTestApp iOS */,
-				42011E9320CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS */,
 				42B5DFF620C005300067F13E /* Products */,
 				42B5E0A620C0117E0067F13E /* Frameworks */,
 			);
@@ -1144,7 +1131,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				42011E9F20CE8FEE00B84755 /* VSK004_SyncKeyStorageTests.swift in Sources */,
-				42011E9520CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift in Sources */,
 				42011EA020CE901900B84755 /* TestConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

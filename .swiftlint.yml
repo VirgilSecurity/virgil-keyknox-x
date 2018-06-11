@@ -39,6 +39,7 @@ opt_in_rules:
 excluded: 
   - Carthage
   - Tests
+  - KeyknoxTestApp iOS
 
 warning_threshold: 15
 

@@ -42,14 +42,14 @@ import Foundation
     @objc public let creationDate: Date
     @objc public let modificationDate: Date
     @objc public let meta: [String: String]?
-    
+
     @objc public init(name: String, data: Data, creationDate: Date, modificationDate: Date, meta: [String: String]?) {
         self.name = name
         self.data = data
         self.creationDate = creationDate
         self.modificationDate = modificationDate
         self.meta = meta
-        
+
         super.init()
     }
 }

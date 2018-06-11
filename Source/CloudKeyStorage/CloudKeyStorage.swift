@@ -99,27 +99,27 @@ extension CloudKeyStorage {
     open func storeEntry(data: Data, name: String, meta: [String: String]? = nil) -> GenericOperation<Void> {
         return self.storeEntries([KeyEntry(name: name, data: data, meta: meta)])
     }
-    
+
     open func updateEntry(data: Data, name: String, meta: [String: String]? = nil) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 let now = Date()
                 let creationDate = self.cache[name]?.creationDate ?? now
-                    
+
                 let cloudEntry = CloudEntry(name: name, data: data,
                                             creationDate: creationDate, modificationDate: now, meta: meta)
-                
+
                 self.cache[name] = cloudEntry
-                
+
                 do {
                     let data = try self.serializeDict(self.cache)
-                    
+
                     let response = try self.keyknoxManager
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
-                    
+
                     self.cache = try self.parseData(response.data)
-                    
+
                     completion((), nil)
                 }
                 catch {
@@ -132,7 +132,7 @@ extension CloudKeyStorage {
     @objc open func retrieveEntry(withName name: String) -> CloudEntry? {
         return self.cache[name]
     }
-    
+
     @objc open func retrieveAllEntries() -> [CloudEntry] {
         return [CloudEntry](self.cache.values)
     }
