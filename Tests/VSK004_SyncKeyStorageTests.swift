@@ -41,45 +41,92 @@ import VirgilSDK
 import VirgilCryptoApiImpl
 
 class VSK004_SyncKeyStorageTests: XCTestCase {
-    func test001() {
+    private var syncKeyStorage: SyncKeyStorage!
+    private var keychainStorage: KeychainStorage!
+    private var cloudKeyStorage: CloudKeyStorage!
+    
+    override func setUp() {
+        super.setUp()
+        
         let config = TestConfig.readFromBundle()
         let crypto = VirgilCrypto()
         let apiKey = try! crypto.importPrivateKey(from: Data(base64Encoded: config.ApiPrivateKey)!)
         
         let generator = JwtGenerator(apiKey: apiKey, apiPublicKeyIdentifier: config.ApiPublicKeyId, accessTokenSigner: VirgilAccessTokenSigner(), appId: config.AppId, ttl: 100)
-        let provider = GeneratorJwtProvider(jwtGenerator: generator, defaultIdentity: "test")
+        let identity = NSUUID().uuidString
+        let provider = GeneratorJwtProvider(jwtGenerator: generator, defaultIdentity: identity)
         let client = KeyknoxClient(serviceUrl: URL(string: config.ServiceURL)!)
         
         let keyknoxManager = KeyknoxManager(accessTokenProvider: provider, keyknoxClient: client)
         
         let keyPair = try! crypto.generateKeyPair()
         
-        let cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager, publicKeys: [keyPair.publicKey], privateKey: keyPair.privateKey)
+        self.cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager, publicKeys: [keyPair.publicKey], privateKey: keyPair.privateKey)
         
-        let syncKeyStorage = try! SyncKeyStorage(cloudKeyStorage: cloudKeyStorage)
-        
+        self.syncKeyStorage = try! SyncKeyStorage(cloudKeyStorage: self.cloudKeyStorage)
+
         let params = try! KeychainStorageParams.makeKeychainStorageParams()
-        let keychainStorage = KeychainStorage(storageParams: params)
+        self.keychainStorage = KeychainStorage(storageParams: params)
         
-        try! keychainStorage.deleteAllEntries()
+        try! self.keychainStorage.deleteAllEntries()
+    }
+    
+    func test001_syncStorage() {
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        XCTAssert(try! self.keychainStorage.retrieveAllEntries().count == 0)
+
+        var keyEntries = [VirgilSDKKeyknox.KeyEntry]()
         
-        let _ = try! syncKeyStorage.sync().startSync().getResult()
-        XCTAssert(try! keychainStorage.retrieveAllEntries().count == 0)
-        
-        let data = NSUUID().uuidString.data(using: .utf8)!
-        let name = NSUUID().uuidString
-        
-        let keyEntry = KeyEntry(name: name, data: data)
-        
-        let _ = try! cloudKeyStorage.storeEntries([keyEntry]).startSync().getResult()
-        let keychainEntries = try! keychainStorage.retrieveAllEntries()
+        for _ in 0..<3 {
+            let data = NSUUID().uuidString.data(using: .utf8)!
+            let name = NSUUID().uuidString
+            
+            let keyEntry = KeyEntry(name: name, data: data)
+            
+            keyEntries.append(keyEntry)
+        }
+
+        let _ = try! self.cloudKeyStorage.storeEntries([keyEntries[0]]).startSync().getResult()
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        let keychainEntries = try! self.keychainStorage.retrieveAllEntries()
         XCTAssert(keychainEntries.count == 1)
-        let keychainEntry = keychainEntries[0]
+        XCTAssert(keychainEntries[0].name == keyEntries[0].name)
+        XCTAssert(keychainEntries[0].data == keyEntries[0].data)
 
         // FIXME
-//        keychainEntry.creationDate, modificationDate
+        //        keychainEntry.creationDate  modificationDate
+
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        let keychainEntries2 = try! self.keychainStorage.retrieveAllEntries()
+        XCTAssert(keychainEntries2.count == 1)
+        XCTAssert(keychainEntries2[0].name == keyEntries[0].name)
+        XCTAssert(keychainEntries2[0].data == keyEntries[0].data)
         
-        XCTAssert(keychainEntry.name == name)
-        XCTAssert(keychainEntry.data == data)
+        let _ = try! self.cloudKeyStorage.storeEntries([keyEntries[1]]).startSync().getResult()
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        let keychainEntries3 = try! self.keychainStorage.retrieveAllEntries()
+        XCTAssert(keychainEntries3.count == 2)
+        XCTAssert(keychainEntries3[1].name == keyEntries[1].name)
+        XCTAssert(keychainEntries3[1].data == keyEntries[1].data)
+        
+        try! self.keychainStorage.deleteAllEntries()
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        let keychainEntries4 = try! self.keychainStorage.retrieveAllEntries()
+        XCTAssert(keychainEntries4.count == 2)
+        XCTAssert(keychainEntries4[0].name == keyEntries[0].name)
+        XCTAssert(keychainEntries4[0].data == keyEntries[0].data)
+        XCTAssert(keychainEntries4[1].name == keyEntries[1].name)
+        XCTAssert(keychainEntries4[1].data == keyEntries[1].data)
+
+        let _ = try! self.cloudKeyStorage.deleteEntry(withName: keyEntries[0].name).startSync().getResult()
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        let keychainEntries5 = try! self.keychainStorage.retrieveAllEntries()
+        XCTAssert(keychainEntries5.count == 1)
+        XCTAssert(keychainEntries5[0].name == keyEntries[1].name)
+        XCTAssert(keychainEntries5[0].data == keyEntries[1].data)
+        
+        let _ = try! self.cloudKeyStorage.deleteAllEntries().startSync().getResult()
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        XCTAssert(try! self.keychainStorage.retrieveAllEntries().count == 0)
     }
 }

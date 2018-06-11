@@ -8,6 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		42011DBE20CACC5400B84755 /* CloudEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011DBD20CACC5400B84755 /* CloudEntry.swift */; };
+		42011E5B20CE8FD400B84755 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011E5A20CE8FD400B84755 /* AppDelegate.swift */; };
+		42011E5D20CE8FD400B84755 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011E5C20CE8FD400B84755 /* ViewController.swift */; };
+		42011E6020CE8FD400B84755 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42011E5E20CE8FD400B84755 /* Main.storyboard */; };
+		42011E6220CE8FD500B84755 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42011E6120CE8FD500B84755 /* Assets.xcassets */; };
+		42011E6520CE8FD500B84755 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42011E6320CE8FD500B84755 /* LaunchScreen.storyboard */; };
+		42011E9520CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011E9420CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift */; };
+		42011E9720CE8FE400B84755 /* VirgilSDKKeyknox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; };
+		42011E9F20CE8FEE00B84755 /* VSK004_SyncKeyStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */; };
+		42011EA020CE901900B84755 /* TestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E0BB20C01E5A0067F13E /* TestConfig.swift */; };
+		42011EA120CE901B00B84755 /* TestConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42B5E0BA20C01E5A0067F13E /* TestConfig.plist */; };
+		42011EA320CE905F00B84755 /* VirgilCrypto.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E08320C011690067F13E /* VirgilCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42011EA420CE905F00B84755 /* VirgilCryptoApiImpl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E09120C011690067F13E /* VirgilCryptoApiImpl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42011EA520CE905F00B84755 /* VSCCrypto.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E09F20C011690067F13E /* VSCCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42011EA620CE905F00B84755 /* VirgilCryptoAPI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E05C20C011640067F13E /* VirgilCryptoAPI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42011EA720CE905F00B84755 /* VirgilSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E03B20C0115D0067F13E /* VirgilSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42011EA820CE906E00B84755 /* VirgilSDKKeyknox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		425EF8AF20C5368400CE1D4F /* KeyknoxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88920C5368400CE1D4F /* KeyknoxManager.swift */; };
 		425EF8B020C5368400CE1D4F /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */; };
 		425EF8B220C5369100CE1D4F /* KeyknoxManager+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */; };
@@ -43,6 +59,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		42011E9820CE8FE400B84755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42B5DFEC20C005300067F13E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42B5DFF420C005300067F13E;
+			remoteInfo = "VirgilSDKKeyknox iOS";
+		};
+		42011E9D20CE8FE800B84755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42B5DFEC20C005300067F13E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42011E5720CE8FD400B84755;
+			remoteInfo = "KeyknoxTestApp iOS";
+		};
 		42B5E01120C00DB80067F13E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 42B5DFEC20C005300067F13E /* Project object */;
@@ -340,6 +370,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		42011EA220CE904A00B84755 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				42011EA820CE906E00B84755 /* VirgilSDKKeyknox.framework in CopyFiles */,
+				42011EA320CE905F00B84755 /* VirgilCrypto.framework in CopyFiles */,
+				42011EA420CE905F00B84755 /* VirgilCryptoApiImpl.framework in CopyFiles */,
+				42011EA520CE905F00B84755 /* VSCCrypto.framework in CopyFiles */,
+				42011EA620CE905F00B84755 /* VirgilCryptoAPI.framework in CopyFiles */,
+				42011EA720CE905F00B84755 /* VirgilSDK.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		42B5E0C520C0252C0067F13E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -359,6 +404,16 @@
 /* Begin PBXFileReference section */
 		42011DBD20CACC5400B84755 /* CloudEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudEntry.swift; sourceTree = "<group>"; };
 		42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSK004_SyncKeyStorageTests.swift; sourceTree = "<group>"; };
+		42011E5820CE8FD400B84755 /* KeyknoxTestApp iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KeyknoxTestApp iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		42011E5A20CE8FD400B84755 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		42011E5C20CE8FD400B84755 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		42011E5F20CE8FD400B84755 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		42011E6120CE8FD500B84755 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		42011E6420CE8FD500B84755 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		42011E6620CE8FD500B84755 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		42011E9220CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VirgilSDKKeyknox AppTests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		42011E9420CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirgilSDKKeyknox_AppTests_iOS.swift; sourceTree = "<group>"; };
+		42011E9620CE8FE400B84755 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		425EF88920C5368400CE1D4F /* KeyknoxManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxManager.swift; sourceTree = "<group>"; };
 		425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Queries.swift"; sourceTree = "<group>"; };
 		425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Operations.swift"; sourceTree = "<group>"; };
@@ -384,6 +439,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		42011E5520CE8FD400B84755 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		42011E8F20CE8FE400B84755 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42011E9720CE8FE400B84755 /* VirgilSDKKeyknox.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		42B5DFF120C005300067F13E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -412,6 +482,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		42011E5920CE8FD400B84755 /* KeyknoxTestApp iOS */ = {
+			isa = PBXGroup;
+			children = (
+				42011E5A20CE8FD400B84755 /* AppDelegate.swift */,
+				42011E5C20CE8FD400B84755 /* ViewController.swift */,
+				42011E5E20CE8FD400B84755 /* Main.storyboard */,
+				42011E6120CE8FD500B84755 /* Assets.xcassets */,
+				42011E6320CE8FD500B84755 /* LaunchScreen.storyboard */,
+				42011E6620CE8FD500B84755 /* Info.plist */,
+			);
+			path = "KeyknoxTestApp iOS";
+			sourceTree = "<group>";
+		};
+		42011E9320CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS */ = {
+			isa = PBXGroup;
+			children = (
+				42011E9420CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift */,
+				42011E9620CE8FE400B84755 /* Info.plist */,
+			);
+			path = "VirgilSDKKeyknox AppTests iOS";
+			sourceTree = "<group>";
+		};
 		425EF88820C5368400CE1D4F /* KeyknoxManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -450,6 +542,8 @@
 				42B5DFF720C005300067F13E /* VirgilSDKKeyknox */,
 				42B5E01A20C011380067F13E /* Source */,
 				42B5E01620C00E320067F13E /* Tests */,
+				42011E5920CE8FD400B84755 /* KeyknoxTestApp iOS */,
+				42011E9320CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS */,
 				42B5DFF620C005300067F13E /* Products */,
 				42B5E0A620C0117E0067F13E /* Frameworks */,
 			);
@@ -460,6 +554,8 @@
 			children = (
 				42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */,
 				42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */,
+				42011E5820CE8FD400B84755 /* KeyknoxTestApp iOS.app */,
+				42011E9220CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -600,6 +696,43 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		42011E5720CE8FD400B84755 /* KeyknoxTestApp iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42011E8D20CE8FD500B84755 /* Build configuration list for PBXNativeTarget "KeyknoxTestApp iOS" */;
+			buildPhases = (
+				42011E5420CE8FD400B84755 /* Sources */,
+				42011E5520CE8FD400B84755 /* Frameworks */,
+				42011E5620CE8FD400B84755 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "KeyknoxTestApp iOS";
+			productName = "KeyknoxTestApp iOS";
+			productReference = 42011E5820CE8FD400B84755 /* KeyknoxTestApp iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		42011E9120CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42011E9A20CE8FE400B84755 /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox AppTests iOS" */;
+			buildPhases = (
+				42011E8E20CE8FE400B84755 /* Sources */,
+				42011E8F20CE8FE400B84755 /* Frameworks */,
+				42011E9020CE8FE400B84755 /* Resources */,
+				42011EA220CE904A00B84755 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				42011E9920CE8FE400B84755 /* PBXTargetDependency */,
+				42011E9E20CE8FE800B84755 /* PBXTargetDependency */,
+			);
+			name = "VirgilSDKKeyknox AppTests iOS";
+			productName = "VirgilSDKKeyknox AppTests iOS";
+			productReference = 42011E9220CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 42B5DFFD20C005300067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox iOS" */;
@@ -653,6 +786,13 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Virgil Security";
 				TargetAttributes = {
+					42011E5720CE8FD400B84755 = {
+						CreatedOnToolsVersion = 9.4;
+					};
+					42011E9120CE8FE400B84755 = {
+						CreatedOnToolsVersion = 9.4;
+						TestTargetID = 42011E5720CE8FD400B84755;
+					};
 					42B5DFF420C005300067F13E = {
 						CreatedOnToolsVersion = 9.3.1;
 						LastSwiftMigration = 0940;
@@ -692,6 +832,8 @@
 			targets = (
 				42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */,
 				42B5E00A20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests */,
+				42011E5720CE8FD400B84755 /* KeyknoxTestApp iOS */,
+				42011E9120CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -952,6 +1094,24 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		42011E5620CE8FD400B84755 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42011E6520CE8FD500B84755 /* LaunchScreen.storyboard in Resources */,
+				42011E6220CE8FD500B84755 /* Assets.xcassets in Resources */,
+				42011E6020CE8FD400B84755 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		42011E9020CE8FE400B84755 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42011EA120CE901B00B84755 /* TestConfig.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		42B5DFF320C005300067F13E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -970,6 +1130,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		42011E5420CE8FD400B84755 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42011E5D20CE8FD400B84755 /* ViewController.swift in Sources */,
+				42011E5B20CE8FD400B84755 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		42011E8E20CE8FE400B84755 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42011E9F20CE8FEE00B84755 /* VSK004_SyncKeyStorageTests.swift in Sources */,
+				42011E9520CE8FE400B84755 /* VirgilSDKKeyknox_AppTests_iOS.swift in Sources */,
+				42011EA020CE901900B84755 /* TestConfig.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		42B5DFF020C005300067F13E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1003,6 +1182,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		42011E9920CE8FE400B84755 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */;
+			targetProxy = 42011E9820CE8FE400B84755 /* PBXContainerItemProxy */;
+		};
+		42011E9E20CE8FE800B84755 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42011E5720CE8FD400B84755 /* KeyknoxTestApp iOS */;
+			targetProxy = 42011E9D20CE8FE800B84755 /* PBXContainerItemProxy */;
+		};
 		42B5E01220C00DB80067F13E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */;
@@ -1035,7 +1224,100 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		42011E5E20CE8FD400B84755 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42011E5F20CE8FD400B84755 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		42011E6320CE8FD500B84755 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42011E6420CE8FD500B84755 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		42011E6720CE8FD500B84755 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "KeyknoxTestApp iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.virgilsecurity.KeyknoxTestApp-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		42011E6820CE8FD500B84755 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "KeyknoxTestApp iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.virgilsecurity.KeyknoxTestApp-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		42011E9B20CE8FE400B84755 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "VirgilSDKKeyknox AppTests iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.virgilsecurity.VirgilSDKKeyknox-AppTests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KeyknoxTestApp iOS.app/KeyknoxTestApp iOS";
+			};
+			name = Debug;
+		};
+		42011E9C20CE8FE400B84755 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "VirgilSDKKeyknox AppTests iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.virgilsecurity.VirgilSDKKeyknox-AppTests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KeyknoxTestApp iOS.app/KeyknoxTestApp iOS";
+			};
+			name = Release;
+		};
 		42B5DFFB20C005300067F13E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1254,6 +1536,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		42011E8D20CE8FD500B84755 /* Build configuration list for PBXNativeTarget "KeyknoxTestApp iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42011E6720CE8FD500B84755 /* Debug */,
+				42011E6820CE8FD500B84755 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		42011E9A20CE8FE400B84755 /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox AppTests iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42011E9B20CE8FE400B84755 /* Debug */,
+				42011E9C20CE8FE400B84755 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		42B5DFEF20C005300067F13E /* Build configuration list for PBXProject "VirgilSDKKeyknox" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

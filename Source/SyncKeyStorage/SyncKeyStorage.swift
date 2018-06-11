@@ -125,7 +125,7 @@ extension KeychainStorage: KeychainStorageProtocol { }
                             meta = cloudMeta
                         }
                         else {
-                            meta = nil
+                            meta = [SyncKeyStorage.keyknoxMetaKey: SyncKeyStorage.keyknoxMetaValue]
                         }
 
                         let _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)

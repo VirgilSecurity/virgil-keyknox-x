@@ -9,6 +9,7 @@ env:
     - MACOS_FRAMEWORK_SCHEME="VirgilSDKKeyknox macOS"
     - TVOS_FRAMEWORK_SCHEME="VirgilSDKKeyknox tvOS"
     - WATCHOS_FRAMEWORK_SCHEME="VirgilSDKKeyknox watchOS"
+    - IOS_TEST_SCHEME="KeyknoxTestApp iOS"
     - IOS_SDK=iphonesimulator11.3
     - MACOS_SDK=macosx10.13
     - TVOS_SDK=appletvsimulator11.3
@@ -16,10 +17,10 @@ env:
     - FRAMEWORK_NAME=VirgilSDKKeyknox
 
   matrix:
-    - DESTINATION="OS=11.3,name=iPhone SE"            SCHEME="$IOS_FRAMEWORK_SCHEME"        SDK="$IOS_SDK"        TWO_STEP_BUILD_ENABLED="YES"    CARTHAGE_PLATFORM_NAME="iOS"        RUN_TESTS="YES"    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="YES"
-    # - DESTINATION="arch=x86_64"                       SCHEME="$MACOS_FRAMEWORK_SCHEME"      SDK="$MACOS_SDK"      TWO_STEP_BUILD_ENABLED="YES"    CARTHAGE_PLATFORM_NAME="Mac"        RUN_TESTS="YES"    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="YES"    POD_LIB_LINT="NO"    SWIFT_LINT="NO"
-    # - DESTINATION="OS=11.3,name=Apple TV 4K"          SCHEME="$TVOS_FRAMEWORK_SCHEME"       SDK="$TVOS_SDK"       TWO_STEP_BUILD_ENABLED="YES"    CARTHAGE_PLATFORM_NAME="tvOS"       RUN_TESTS="YES"    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="YES"
-    # - DESTINATION="OS=4.3,name=Apple Watch - 42mm"    SCHEME="$WATCHOS_FRAMEWORK_SCHEME"    SDK="$WATCHOS_SDK"    TWO_STEP_BUILD_ENABLED="NO"     CARTHAGE_PLATFORM_NAME="watchOS"    RUN_TESTS="NO"     PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="NO"
+    - DESTINATION="OS=11.3,name=iPhone SE"            SCHEME="$IOS_FRAMEWORK_SCHEME"        SDK="$IOS_SDK"        TWO_STEP_BUILD_ENABLED="YES"    CARTHAGE_PLATFORM_NAME="iOS"        RUN_TESTS="YES"    ADDITIONAL_TESTS_SCHEME="$IOS_TEST_SCHEME"    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="YES"
+    # - DESTINATION="arch=x86_64"                       SCHEME="$MACOS_FRAMEWORK_SCHEME"      SDK="$MACOS_SDK"      TWO_STEP_BUILD_ENABLED="YES"    CARTHAGE_PLATFORM_NAME="Mac"        RUN_TESTS="YES"    ADDITIONAL_TESTS_SCHEME=""    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="YES"    POD_LIB_LINT="NO"    SWIFT_LINT="NO"
+    # - DESTINATION="OS=11.3,name=Apple TV 4K"          SCHEME="$TVOS_FRAMEWORK_SCHEME"       SDK="$TVOS_SDK"       TWO_STEP_BUILD_ENABLED="YES"    CARTHAGE_PLATFORM_NAME="tvOS"       RUN_TESTS="YES"    ADDITIONAL_TESTS_SCHEME=""    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="YES"
+    # - DESTINATION="OS=4.3,name=Apple Watch - 42mm"    SCHEME="$WATCHOS_FRAMEWORK_SCHEME"    SDK="$WATCHOS_SDK"    TWO_STEP_BUILD_ENABLED="NO"     CARTHAGE_PLATFORM_NAME="watchOS"    RUN_TESTS="NO"     ADDITIONAL_TESTS_SCHEME=""    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="NO"
 
 before_install:
   - set -e
@@ -48,6 +49,10 @@ script:
       # Build Framework in Release and Run Tests if specified
       if [ $RUN_TESTS == "YES" ]; then
         xcodebuild -verbose -project "$PROJECT" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug test-without-building;
+
+        if [ -n "$ADDITIONAL_TESTS_SCHEME" ]; then
+          xcodebuild -verbose -project "$PROJECT" -scheme "$ADDITIONAL_TESTS_SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug clean test;
+        fi
       fi
     else
       # Build Framework
