@@ -106,17 +106,29 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         let _ = try! self.syncKeyStorage.sync().startSync().getResult()
         let keychainEntries3 = try! self.keychainStorage.retrieveAllEntries()
         XCTAssert(keychainEntries3.count == 2)
-        XCTAssert(keychainEntries3[1].name == keyEntries[1].name)
-        XCTAssert(keychainEntries3[1].data == keyEntries[1].data)
+        if let keychainEntry = keychainEntries3.first(where: { $0.name == keyEntries[1].name }) {
+            XCTAssert(keychainEntry.data == keyEntries[1].data)
+        }
+        else {
+            XCTFail()
+        }
         
         try! self.keychainStorage.deleteAllEntries()
         let _ = try! self.syncKeyStorage.sync().startSync().getResult()
         let keychainEntries4 = try! self.keychainStorage.retrieveAllEntries()
         XCTAssert(keychainEntries4.count == 2)
-        XCTAssert(keychainEntries4[0].name == keyEntries[0].name)
-        XCTAssert(keychainEntries4[0].data == keyEntries[0].data)
-        XCTAssert(keychainEntries4[1].name == keyEntries[1].name)
-        XCTAssert(keychainEntries4[1].data == keyEntries[1].data)
+        if let keychainEntry = keychainEntries4.first(where: { $0.name == keyEntries[0].name }) {
+            XCTAssert(keychainEntry.data == keyEntries[0].data)
+        }
+        else {
+            XCTFail()
+        }
+        if let keychainEntry = keychainEntries4.first(where: { $0.name == keyEntries[1].name }) {
+            XCTAssert(keychainEntry.data == keyEntries[1].data)
+        }
+        else {
+            XCTFail()
+        }
 
         let _ = try! self.cloudKeyStorage.deleteEntry(withName: keyEntries[0].name).startSync().getResult()
         let _ = try! self.syncKeyStorage.sync().startSync().getResult()
