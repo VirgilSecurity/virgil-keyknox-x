@@ -96,11 +96,11 @@ extension CloudKeyStorage {
         }
     }
 
-    open func storeEntry(data: Data, name: String, meta: [String: String]? = nil) -> GenericOperation<Void> {
+    open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<Void> {
         return self.storeEntries([KeyEntry(name: name, data: data, meta: meta)])
     }
 
-    open func updateEntry(data: Data, name: String, meta: [String: String]? = nil) -> GenericOperation<Void> {
+    open func updateEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 let now = Date()

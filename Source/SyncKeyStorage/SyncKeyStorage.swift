@@ -39,8 +39,8 @@ import VirgilSDK
 
 public protocol CloudKeyStorageProtocol {
     func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<Void>
-    func storeEntry(data: Data, name: String, meta: [String: String]?) -> GenericOperation<Void>
-    func updateEntry(data: Data, name: String, meta: [String: String]?) -> GenericOperation<Void>
+    func storeEntry(withName name: String, data: Data, meta: [String: String]?) -> GenericOperation<Void>
+    func updateEntry(withName: String, data: Data, meta: [String: String]?) -> GenericOperation<Void>
     func retrieveAllEntries() -> [CloudEntry]
     func retrieveEntry(withName name: String) -> CloudEntry?
     func existsEntry(withName name: String) -> Bool
@@ -58,6 +58,7 @@ public protocol KeychainStorageProtocol {
     func retrieveEntry(withName name: String) throws -> KeychainEntry
     func retrieveAllEntries() throws -> [KeychainEntry]
     func deleteEntry(withName name: String) throws
+    func existsEntry(withName name: String) throws -> Bool
 }
 
 extension KeychainStorage: KeychainStorageProtocol { }
@@ -85,6 +86,28 @@ extension KeychainStorage: KeychainStorageProtocol { }
 
         super.init()
     }
+    
+    open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<Void> {
+        return CallbackOperation { _, completion in
+            SyncKeyStorage.queue.async {
+                do {
+                    guard !(try self.keychainStorage.existsEntry(withName: name)),
+                        !self.cloudKeyStorage.existsEntry(withName: name) else {
+                            // FIXME
+                            throw NSError()
+                    }
+                    
+                    let _ = try self.cloudKeyStorage.storeEntry(withName: name, data: data, meta: meta).startSync().getResult()
+                    let _ = try self.keychainStorage.store(data: data, withName: name, meta: nil)
+                    
+                    completion((), nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
+            }
+        }
+    }
 
     open func sync() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
@@ -111,9 +134,9 @@ extension KeychainStorage: KeychainStorageProtocol { }
                     let entriesToStore = [String](cloudSet.subtracting(keychainSet))
                     let entriesToCompare = [String](keychainSet.intersection(cloudSet))
 
-                    try self.deleteEntries(entriesToDelete)
-                    try self.storeEntries(entriesToStore)
-                    try self.compareEntries(entriesToCompare, keychainEntries: keychainEntries)
+                    try self.syncDeleteEntries(entriesToDelete)
+                    try self.syncStoreEntries(entriesToStore)
+                    try self.syncCompareEntries(entriesToCompare, keychainEntries: keychainEntries)
 
                     completion((), nil)
                 }
@@ -124,13 +147,13 @@ extension KeychainStorage: KeychainStorageProtocol { }
         }
     }
 
-    private func deleteEntries(_ entriesToDelete: [String]) throws {
+    private func syncDeleteEntries(_ entriesToDelete: [String]) throws {
         try entriesToDelete.forEach {
             try self.keychainStorage.deleteEntry(withName: $0)
         }
     }
 
-    private func storeEntries(_ entriesToStore: [String]) throws {
+    private func syncStoreEntries(_ entriesToStore: [String]) throws {
         try entriesToStore.forEach {
             guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: $0) else {
                 throw NSError() // FIXME
@@ -149,7 +172,7 @@ extension KeychainStorage: KeychainStorageProtocol { }
         }
     }
 
-    private func compareEntries(_ entriesToCompare: [String], keychainEntries: [KeychainEntry]) throws {
+    private func syncCompareEntries(_ entriesToCompare: [String], keychainEntries: [KeychainEntry]) throws {
         // Determine newest version and either update keychain entry or upload newer version to cloud
         try entriesToCompare.forEach { name in
             guard let keychainEntry = keychainEntries.first(where: { $0.name == name }),

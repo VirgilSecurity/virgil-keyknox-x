@@ -64,9 +64,9 @@ extension CloudKeyStorage {
         }
     }
 
-    @objc open func storeEntry(data: Data, name: String, meta: [String: String]? = nil,
+    @objc open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil,
                                completion: @escaping (Error?) -> ()) {
-        self.storeEntry(data: data, name: name, meta: meta).start { _, error in
+        self.storeEntry(withName: name, data: data, meta: meta).start { _, error in
             completion(error)
         }
     }
