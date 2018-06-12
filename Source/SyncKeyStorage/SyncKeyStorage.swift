@@ -86,6 +86,33 @@ extension KeychainStorage: KeychainStorageProtocol { }
 }
 
 extension SyncKeyStorage {
+    open func updateEntry(withName name: String, data: Data, meta: [String: String]?) -> GenericOperation<Void> {
+        return CallbackOperation { _, completion in
+            SyncKeyStorage.queue.async {
+                do {
+                    guard try self.keychainStorage.existsEntry(withName: name),
+                        self.cloudKeyStorage.existsEntry(withName: name) else {
+                            // FIXME
+                            throw NSError()
+                    }
+                    
+                    let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name, data: data, meta: meta).startSync().getResult()
+                    let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
+                    try self.keychainStorage.updateEntry(withName: name, data: data, meta: meta)
+                    
+                    completion((), nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
+            }
+        }
+    }
+
+    open func retrieveEntry(withName name: String) throws -> KeychainEntry {
+        return try self.keychainStorage.retrieveEntry(withName: name)
+    }
+
     open func deleteEntry(withName name: String) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             SyncKeyStorage.queue.async {
