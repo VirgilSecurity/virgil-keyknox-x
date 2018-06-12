@@ -165,5 +165,9 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         XCTAssert(self.cloudKeyStorage.retrieveAllEntries().count == 1)
         XCTAssert(entry.name == name)
         XCTAssert(entry.data == data)
+        
+        let keychainEntry = try! self.keychainStorage.retrieveEntry(withName: name)
+        XCTAssert(keychainEntry.name == name)
+        XCTAssert(keychainEntry.data == data)
     }
 }

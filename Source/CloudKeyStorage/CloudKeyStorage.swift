@@ -60,34 +60,39 @@ import VirgilSDK
 }
 
 extension CloudKeyStorage {
-    open func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<Void> {
+    private func storeEntriesSync(_ keyEntries: [KeyEntry]) throws -> [CloudEntry] {
+        for entry in keyEntries {
+            guard self.cache[entry.name] == nil else {
+                throw NSError()
+            }
+        }
+        
+        var cloudEntries = [CloudEntry]()
+        for entry in keyEntries {
+            let now = Date()
+            let cloudEntry = CloudEntry(name: entry.name, data: entry.data,
+                                        creationDate: now, modificationDate: now, meta: entry.meta)
+            
+            cloudEntries.append(cloudEntry)
+            self.cache[entry.name] = cloudEntry
+        }
+        
+        let data = try self.serializeDict(self.cache)
+        
+        let response = try self.keyknoxManager
+            .pushData(data, publicKeys: self.publicKeys,
+                      privateKey: self.privateKey).startSync().getResult()
+        
+        self.cache = try self.parseData(response.data)
+        
+        return cloudEntries
+    }
+    
+    open func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[CloudEntry]> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
-                for entry in keyEntries {
-                    guard self.cache[entry.name] == nil else {
-                        completion(nil, NSError()) // FIXME
-                        return
-                    }
-                }
-
-                for entry in keyEntries {
-                    let now = Date()
-                    let cloudEntry = CloudEntry(name: entry.name, data: entry.data,
-                                                creationDate: now, modificationDate: now, meta: entry.meta)
-
-                    self.cache[entry.name] = cloudEntry
-                }
-
                 do {
-                    let data = try self.serializeDict(self.cache)
-
-                    let response = try self.keyknoxManager
-                        .pushData(data, publicKeys: self.publicKeys,
-                                  privateKey: self.privateKey).startSync().getResult()
-
-                    self.cache = try self.parseData(response.data)
-
-                    completion((), nil)
+                    completion(try self.storeEntriesSync(keyEntries), nil)
                 }
                 catch {
                     completion(nil, error)
@@ -96,11 +101,25 @@ extension CloudKeyStorage {
         }
     }
 
-    open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<Void> {
-        return self.storeEntries([KeyEntry(name: name, data: data, meta: meta)])
+    open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
+        return CallbackOperation { _, completion in
+            CloudKeyStorage.queue.async {
+                do {
+                    let cloudEntries = try self.storeEntriesSync([KeyEntry(name: name, data: data, meta: meta)])
+                    guard cloudEntries.count == 1, let cloudEntry = cloudEntries.first else {
+                        throw NSError() // FIXME
+                    }
+                    
+                    completion(cloudEntry, nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
+            }
+        }
     }
 
-    open func updateEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<Void> {
+    open func updateEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 let now = Date()
@@ -120,7 +139,7 @@ extension CloudKeyStorage {
 
                     self.cache = try self.parseData(response.data)
 
-                    completion((), nil)
+                    completion(cloudEntry, nil)
                 }
                 catch {
                     completion(nil, error)

@@ -109,7 +109,7 @@ static const NSTimeInterval timeout = 20.;
                            @"test_key": @"test_value"
                            };
     
-    [self.keyStorage storeEntryWithData:privateKeyData name:name meta:meta completion:^(NSError *error) {
+    [self.keyStorage storeEntryWithName:name data:privateKeyData meta:meta completion:^(NSError *error) {
         XCTAssert(error == nil);
         XCTAssert(self.keyStorage.retrieveAllEntries.count == 1);
         
@@ -149,7 +149,7 @@ static const NSTimeInterval timeout = 20.;
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
     NSData *privateKeyData = [self.crypto exportPrivateKey:keyPair.privateKey];
 
-    [self.keyStorage storeEntryWithData:privateKeyData name:@"test" meta:nil completion:^(NSError *error) {
+    [self.keyStorage storeEntryWithName:@"test" data:privateKeyData meta:nil completion:^(NSError *error) {
         XCTAssert(error == nil);
         XCTAssert(self.keyStorage.retrieveAllEntries.count == 1);
 
@@ -193,7 +193,7 @@ static const NSTimeInterval timeout = 20.;
     }
 
     NSData *privateKeyData = [self.crypto exportPrivateKey:privateKeys[0]];
-    [self.keyStorage storeEntryWithData:privateKeyData name:@"first" meta:nil completion:^(NSError *error) {
+    [self.keyStorage storeEntryWithName:@"first" data:privateKeyData meta:nil completion:^(NSError *error) {
         XCTAssert(error == nil);
         XCTAssert(self.keyStorage.retrieveAllEntries.count == 1);
         VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage retrieveEntryWithName:@"first"].data password:nil error:nil];
@@ -222,7 +222,7 @@ static const NSTimeInterval timeout = 20.;
                 }
 
                 NSData *privateKeyData = [self.crypto exportPrivateKey:privateKeys[numberOfKeys - 1]];
-                [self.keyStorage storeEntryWithData:privateKeyData name:@"last" meta:nil completion:^(NSError *error) {
+                [self.keyStorage storeEntryWithName:@"last" data:privateKeyData meta:nil completion:^(NSError *error) {
                     XCTAssert(error == nil);
                     XCTAssert(self.keyStorage.retrieveAllEntries.count == numberOfKeys);
                     VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage retrieveEntryWithName:@"first"].data password:nil error:nil];
