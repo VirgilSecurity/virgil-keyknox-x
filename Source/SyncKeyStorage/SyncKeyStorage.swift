@@ -95,11 +95,12 @@ extension SyncKeyStorage {
                             // FIXME
                             throw NSError()
                     }
-                    
-                    let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name, data: data, meta: meta).startSync().getResult()
+
+                    let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name, data: data,
+                                                                          meta: meta).startSync().getResult()
                     let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
                     try self.keychainStorage.updateEntry(withName: name, data: data, meta: meta)
-                    
+
                     completion((), nil)
                 }
                 catch {
@@ -122,10 +123,10 @@ extension SyncKeyStorage {
                             // FIXME
                             throw NSError()
                     }
-                    
-                    let _ = try self.cloudKeyStorage.deleteEntry(withName: name).startSync().getResult()
-                    let _ = try self.keychainStorage.deleteEntry(withName: name)
-                    
+
+                    _ = try self.cloudKeyStorage.deleteEntry(withName: name).startSync().getResult()
+                    _ = try self.keychainStorage.deleteEntry(withName: name)
+
                     completion((), nil)
                 }
                 catch {
@@ -135,7 +136,8 @@ extension SyncKeyStorage {
         }
     }
 
-    open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<KeychainEntry> {
+    open func storeEntry(withName name: String, data: Data,
+                         meta: [String: String]? = nil) -> GenericOperation<KeychainEntry> {
         return CallbackOperation { _, completion in
             SyncKeyStorage.queue.async {
                 do {
@@ -144,11 +146,12 @@ extension SyncKeyStorage {
                             // FIXME
                             throw NSError()
                     }
-                    
-                    let cloudEntry = try self.cloudKeyStorage.storeEntry(withName: name, data: data, meta: meta).startSync().getResult()
+
+                    let cloudEntry = try self.cloudKeyStorage.storeEntry(withName: name, data: data,
+                                                                         meta: meta).startSync().getResult()
                     let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
                     let keychainEntry = try self.keychainStorage.store(data: data, withName: name, meta: meta)
-                    
+
                     completion(keychainEntry, nil)
                 }
                 catch {
@@ -202,13 +205,13 @@ extension SyncKeyStorage {
             guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: $0) else {
                 throw NSError() // FIXME
             }
-            
+
             let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
 
             _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
         }
     }
-    
+
     private func syncCompareEntries(_ entriesToCompare: [String], keychainEntries: [KeychainEntry]) throws {
         // Determine newest version and either update keychain entry or upload newer version to cloud
         try entriesToCompare.forEach { name in
@@ -216,12 +219,12 @@ extension SyncKeyStorage {
                 let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: name) else {
                     throw NSError() // FIXME
             }
-            
+
             let keychainModificationDate = try SyncKeyStorage.extractModificationDate(fromKeychainEntry: keychainEntry)
-            
+
             if keychainModificationDate < cloudEntry.modificationDate {
                 let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
-                
+
                 try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
             }
         }
@@ -232,7 +235,7 @@ extension SyncKeyStorage {
 extension SyncKeyStorage {
     @objc public static let keyknoxMetaCreationDateKey = "k_cda"
     @objc public static let keyknoxMetaModificationDateKey = "k_mda"
-    
+
     private static func extractModificationDate(fromKeychainEntry keychainEntry: KeychainEntry) throws -> Date {
         guard let meta = keychainEntry.meta,
             let modificationTimestampStr = meta[self.keyknoxMetaModificationDateKey],
@@ -242,7 +245,7 @@ extension SyncKeyStorage {
 
         return Date(timeIntervalSince1970: TimeInterval(modificationTimestamp))
     }
-    
+
     private static func filterKeyknoxKeychainEntry(_ keychainEntry: KeychainEntry) -> KeychainEntry? {
         // FIXME
         guard let meta = keychainEntry.meta,
@@ -250,10 +253,10 @@ extension SyncKeyStorage {
             meta[self.keyknoxMetaModificationDateKey] != nil else {
                 return nil
         }
-        
+
         return keychainEntry
     }
-    
+
     private static func createMetaForKeychain(from cloudEntry: CloudEntry) throws -> [String: String] {
         var additionalDict = [
             self.keyknoxMetaCreationDateKey: "\(Int(cloudEntry.creationDate.timeIntervalSince1970))",
@@ -263,7 +266,7 @@ extension SyncKeyStorage {
         if let meta = cloudEntry.meta {
             try additionalDict.merge(meta, uniquingKeysWith: { _, _ in throw NSError() /* FIXME */ })
         }
-        
+
         return additionalDict
     }
 }

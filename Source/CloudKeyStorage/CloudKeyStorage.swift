@@ -66,28 +66,28 @@ extension CloudKeyStorage {
                 throw NSError()
             }
         }
-        
+
         var cloudEntries = [CloudEntry]()
         for entry in keyEntries {
             let now = Date()
             let cloudEntry = CloudEntry(name: entry.name, data: entry.data,
                                         creationDate: now, modificationDate: now, meta: entry.meta)
-            
+
             cloudEntries.append(cloudEntry)
             self.cache[entry.name] = cloudEntry
         }
-        
+
         let data = try self.serializeDict(self.cache)
-        
+
         let response = try self.keyknoxManager
             .pushData(data, publicKeys: self.publicKeys,
                       privateKey: self.privateKey).startSync().getResult()
-        
+
         self.cache = try self.parseData(response.data)
-        
+
         return cloudEntries
     }
-    
+
     open func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[CloudEntry]> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
@@ -101,7 +101,8 @@ extension CloudKeyStorage {
         }
     }
 
-    open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
+    open func storeEntry(withName name: String, data: Data,
+                         meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 do {
@@ -109,7 +110,7 @@ extension CloudKeyStorage {
                     guard cloudEntries.count == 1, let cloudEntry = cloudEntries.first else {
                         throw NSError() // FIXME
                     }
-                    
+
                     completion(cloudEntry, nil)
                 }
                 catch {
@@ -119,7 +120,8 @@ extension CloudKeyStorage {
         }
     }
 
-    open func updateEntry(withName name: String, data: Data, meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
+    open func updateEntry(withName name: String, data: Data,
+                          meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
         return CallbackOperation { _, completion in
             CloudKeyStorage.queue.async {
                 let now = Date()
