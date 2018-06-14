@@ -23,6 +23,7 @@
 		42011EA620CE905F00B84755 /* VirgilCryptoAPI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E05C20C011640067F13E /* VirgilCryptoAPI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		42011EA720CE905F00B84755 /* VirgilSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E03B20C0115D0067F13E /* VirgilSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		42011EA820CE906E00B84755 /* VirgilSDKKeyknox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42011EBC20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011EBB20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift */; };
 		425EF8AF20C5368400CE1D4F /* KeyknoxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88920C5368400CE1D4F /* KeyknoxManager.swift */; };
 		425EF8B020C5368400CE1D4F /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */; };
 		425EF8B220C5369100CE1D4F /* KeyknoxManager+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */; };
@@ -411,6 +412,7 @@
 		42011E6420CE8FD500B84755 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		42011E6620CE8FD500B84755 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		42011E9220CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VirgilSDKKeyknox AppTests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		42011EBB20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncKeyStorage+Obj-C.swift"; sourceTree = "<group>"; };
 		425EF88920C5368400CE1D4F /* KeyknoxManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxManager.swift; sourceTree = "<group>"; };
 		425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Queries.swift"; sourceTree = "<group>"; };
 		425EF8B120C5369100CE1D4F /* KeyknoxManager+Operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Operations.swift"; sourceTree = "<group>"; };
@@ -517,6 +519,7 @@
 			isa = PBXGroup;
 			children = (
 				425EF95720C8171B00CE1D4F /* SyncKeyStorage.swift */,
+				42011EBB20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift */,
 			);
 			path = SyncKeyStorage;
 			sourceTree = "<group>";
@@ -1146,6 +1149,7 @@
 				42011DBE20CACC5400B84755 /* CloudEntry.swift in Sources */,
 				42B5E02720C011380067F13E /* KeynoxClient+Queries.swift in Sources */,
 				425EF95320C8156E00CE1D4F /* CloudKeyStorage.swift in Sources */,
+				42011EBC20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift in Sources */,
 				42B5E02820C011380067F13E /* KeyknoxData.swift in Sources */,
 				425EF8B020C5368400CE1D4F /* KeyknoxManager+Queries.swift in Sources */,
 				42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */,

@@ -110,7 +110,7 @@ extension SyncKeyStorage {
         }
     }
 
-    open func retrieveEntry(withName name: String) throws -> KeychainEntry {
+    @objc open func retrieveEntry(withName name: String) throws -> KeychainEntry {
         return try self.keychainStorage.retrieveEntry(withName: name)
     }
 
