@@ -44,6 +44,7 @@ import VirgilSDK
     @objc public let publicKeys: [VirgilPublicKey]
     @objc public let privateKey: VirgilPrivateKey
     private var cache: [String: CloudEntry] = [:]
+    private let cloudEntrySerializer = CloudEntrySerializer()
 
     private static let queue = DispatchQueue(label: "CloudKeyStorageQueue")
 
@@ -77,13 +78,13 @@ extension CloudKeyStorage {
             self.cache[entry.name] = cloudEntry
         }
 
-        let data = try self.serializeDict(self.cache)
+        let data = try self.cloudEntrySerializer.serializeDict(self.cache)
 
         let response = try self.keyknoxManager
             .pushData(data, publicKeys: self.publicKeys,
                       privateKey: self.privateKey).startSync().getResult()
 
-        self.cache = try self.parseData(response.data)
+        self.cache = try self.cloudEntrySerializer.parseData(response.data)
 
         return cloudEntries
     }
@@ -133,13 +134,13 @@ extension CloudKeyStorage {
                 self.cache[name] = cloudEntry
 
                 do {
-                    let data = try self.serializeDict(self.cache)
+                    let data = try self.cloudEntrySerializer.serializeDict(self.cache)
 
                     let response = try self.keyknoxManager
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.parseData(response.data)
+                    self.cache = try self.cloudEntrySerializer.parseData(response.data)
 
                     completion(cloudEntry, nil)
                 }
@@ -181,13 +182,13 @@ extension CloudKeyStorage {
                         self.cache.removeValue(forKey: name)
                     }
 
-                    let data = try self.serializeDict(self.cache)
+                    let data = try self.cloudEntrySerializer.serializeDict(self.cache)
 
                     let response = try self.keyknoxManager
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.parseData(response.data)
+                    self.cache = try self.cloudEntrySerializer.parseData(response.data)
 
                     completion((), nil)
                 }
@@ -204,13 +205,13 @@ extension CloudKeyStorage {
                 do {
                     self.cache = [:]
 
-                    let data = try self.serializeDict(self.cache)
+                    let data = try self.cloudEntrySerializer.serializeDict(self.cache)
 
                     let response = try self.keyknoxManager
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.parseData(response.data)
+                    self.cache = try self.cloudEntrySerializer.parseData(response.data)
 
                     completion((), nil)
                 }
@@ -229,7 +230,7 @@ extension CloudKeyStorage {
                                                                 privateKey: self.privateKey)
                         .startSync().getResult()
 
-                    self.cache = try self.parseData(data.data)
+                    self.cache = try self.cloudEntrySerializer.parseData(data.data)
 
                     completion((), nil)
                 }
@@ -241,13 +242,5 @@ extension CloudKeyStorage {
                 }
             }
         }
-    }
-
-    private func serializeDict(_ dict: [String: CloudEntry]) throws -> Data {
-        return try JSONEncoder().encode(dict)
-    }
-
-    private func parseData(_ data: Data) throws -> [String: CloudEntry] {
-        return try JSONDecoder().decode(Dictionary<String, CloudEntry>.self, from: data)
     }
 }
