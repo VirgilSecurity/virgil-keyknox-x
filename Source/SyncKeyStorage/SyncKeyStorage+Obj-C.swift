@@ -38,7 +38,8 @@ import Foundation
 import VirgilSDK
 
 extension SyncKeyStorage {
-    @objc open func updateEntry(withName name: String, data: Data, meta: [String: String]?, completion: @escaping (Error?) -> Void) {
+    @objc open func updateEntry(withName name: String, data: Data, meta: [String: String]?,
+                                completion: @escaping (Error?) -> Void) {
         self.updateEntry(withName: name, data: data, meta: meta).start { _, error in
             completion(error)
         }
@@ -50,7 +51,8 @@ extension SyncKeyStorage {
         }
     }
 
-    @objc open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil, completion: @escaping (KeychainEntry?, Error?) -> Void) {
+    @objc open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil,
+                               completion: @escaping (KeychainEntry?, Error?) -> Void) {
         self.storeEntry(withName: name, data: data, meta: meta).start(completion: completion)
     }
 
