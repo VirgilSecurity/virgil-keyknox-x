@@ -55,11 +55,11 @@ import VirgilCryptoAPI
     public let crypto: KeyknoxCryptoProtocol
     @objc public let retryOnUnauthorized: Bool
 
-    public init(accessTokenProvider: AccessTokenProvider, keyknoxClient: KeyknoxClient,
-                crypto: KeyknoxCryptoProtocol = KeyknoxCrypto(), retryOnUnauthorized: Bool = false) {
+    @objc public init(accessTokenProvider: AccessTokenProvider,
+                      keyknoxClient: KeyknoxClient = KeyknoxClient(), retryOnUnauthorized: Bool = false) {
         self.accessTokenProvider = accessTokenProvider
         self.keyknoxClient = keyknoxClient
-        self.crypto = crypto
+        self.crypto = KeyknoxCrypto()
         self.retryOnUnauthorized = retryOnUnauthorized
 
         super.init()
