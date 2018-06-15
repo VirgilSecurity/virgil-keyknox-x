@@ -75,13 +75,13 @@ extension CloudKeyStorage {
             self.cache[entry.name] = cloudEntry
         }
 
-        let data = try self.cloudEntrySerializer.serializeDict(self.cache)
+        let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
         let response = try self.keyknoxManager
             .pushData(data, publicKeys: self.publicKeys,
                       privateKey: self.privateKey).startSync().getResult()
 
-        self.cache = try self.cloudEntrySerializer.parseData(response.data)
+        self.cache = try self.cloudEntrySerializer.parse(data: response.data)
 
         return cloudEntries
     }
@@ -131,13 +131,13 @@ extension CloudKeyStorage {
                 self.cache[name] = cloudEntry
 
                 do {
-                    let data = try self.cloudEntrySerializer.serializeDict(self.cache)
+                    let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
                     let response = try self.keyknoxManager
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parseData(response.data)
+                    self.cache = try self.cloudEntrySerializer.parse(data: response.data)
 
                     completion(cloudEntry, nil)
                 }
@@ -179,13 +179,13 @@ extension CloudKeyStorage {
                         self.cache.removeValue(forKey: name)
                     }
 
-                    let data = try self.cloudEntrySerializer.serializeDict(self.cache)
+                    let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
                     let response = try self.keyknoxManager
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parseData(response.data)
+                    self.cache = try self.cloudEntrySerializer.parse(data: response.data)
 
                     completion((), nil)
                 }
@@ -202,13 +202,13 @@ extension CloudKeyStorage {
                 do {
                     self.cache = [:]
 
-                    let data = try self.cloudEntrySerializer.serializeDict(self.cache)
+                    let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
                     let response = try self.keyknoxManager
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parseData(response.data)
+                    self.cache = try self.cloudEntrySerializer.parse(data: response.data)
 
                     completion((), nil)
                 }
@@ -227,7 +227,7 @@ extension CloudKeyStorage {
                                                                 privateKey: self.privateKey)
                         .startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parseData(data.data)
+                    self.cache = try self.cloudEntrySerializer.parse(data: data.data)
 
                     completion((), nil)
                 }

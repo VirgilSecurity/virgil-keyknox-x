@@ -38,14 +38,25 @@ import Foundation
 import VirgilSDK
 
 internal final class CloudEntrySerializer {
-    internal func serializeDict(_ dict: [String: CloudEntry]) throws -> Data {
+    internal func serialize(dict: [String: CloudEntry]) throws -> Data {
         let encoder = JSONEncoder()
+
+        encoder.dateEncodingStrategy = .custom { date, encoder in
+            var container = encoder.singleValueContainer()
+            try container.encode(Int(date.timeIntervalSince1970 * 1000))
+        }
 
         return try encoder.encode(dict)
     }
 
-    internal func parseData(_ data: Data) throws -> [String: CloudEntry] {
+    internal func parse(data: Data) throws -> [String: CloudEntry] {
         let decoder = JSONDecoder()
+
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let timestamp = try decoder.singleValueContainer().decode(Int.self)
+            
+            return Date(timeIntervalSince1970: TimeInterval(timestamp) / 1000)
+        }
 
         return try decoder.decode(Dictionary<String, CloudEntry>.self, from: data)
     }

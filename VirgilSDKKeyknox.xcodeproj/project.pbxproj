@@ -26,6 +26,8 @@
 		42011EBC20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011EBB20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift */; };
 		421A611E20D3E80D00BBF05D /* KeyknoxCryptoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A611D20D3E80D00BBF05D /* KeyknoxCryptoProtocol.swift */; };
 		421A612020D3E83400BBF05D /* KeyknoxCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A611F20D3E83400BBF05D /* KeyknoxCrypto.swift */; };
+		421A612220D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */; };
+		421A612420D41AFF00BBF05D /* Cloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 421A612320D41AFF00BBF05D /* Cloud.json */; };
 		425B37A720D2AA4200EAAAEB /* CloudEntrySerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425B37A620D2AA4200EAAAEB /* CloudEntrySerializer.swift */; };
 		425EF8AF20C5368400CE1D4F /* KeyknoxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88920C5368400CE1D4F /* KeyknoxManager.swift */; };
 		425EF8B020C5368400CE1D4F /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */; };
@@ -418,6 +420,8 @@
 		42011EBB20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncKeyStorage+Obj-C.swift"; sourceTree = "<group>"; };
 		421A611D20D3E80D00BBF05D /* KeyknoxCryptoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyknoxCryptoProtocol.swift; sourceTree = "<group>"; };
 		421A611F20D3E83400BBF05D /* KeyknoxCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyknoxCrypto.swift; sourceTree = "<group>"; };
+		421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSK005_CloudEntrySerializerTests.swift; sourceTree = "<group>"; };
+		421A612320D41AFF00BBF05D /* Cloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Cloud.json; sourceTree = "<group>"; };
 		425B37A620D2AA4200EAAAEB /* CloudEntrySerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudEntrySerializer.swift; sourceTree = "<group>"; };
 		425EF88920C5368400CE1D4F /* KeyknoxManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxManager.swift; sourceTree = "<group>"; };
 		425EF88A20C5368400CE1D4F /* KeyknoxManager+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Queries.swift"; sourceTree = "<group>"; };
@@ -583,6 +587,7 @@
 				425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */,
 				425EF8CF20C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m */,
 				42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */,
+				421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -685,6 +690,7 @@
 		42B5E0B820C01E5A0067F13E /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				421A612320D41AFF00BBF05D /* Cloud.json */,
 				42B5E0BA20C01E5A0067F13E /* TestConfig.plist */,
 			);
 			path = Data;
@@ -1131,6 +1137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42B5E0BD20C01E5A0067F13E /* TestConfig.plist in Resources */,
+				421A612420D41AFF00BBF05D /* Cloud.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1184,6 +1191,7 @@
 			files = (
 				425EF8D020C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m in Sources */,
 				42B5E0B720C01C9B0067F13E /* VSK001_ClientTests.m in Sources */,
+				421A612220D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift in Sources */,
 				425EF8B920C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m in Sources */,
 				42B5E0BE20C01E5A0067F13E /* TestConfig.swift in Sources */,
 			);

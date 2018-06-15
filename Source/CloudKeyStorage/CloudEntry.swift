@@ -52,4 +52,12 @@ import Foundation
 
         super.init()
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case data
+        case creationDate = "creation_date"
+        case modificationDate = "modification_date"
+        case meta
+    }
 }
