@@ -81,7 +81,8 @@ extension KeyknoxManager {
             do {
                 let keyknoxData: EncryptedKeyknoxData = try operation.findDependencyResult()
 
-                let result = try self.crypto.decrypt(keyknoxData: keyknoxData, privateKey: privateKey, publicKeys: publicKeys)
+                let result = try self.crypto.decrypt(keyknoxData: keyknoxData,
+                                                     privateKey: privateKey, publicKeys: publicKeys)
 
                 completion(result, nil)
             }
@@ -113,7 +114,7 @@ extension KeyknoxManager {
         return CallbackOperation { operation, completion in
             do {
                 let data: Data = try operation.findDependencyResult()
-                
+
                 completion(try self.crypto.encrypt(data: data, privateKey: privateKey, publicKeys: publicKeys), nil)
             }
             catch {

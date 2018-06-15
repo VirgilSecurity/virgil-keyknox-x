@@ -41,7 +41,7 @@ import VirgilCrypto
 
 open class KeyknoxCrypto {
     public let crypto: VirgilCrypto
-    
+
     public init(crypto: VirgilCrypto = VirgilCrypto()) {
         self.crypto = crypto
     }
@@ -49,12 +49,12 @@ open class KeyknoxCrypto {
 
 extension KeyknoxCrypto: KeyknoxCryptoProtocol {
     open func decrypt(keyknoxData: EncryptedKeyknoxData, privateKey: PrivateKey,
-                            publicKeys: [PublicKey]) throws -> DecryptedKeyknoxData {
+                      publicKeys: [PublicKey]) throws -> DecryptedKeyknoxData {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
                 throw NSError() // FIXME
         }
-        
+
         let cipher = Cipher()
         try cipher.setContentInfo(keyknoxData.meta)
         let privateKeyData = self.crypto.exportPrivateKey(virgilPrivateKey)
@@ -66,30 +66,30 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         catch {
             throw KeyknoxManagerError.decryptionFailed
         }
-        
+
         let meta = try cipher.contentInfo()
-        
+
         let signedId = try cipher.data(forKey: VirgilCrypto.CustomParamKeySignerId)
         let signature = try cipher.data(forKey: VirgilCrypto.CustomParamKeySignature)
-        
+
         let signer = Signer(hash: kHashNameSHA512)
-        
+
         guard let publicKey = virgilPublicKeys.first(where: { $0.identifier == signedId }) else {
             throw KeyknoxManagerError.signerNotFound
         }
-        
+
         let publicKeyData = self.crypto.exportPublicKey(publicKey)
-        
+
         do {
             try signer.verifySignature(signature, data: decryptedData, publicKey: publicKeyData)
         }
         catch {
             throw KeyknoxManagerError.signatureVerificationFailed
         }
-        
+
         return DecryptedKeyknoxData(meta: meta, data: decryptedData, version: keyknoxData.version)
     }
-    
+
     open func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data) {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
@@ -99,7 +99,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         let signer = Signer(hash: kHashNameSHA512)
         let privateKeyData = self.crypto.exportPrivateKey(virgilPrivateKey)
         let signature = try signer.sign(data, privateKey: privateKeyData, keyPassword: nil)
-        
+
         let cipher = Cipher()
         try cipher.setData(virgilPrivateKey.identifier, forKey: VirgilCrypto.CustomParamKeySignerId)
         try cipher.setData(signature, forKey: VirgilCrypto.CustomParamKeySignature)
@@ -108,7 +108,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
             .forEach { try cipher.addKeyRecipient($0, publicKey: $1) }
         let encryptedData = try cipher.encryptData(data, embedContentInfo: false)
         let meta = try cipher.contentInfo()
-        
+
         return (meta, encryptedData)
     }
 }

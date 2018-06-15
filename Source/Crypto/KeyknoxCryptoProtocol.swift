@@ -39,7 +39,7 @@ import VirgilCryptoAPI
 
 public protocol KeyknoxCryptoProtocol: class {
     func decrypt(keyknoxData: EncryptedKeyknoxData, privateKey: PrivateKey,
-                            publicKeys: [PublicKey]) throws -> DecryptedKeyknoxData
-    
+                 publicKeys: [PublicKey]) throws -> DecryptedKeyknoxData
+
     func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data)
 }
