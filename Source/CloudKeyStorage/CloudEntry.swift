@@ -52,8 +52,8 @@ import Foundation
 
         super.init()
     }
-    
-    enum CodingKeys: String, CodingKey {
+
+    public enum CodingKeys: String, CodingKey {
         case name
         case data
         case creationDate = "creation_date"
@@ -63,7 +63,7 @@ import Foundation
 }
 
 public extension CloudEntry {
-    static func ==(lhs: CloudEntry, rhs: CloudEntry) -> Bool {
+    static func == (lhs: CloudEntry, rhs: CloudEntry) -> Bool {
         return lhs.name == rhs.name
             && lhs.data == rhs.data
             && lhs.creationDate == rhs.creationDate

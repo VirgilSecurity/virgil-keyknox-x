@@ -3,6 +3,7 @@ disabled_rules:
   - statement_position
   - void_return
   - nesting
+  - explicit_enum_raw_value
 
 opt_in_rules:
   - array_init

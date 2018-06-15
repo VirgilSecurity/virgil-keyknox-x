@@ -54,7 +54,7 @@ internal final class CloudEntrySerializer {
 
         decoder.dateDecodingStrategy = .custom { decoder in
             let timestamp = try decoder.singleValueContainer().decode(Int.self)
-            
+
             return Date(timeIntervalSince1970: TimeInterval(timestamp) / 1000)
         }
 
