@@ -61,3 +61,13 @@ import Foundation
         case meta
     }
 }
+
+public extension CloudEntry {
+    static func ==(lhs: CloudEntry, rhs: CloudEntry) -> Bool {
+        return lhs.name == rhs.name
+            && lhs.data == rhs.data
+            && lhs.creationDate == rhs.creationDate
+            && lhs.modificationDate == rhs.modificationDate
+            && lhs.meta == rhs.meta
+    }
+}
