@@ -36,8 +36,7 @@
 
 import Foundation
 import VirgilSDK
-import VirgilCrypto
-import VirgilCryptoApiImpl
+import VirgilCryptoAPI
 
 extension KeyknoxManager {
     internal func makePullValueOperation() -> GenericOperation<EncryptedKeyknoxData> {
@@ -76,45 +75,13 @@ extension KeyknoxManager {
         }
     }
 
-    internal func makeDecryptOperation(publicKeys: [VirgilPublicKey],
-                                       privateKey: VirgilPrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
+    internal func makeDecryptOperation(publicKeys: [PublicKey],
+                                       privateKey: PrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
         return CallbackOperation { operation, completion in
             do {
                 let keyknoxData: EncryptedKeyknoxData = try operation.findDependencyResult()
 
-                let cipher = Cipher()
-                try cipher.setContentInfo(keyknoxData.meta)
-                let privateKeyData = self.crypto.exportPrivateKey(privateKey)
-                let decryptedData: Data
-                do {
-                    decryptedData = try cipher.decryptData(keyknoxData.data, recipientId: privateKey.identifier,
-                                                           privateKey: privateKeyData, keyPassword: nil)
-                }
-                catch {
-                    throw KeyknoxManagerError.decryptionFailed
-                }
-
-                let meta = try cipher.contentInfo()
-
-                let signedId = try cipher.data(forKey: VirgilCrypto.CustomParamKeySignerId)
-                let signature = try cipher.data(forKey: VirgilCrypto.CustomParamKeySignature)
-
-                let signer = Signer(hash: kHashNameSHA512)
-
-                guard let publicKey = publicKeys.first(where: { $0.identifier == signedId }) else {
-                    throw KeyknoxManagerError.signerNotFound
-                }
-
-                let publicKeyData = self.crypto.exportPublicKey(publicKey)
-
-                do {
-                    try signer.verifySignature(signature, data: decryptedData, publicKey: publicKeyData)
-                }
-                catch {
-                    throw KeyknoxManagerError.signatureVerificationFailed
-                }
-
-                let result = DecryptedKeyknoxData(meta: meta, data: decryptedData, version: keyknoxData.version)
+                let result = try self.crypto.decrypt(keyknoxData: keyknoxData, privateKey: privateKey, publicKeys: publicKeys)
 
                 completion(result, nil)
             }
@@ -141,26 +108,13 @@ extension KeyknoxManager {
         }
     }
 
-    internal func makeEncryptOperation(publicKeys: [VirgilPublicKey],
-                                       privateKey: VirgilPrivateKey) -> GenericOperation<(Data, Data)> {
+    internal func makeEncryptOperation(publicKeys: [PublicKey],
+                                       privateKey: PrivateKey) -> GenericOperation<(Data, Data)> {
         return CallbackOperation { operation, completion in
             do {
                 let data: Data = try operation.findDependencyResult()
-
-                let signer = Signer(hash: kHashNameSHA512)
-                let privateKeyData = self.crypto.exportPrivateKey(privateKey)
-                let signature = try signer.sign(data, privateKey: privateKeyData, keyPassword: nil)
-
-                let cipher = Cipher()
-                try cipher.setData(privateKey.identifier, forKey: VirgilCrypto.CustomParamKeySignerId)
-                try cipher.setData(signature, forKey: VirgilCrypto.CustomParamKeySignature)
-                try publicKeys
-                    .map { return ($0.identifier, self.crypto.exportPublicKey($0)) }
-                    .forEach { try cipher.addKeyRecipient($0, publicKey: $1) }
-                let encryptedData = try cipher.encryptData(data, embedContentInfo: false)
-                let meta = try cipher.contentInfo()
-
-                completion((meta, encryptedData), nil)
+                
+                completion(try self.crypto.encrypt(data: data, privateKey: privateKey, publicKeys: publicKeys), nil)
             }
             catch {
                 completion(nil, error)

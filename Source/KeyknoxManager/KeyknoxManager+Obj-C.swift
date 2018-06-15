@@ -35,29 +35,29 @@
 //
 
 import Foundation
-import VirgilCryptoApiImpl
+import VirgilCryptoAPI
 
 extension KeyknoxManager {
-    @objc open func pushData(_ data: Data, publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
+    @objc open func pushData(_ data: Data, publicKeys: [PublicKey], privateKey: PrivateKey,
                              completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.pushData(data, publicKeys: publicKeys, privateKey: privateKey).start(completion: completion)
     }
 
-    @objc open func pullData(publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
+    @objc open func pullData(publicKeys: [PublicKey], privateKey: PrivateKey,
                              completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.pullData(publicKeys: publicKeys, privateKey: privateKey).start(completion: completion)
     }
 
-    @objc open func updateRecipients(publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
-                                     newPublicKeys: [VirgilPublicKey]? = nil,
-                                     newPrivateKey: VirgilPrivateKey? = nil,
+    @objc open func updateRecipients(publicKeys: [PublicKey], privateKey: PrivateKey,
+                                     newPublicKeys: [PublicKey]? = nil,
+                                     newPrivateKey: PrivateKey? = nil,
                                      completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.updateRecipients(publicKeys: publicKeys, privateKey: privateKey,
                               newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start(completion: completion)
     }
 
-    @objc open func updateRecipients(data: Data, newPublicKeys: [VirgilPublicKey],
-                                     newPrivateKey: VirgilPrivateKey,
+    @objc open func updateRecipients(data: Data, newPublicKeys: [PublicKey],
+                                     newPrivateKey: PrivateKey,
                                      completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.updateRecipients(data: data, newPublicKeys: newPublicKeys,
                               newPrivateKey: newPrivateKey).start(completion: completion)

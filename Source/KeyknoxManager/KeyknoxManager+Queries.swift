@@ -35,13 +35,12 @@
 //
 
 import Foundation
-import VirgilCrypto
-import VirgilCryptoApiImpl
+import VirgilCryptoAPI
 import VirgilSDK
 
 extension KeyknoxManager {
-    open func pushData(_ data: Data, publicKeys: [VirgilPublicKey],
-                       privateKey: VirgilPrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
+    open func pushData(_ data: Data, publicKeys: [PublicKey],
+                       privateKey: PrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
             return CallbackOperation { _, completion in
                 let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
@@ -77,8 +76,8 @@ extension KeyknoxManager {
         }
     }
 
-    open func pullData(publicKeys: [VirgilPublicKey],
-                       privateKey: VirgilPrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
+    open func pullData(publicKeys: [PublicKey],
+                       privateKey: PrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
             return CallbackOperation { _, completion in
                 let tokenContext = TokenContext(service: "keyknox", operation: "get", forceReload: force)
@@ -109,9 +108,9 @@ extension KeyknoxManager {
         }
     }
 
-    open func updateRecipients(publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
-                               newPublicKeys: [VirgilPublicKey]? = nil,
-                               newPrivateKey: VirgilPrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxData> {
+    open func updateRecipients(publicKeys: [PublicKey], privateKey: PrivateKey,
+                               newPublicKeys: [PublicKey]? = nil,
+                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxData> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
             return CallbackOperation { _, completion in
                 let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
@@ -154,8 +153,8 @@ extension KeyknoxManager {
         }
     }
 
-    open func updateRecipients(data: Data, newPublicKeys: [VirgilPublicKey],
-                               newPrivateKey: VirgilPrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
+    open func updateRecipients(data: Data, newPublicKeys: [PublicKey],
+                               newPrivateKey: PrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
             return CallbackOperation { _, completion in
                 let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)

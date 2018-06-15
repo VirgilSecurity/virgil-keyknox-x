@@ -35,26 +35,23 @@
 //
 
 import Foundation
-import VirgilCryptoApiImpl
+import VirgilCryptoAPI
 import VirgilSDK
 
 @objc(VSKCloudKeyStorage) open class CloudKeyStorage: NSObject {
-    @objc public let crypto: VirgilCrypto
     @objc public let keyknoxManager: KeyknoxManager
-    @objc public let publicKeys: [VirgilPublicKey]
-    @objc public let privateKey: VirgilPrivateKey
+    @objc public let publicKeys: [PublicKey]
+    @objc public let privateKey: PrivateKey
     private var cache: [String: CloudEntry] = [:]
     private let cloudEntrySerializer = CloudEntrySerializer()
 
     private static let queue = DispatchQueue(label: "CloudKeyStorageQueue")
 
     @objc public init(keyknoxManager: KeyknoxManager,
-                      publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
-                      crypto: VirgilCrypto = VirgilCrypto()) {
+                      publicKeys: [PublicKey], privateKey: PrivateKey) {
         self.keyknoxManager = keyknoxManager
         self.publicKeys = publicKeys
         self.privateKey = privateKey
-        self.crypto = crypto
 
         super.init()
     }

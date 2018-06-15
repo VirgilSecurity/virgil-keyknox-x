@@ -35,7 +35,7 @@
 //
 
 import Foundation
-import VirgilCryptoApiImpl
+import VirgilCryptoAPI
 
 @objc(VSKKeyEntry) public final class KeyEntry: NSObject {
     @objc public let name: String

@@ -35,33 +35,11 @@
 //
 
 import Foundation
-import VirgilSDK
 import VirgilCryptoAPI
 
-/// Declares error types and codes for CardManager
-@objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
-    case signerNotFound = 1
-    case signatureVerificationFailed = 2
-    case decryptionFailed = 3
-    case keyknoxIsEmpty = 4
-}
-
-@objc(VSKKeyknoxManager) open class KeyknoxManager: NSObject {
-    /// AccessTokenProvider instance used for getting Access Token
-    /// when performing queries
-    @objc public let accessTokenProvider: AccessTokenProvider
-    /// KeyknoxClient instance used for performing queries
-    @objc public let keyknoxClient: KeyknoxClient
-    public let crypto: KeyknoxCryptoProtocol
-    @objc public let retryOnUnauthorized: Bool
-
-    public init(accessTokenProvider: AccessTokenProvider, keyknoxClient: KeyknoxClient,
-                crypto: KeyknoxCryptoProtocol = KeyknoxCrypto(), retryOnUnauthorized: Bool = false) {
-        self.accessTokenProvider = accessTokenProvider
-        self.keyknoxClient = keyknoxClient
-        self.crypto = crypto
-        self.retryOnUnauthorized = retryOnUnauthorized
-
-        super.init()
-    }
+public protocol KeyknoxCryptoProtocol: class {
+    func decrypt(keyknoxData: EncryptedKeyknoxData, privateKey: PrivateKey,
+                            publicKeys: [PublicKey]) throws -> DecryptedKeyknoxData
+    
+    func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data)
 }
