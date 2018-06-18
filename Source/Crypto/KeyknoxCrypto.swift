@@ -52,7 +52,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
                       publicKeys: [PublicKey]) throws -> DecryptedKeyknoxData {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
-                throw NSError() // FIXME
+                throw VirgilCryptoError.passedKeyIsNotVirgil
         }
 
         let cipher = Cipher()
@@ -93,7 +93,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
     open func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data) {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
-                throw NSError() // FIXME
+                throw VirgilCryptoError.passedKeyIsNotVirgil
         }
 
         let signer = Signer(hash: kHashNameSHA512)

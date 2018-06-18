@@ -41,10 +41,7 @@ internal final class CloudEntrySerializer {
     internal func serialize(dict: [String: CloudEntry]) throws -> Data {
         let encoder = JSONEncoder()
 
-        encoder.dateEncodingStrategy = .custom { date, encoder in
-            var container = encoder.singleValueContainer()
-            try container.encode(Int(date.timeIntervalSince1970 * 1000))
-        }
+        encoder.dateEncodingStrategy = .custom(DateUtils.timestampMilliDateEncodingStrategy)
 
         return try encoder.encode(dict)
     }
@@ -52,11 +49,7 @@ internal final class CloudEntrySerializer {
     internal func parse(data: Data) throws -> [String: CloudEntry] {
         let decoder = JSONDecoder()
 
-        decoder.dateDecodingStrategy = .custom { decoder in
-            let timestamp = try decoder.singleValueContainer().decode(Int.self)
-
-            return Date(timeIntervalSince1970: TimeInterval(timestamp) / 1000)
-        }
+        decoder.dateDecodingStrategy = .custom(DateUtils.timestampMilliDateDecodingStrategy)
 
         return try decoder.decode(Dictionary<String, CloudEntry>.self, from: data)
     }

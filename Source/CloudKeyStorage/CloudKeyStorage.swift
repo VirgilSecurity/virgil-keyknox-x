@@ -38,6 +38,12 @@ import Foundation
 import VirgilCryptoAPI
 import VirgilSDK
 
+@objc(VSKCloudKeyStorageError) public enum CloudKeyStorageError: Int, Error {
+    case entryNotFound
+    case entrySavingError
+    case entryAlreadyExists
+}
+
 @objc(VSKCloudKeyStorage) open class CloudKeyStorage: NSObject {
     @objc public let keyknoxManager: KeyknoxManager
     @objc public let publicKeys: [PublicKey]
@@ -61,7 +67,7 @@ extension CloudKeyStorage {
     private func storeEntriesSync(_ keyEntries: [KeyEntry]) throws -> [CloudEntry] {
         for entry in keyEntries {
             guard self.cache[entry.name] == nil else {
-                throw NSError()
+                throw CloudKeyStorageError.entryAlreadyExists
             }
         }
 
@@ -106,7 +112,7 @@ extension CloudKeyStorage {
                 do {
                     let cloudEntries = try self.storeEntriesSync([KeyEntry(name: name, data: data, meta: meta)])
                     guard cloudEntries.count == 1, let cloudEntry = cloudEntries.first else {
-                        throw NSError() // FIXME
+                        throw CloudKeyStorageError.entrySavingError
                     }
 
                     completion(cloudEntry, nil)
@@ -169,7 +175,7 @@ extension CloudKeyStorage {
             CloudKeyStorage.queue.async {
                 for name in names {
                     guard self.cache[name] != nil else {
-                        completion(nil, NSError()) // FIXME
+                        completion(nil, CloudKeyStorageError.entryNotFound)
                         return
                     }
                 }

@@ -63,6 +63,28 @@ public protocol KeychainStorageProtocol {
 
 extension KeychainStorage: KeychainStorageProtocol { }
 
+@objc(VSKSyncKeyStorageError) public enum SyncKeyStorageError: Int, Error {
+    case keychainEntryNotFoundWhileUpdating
+    case cloudEntryNotFoundWhileUpdating
+
+    case keychainEntryNotFoundWhileDeleting
+    case cloudEntryNotFoundWhileDeleting
+
+    case keychainEntryNotFoundWhileComparing
+    case cloudEntryNotFoundWhileComparing
+
+    case keychainEntryAlreadyExistsWhileStoring
+    case cloudEntryAlreadyExistsWhileStoring
+
+    case cloudEntryNotFoundWhileSyncing
+
+    case invalidModificationDateInKeychainEntry
+    case invalidCreationDateInKeychainEntry
+    case noMetaInKeychainEntry
+
+    case invalidKeysInEntryMeta
+}
+
 @objc(VSKSyncKeyStorage) open class SyncKeyStorage: NSObject {
     private let keychainStorage: KeychainStorageProtocol
     private let cloudKeyStorage: CloudKeyStorageProtocol
@@ -90,15 +112,17 @@ extension SyncKeyStorage {
         return CallbackOperation { _, completion in
             SyncKeyStorage.queue.async {
                 do {
-                    guard try self.keychainStorage.existsEntry(withName: name),
-                        self.cloudKeyStorage.existsEntry(withName: name) else {
-                            // FIXME
-                            throw NSError()
+                    guard try self.keychainStorage.existsEntry(withName: name) else {
+                        throw SyncKeyStorageError.keychainEntryNotFoundWhileUpdating
+                    }
+
+                    guard self.cloudKeyStorage.existsEntry(withName: name) else {
+                        throw SyncKeyStorageError.cloudEntryNotFoundWhileUpdating
                     }
 
                     let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name, data: data,
                                                                           meta: meta).startSync().getResult()
-                    let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
+                    let meta = try KeychainUtils.createMetaForKeychain(from: cloudEntry)
                     try self.keychainStorage.updateEntry(withName: name, data: data, meta: meta)
 
                     completion((), nil)
@@ -118,10 +142,12 @@ extension SyncKeyStorage {
         return CallbackOperation { _, completion in
             SyncKeyStorage.queue.async {
                 do {
-                    guard try self.keychainStorage.existsEntry(withName: name),
-                        self.cloudKeyStorage.existsEntry(withName: name) else {
-                            // FIXME
-                            throw NSError()
+                    guard try self.keychainStorage.existsEntry(withName: name) else {
+                        throw SyncKeyStorageError.keychainEntryNotFoundWhileDeleting
+                    }
+
+                    guard self.cloudKeyStorage.existsEntry(withName: name) else {
+                        throw SyncKeyStorageError.cloudEntryNotFoundWhileDeleting
                     }
 
                     _ = try self.cloudKeyStorage.deleteEntry(withName: name).startSync().getResult()
@@ -141,15 +167,17 @@ extension SyncKeyStorage {
         return CallbackOperation { _, completion in
             SyncKeyStorage.queue.async {
                 do {
-                    guard !(try self.keychainStorage.existsEntry(withName: name)),
-                        !self.cloudKeyStorage.existsEntry(withName: name) else {
-                            // FIXME
-                            throw NSError()
+                    guard !(try self.keychainStorage.existsEntry(withName: name)) else {
+                        throw SyncKeyStorageError.keychainEntryAlreadyExistsWhileStoring
+                    }
+
+                    guard !self.cloudKeyStorage.existsEntry(withName: name) else {
+                        throw SyncKeyStorageError.cloudEntryAlreadyExistsWhileStoring
                     }
 
                     let cloudEntry = try self.cloudKeyStorage.storeEntry(withName: name, data: data,
                                                                          meta: meta).startSync().getResult()
-                    let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
+                    let meta = try KeychainUtils.createMetaForKeychain(from: cloudEntry)
                     let keychainEntry = try self.keychainStorage.store(data: data, withName: name, meta: meta)
 
                     completion(keychainEntry, nil)
@@ -165,11 +193,11 @@ extension SyncKeyStorage {
         return CallbackOperation { _, completion in
             SyncKeyStorage.queue.async {
                 do {
-                    // FIXME: Optimize to run concurrently
+                    // TODO: Optimize to run concurrently
                     try self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
 
                     let keychainEntries = try self.keychainStorage.retrieveAllEntries()
-                        .compactMap(SyncKeyStorage.filterKeyknoxKeychainEntry)
+                        .compactMap(KeychainUtils.filterKeyknoxKeychainEntry)
 
                     let keychainSet = Set<String>(keychainEntries.map { $0.name })
                     let cloudSet = Set<String>(self.cloudKeyStorage.retrieveAllEntries().map { $0.name })
@@ -203,10 +231,10 @@ extension SyncKeyStorage {
     private func syncStoreEntries(_ entriesToStore: [String]) throws {
         try entriesToStore.forEach {
             guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: $0) else {
-                throw NSError() // FIXME
+                throw SyncKeyStorageError.cloudEntryNotFoundWhileSyncing
             }
 
-            let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
+            let meta = try KeychainUtils.createMetaForKeychain(from: cloudEntry)
 
             _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
         }
@@ -215,15 +243,18 @@ extension SyncKeyStorage {
     private func syncCompareEntries(_ entriesToCompare: [String], keychainEntries: [KeychainEntry]) throws {
         // Determine newest version and either update keychain entry or upload newer version to cloud
         try entriesToCompare.forEach { name in
-            guard let keychainEntry = keychainEntries.first(where: { $0.name == name }),
-                let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: name) else {
-                    throw NSError() // FIXME
+            guard let keychainEntry = keychainEntries.first(where: { $0.name == name }) else {
+                throw SyncKeyStorageError.keychainEntryNotFoundWhileComparing
             }
 
-            let keychainModificationDate = try SyncKeyStorage.extractModificationDate(fromKeychainEntry: keychainEntry)
+            guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: name) else {
+                throw SyncKeyStorageError.cloudEntryNotFoundWhileComparing
+            }
 
-            if keychainModificationDate < cloudEntry.modificationDate {
-                let meta = try SyncKeyStorage.createMetaForKeychain(from: cloudEntry)
+            let keychainDate = try KeychainUtils.extractModificationDate(fromKeychainEntry: keychainEntry)
+
+            if keychainDate.modificationDate < cloudEntry.modificationDate {
+                let meta = try KeychainUtils.createMetaForKeychain(from: cloudEntry)
 
                 try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
             }
@@ -231,42 +262,54 @@ extension SyncKeyStorage {
     }
 }
 
-// MARK: Keychain format helper
 extension SyncKeyStorage {
-    @objc public static let keyknoxMetaCreationDateKey = "k_cda"
-    @objc public static let keyknoxMetaModificationDateKey = "k_mda"
-
-    private static func extractModificationDate(fromKeychainEntry keychainEntry: KeychainEntry) throws -> Date {
-        guard let meta = keychainEntry.meta,
-            let modificationTimestampStr = meta[self.keyknoxMetaModificationDateKey],
-            let modificationTimestamp = Int(modificationTimestampStr) else {
-                throw NSError()
+    @objc(VSKSyncKeyStorageKeychainUtils) public final class KeychainUtils: NSObject {
+        @objc public static let keyknoxMetaCreationDateKey = "k_cda"
+        @objc public static let keyknoxMetaModificationDateKey = "k_mda"
+        
+        internal static func extractModificationDate(fromKeychainEntry keychainEntry: KeychainEntry) throws
+            -> (creationDate: Date, modificationDate: Date) {
+                guard let meta = keychainEntry.meta else {
+                    throw SyncKeyStorageError.noMetaInKeychainEntry
+                }
+                
+                guard let modificationTimestampStr = meta[self.keyknoxMetaModificationDateKey],
+                    let modificationTimestamp = Int64(modificationTimestampStr) else {
+                        throw SyncKeyStorageError.invalidModificationDateInKeychainEntry
+                }
+                guard let creationTimestampStr = meta[self.keyknoxMetaCreationDateKey],
+                    let creationTimestamp = Int64(creationTimestampStr) else {
+                        throw SyncKeyStorageError.invalidCreationDateInKeychainEntry
+                }
+                
+                return (DateUtils.dateFromMilliTimestamp(creationTimestamp),
+                        DateUtils.dateFromMilliTimestamp(modificationTimestamp))
         }
-
-        return Date(timeIntervalSince1970: TimeInterval(modificationTimestamp))
-    }
-
-    private static func filterKeyknoxKeychainEntry(_ keychainEntry: KeychainEntry) -> KeychainEntry? {
-        // FIXME
-        guard let meta = keychainEntry.meta,
-            meta[self.keyknoxMetaCreationDateKey] != nil,
-            meta[self.keyknoxMetaModificationDateKey] != nil else {
+        
+        internal static func filterKeyknoxKeychainEntry(_ keychainEntry: KeychainEntry) -> KeychainEntry? {
+            do {
+                _ = try self.extractModificationDate(fromKeychainEntry: keychainEntry)
+                
+                return keychainEntry
+            }
+            catch {
                 return nil
+            }
         }
-
-        return keychainEntry
-    }
-
-    private static func createMetaForKeychain(from cloudEntry: CloudEntry) throws -> [String: String] {
-        var additionalDict = [
-            self.keyknoxMetaCreationDateKey: "\(Int(cloudEntry.creationDate.timeIntervalSince1970))",
-            self.keyknoxMetaModificationDateKey: "\(Int(cloudEntry.modificationDate.timeIntervalSince1970))"
-        ]
-
-        if let meta = cloudEntry.meta {
-            try additionalDict.merge(meta, uniquingKeysWith: { _, _ in throw NSError() /* FIXME */ })
+        
+        internal static func createMetaForKeychain(from cloudEntry: CloudEntry) throws -> [String: String] {
+            var additionalDict = [
+                self.keyknoxMetaCreationDateKey: "\(DateUtils.dateToMilliTimestamp(date: cloudEntry.creationDate))",
+                self.keyknoxMetaModificationDateKey: "\(DateUtils.dateToMilliTimestamp(date: cloudEntry.modificationDate))"
+            ]
+            
+            if let meta = cloudEntry.meta {
+                try additionalDict.merge(meta, uniquingKeysWith: { _, _ in
+                    throw SyncKeyStorageError.invalidKeysInEntryMeta
+                })
+            }
+            
+            return additionalDict
         }
-
-        return additionalDict
     }
 }

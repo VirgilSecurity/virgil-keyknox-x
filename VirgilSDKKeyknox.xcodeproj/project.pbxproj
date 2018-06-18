@@ -38,6 +38,7 @@
 		425EF95320C8156E00CE1D4F /* CloudKeyStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF95120C8156D00CE1D4F /* CloudKeyStorage.swift */; };
 		425EF95520C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF95420C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift */; };
 		425EF95820C8171B00CE1D4F /* SyncKeyStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF95720C8171B00CE1D4F /* SyncKeyStorage.swift */; };
+		428B15BD20D7F0B40041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */; };
 		42B5E01020C00DB80067F13E /* VirgilSDKKeyknox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; };
 		42B5E02520C011380067F13E /* KeyknoxClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01E20C011380067F13E /* KeyknoxClientProtocol.swift */; };
 		42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01F20C011380067F13E /* KeyknoxClient.swift */; };
@@ -432,6 +433,7 @@
 		425EF95120C8156D00CE1D4F /* CloudKeyStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKeyStorage.swift; sourceTree = "<group>"; };
 		425EF95420C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CloudKeyStorage+Obj-C.swift"; sourceTree = "<group>"; };
 		425EF95720C8171B00CE1D4F /* SyncKeyStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncKeyStorage.swift; sourceTree = "<group>"; };
+		428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSK006_SyncKeyStorageKeychainUtilsTests.swift; sourceTree = "<group>"; };
 		42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VirgilSDKKeyknox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B5DFF920C005300067F13E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VirgilSDKKeyknox iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -588,6 +590,7 @@
 				425EF8CF20C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m */,
 				42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */,
 				421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */,
+				428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1191,6 +1194,7 @@
 			files = (
 				425EF8D020C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m in Sources */,
 				42B5E0B720C01C9B0067F13E /* VSK001_ClientTests.m in Sources */,
+				428B15BD20D7F0B40041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */,
 				421A612220D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift in Sources */,
 				425EF8B920C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m in Sources */,
 				42B5E0BE20C01E5A0067F13E /* TestConfig.swift in Sources */,
