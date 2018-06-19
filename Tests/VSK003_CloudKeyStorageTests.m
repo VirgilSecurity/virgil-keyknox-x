@@ -71,12 +71,16 @@ static const NSTimeInterval timeout = 20.;
         
         completion(jwt, nil);
     }];
-    
-    VSKKeyknoxManager *keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient retryOnUnauthorized:NO];
-    
+
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+
+    NSError *err;
     
-    self.keyStorage = [[VSKCloudKeyStorage alloc] initWithKeyknoxManager:keyknoxManager publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey];
+    VSKKeyknoxManager *keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey retryOnUnauthorized:NO error:&err];
+    
+    XCTAssert(err == nil);
+    
+    self.keyStorage = [[VSKCloudKeyStorage alloc] initWithKeyknoxManager:keyknoxManager];
 }
 
 - (void)tearDown {

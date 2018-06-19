@@ -50,6 +50,8 @@ static const NSTimeInterval timeout = 20.;
 @property (nonatomic) VSMVirgilCrypto *crypto;
 @property (nonatomic) VSKKeyknoxManager *keyknoxManager;
 @property (nonatomic) NSInteger numberOfKeys;
+@property (nonatomic) VSKKeyknoxClient *keyknoxClient;
+@property (nonatomic) id<VSSAccessTokenProvider> provider;
 
 @end
 
@@ -60,19 +62,24 @@ static const NSTimeInterval timeout = 20.;
     
     self.config = [TestConfig readFromBundle];
     self.crypto = [[VSMVirgilCrypto alloc] initWithDefaultKeyType:VSCKeyTypeFAST_EC_ED25519 useSHA256Fingerprints:NO];
-    VSKKeyknoxClient *keyknoxClient = [[VSKKeyknoxClient alloc] initWithServiceUrl:[[NSURL alloc] initWithString:self.config.ServiceURL]];
+    self.keyknoxClient = [[VSKKeyknoxClient alloc] initWithServiceUrl:[[NSURL alloc] initWithString:self.config.ServiceURL]];
     
     VSMVirgilPrivateKey *apiKey = [self.crypto importPrivateKeyFrom:[[NSData alloc] initWithBase64EncodedString:self.config.ApiPrivateKey options:0] password:nil error:nil];
     VSSJwtGenerator *generator = [[VSSJwtGenerator alloc] initWithApiKey:apiKey apiPublicKeyIdentifier:self.config.ApiPublicKeyId accessTokenSigner:[[VSMVirgilAccessTokenSigner alloc] initWithVirgilCrypto:self.crypto] appId:self.config.AppId ttl:600];
     NSString *identity = [[NSUUID alloc] init].UUIDString;
     
-    id<VSSAccessTokenProvider> provider = [[VSSCachingJwtProvider alloc] initWithRenewJwtCallback:^(VSSTokenContext *context, void (^completion)(VSSJwt *jwt, NSError *error)) {
+    self.provider = [[VSSCachingJwtProvider alloc] initWithRenewJwtCallback:^(VSSTokenContext *context, void (^completion)(VSSJwt *jwt, NSError *error)) {
         VSSJwt *jwt = [generator generateTokenWithIdentity:identity additionalData:nil error:nil];
         
         completion(jwt, nil);
     }];
     
-    self.keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient retryOnUnauthorized:NO];
+    VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+    NSError *err;
+
+    self.keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey retryOnUnauthorized:NO error:&err];
+    
+    XCTAssert(err == nil);
     
     self.numberOfKeys = 50;
 }
@@ -86,9 +93,7 @@ static const NSTimeInterval timeout = 20.;
     
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
-    VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-    
-    [self.keyknoxManager pushData:someData publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+    [self.keyknoxManager pushValue:someData previousHash:nil completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
         
         XCTAssert([decryptedData.value isEqualToData:someData]);
@@ -107,10 +112,8 @@ static const NSTimeInterval timeout = 20.;
     
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
-    VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-    
-    [self.keyknoxManager pushData:someData publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
-        [self.keyknoxManager pullDataWithPublicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+    [self.keyknoxManager pushValue:someData previousHash:nil completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+        [self.keyknoxManager pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
             XCTAssert([decryptedData.value isEqualToData:someData]);
             
@@ -126,43 +129,45 @@ static const NSTimeInterval timeout = 20.;
 
 - (void)test003_pullMultiplePublicKeys {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
-    
+
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    
+
     VSMVirgilPrivateKey *privateKey = nil;
     NSMutableArray<VSMVirgilPublicKey *> *halfPublicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *anotherHalfPublicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
-    
+
     for (int i = 0; i < self.numberOfKeys; i++) {
         VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-        
+
         if (i == 0)
             privateKey = keyPair.privateKey;
-        
+
         if (i < self.numberOfKeys / 2)
             [halfPublicKeys addObject:keyPair.publicKey];
         else
             [anotherHalfPublicKeys addObject:keyPair.publicKey];
     }
     
-    [self.keyknoxManager pushData:someData publicKeys:halfPublicKeys privateKey:privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+    VSKKeyknoxManager *keyknoxManager1 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:halfPublicKeys privateKey:privateKey retryOnUnauthorized:NO error:nil];
+    [keyknoxManager1 pushValue:someData previousHash:nil completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
         XCTAssert([decryptedData.value isEqualToData:someData]);
 
-        [self.keyknoxManager pullDataWithPublicKeys:halfPublicKeys privateKey:privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+        [keyknoxManager1 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
             XCTAssert([decryptedData.value isEqualToData:someData]);
 
-            [self.keyknoxManager pullDataWithPublicKeys:anotherHalfPublicKeys privateKey:privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+            VSKKeyknoxManager *keyknoxManager2 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:anotherHalfPublicKeys privateKey:privateKey retryOnUnauthorized:NO error:nil];
+            [keyknoxManager2 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                 XCTAssert(decryptedData == nil && error != nil);
                 XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
                 XCTAssert(error.code == VSKKeyknoxManagerErrorSignerNotFound);
-                
+
                 [ex fulfill];
             }];
         }];
     }];
-    
+
     [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
@@ -171,47 +176,50 @@ static const NSTimeInterval timeout = 20.;
 
 - (void)test004_pullDifferentPrivateKeys {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
-    
+
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    
+
     NSMutableArray<VSMVirgilKeyPair *> *keyPairs = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *publicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *halfPublicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
-    
+
     for (int i = 0; i < self.numberOfKeys; i++) {
         VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-        
+
         [keyPairs addObject:keyPair];
         [publicKeys addObject:keyPair.publicKey];
-        
+
         if (i < self.numberOfKeys / 2)
             [halfPublicKeys addObject:keyPair.publicKey];
     }
-    
+
     VSCVirgilRandom *random = [[VSCVirgilRandom alloc] initWithPersonalInfo:@"info"];
-    
+
     size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
-    
-    [self.keyknoxManager pushData:someData publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+
+    VSKKeyknoxManager *keyknoxManager1 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+    [keyknoxManager1 pushValue:someData previousHash:nil completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
         XCTAssert([decryptedData.value isEqualToData:someData]);
-        
+
         size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
-        [self.keyknoxManager pullDataWithPublicKeys:publicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+        VSKKeyknoxManager *keyknoxManager2 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:publicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+        [keyknoxManager2 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
             XCTAssert([decryptedData.value isEqualToData:someData]);
-            
+
             size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
-            [self.keyknoxManager pullDataWithPublicKeys:publicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+            VSKKeyknoxManager *keyknoxManager3 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:publicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+            [keyknoxManager3 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                 XCTAssert(decryptedData == nil && error != nil);
                 XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
                 XCTAssert(error.code == VSKKeyknoxManagerErrorDecryptionFailed);
-                
+
                 [ex fulfill];
             }];
         }];
     }];
-    
+
     [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
@@ -220,68 +228,73 @@ static const NSTimeInterval timeout = 20.;
 
 - (void)test005_updateRecipients {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
-    
+
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    
+
     NSMutableArray<VSMVirgilKeyPair *> *keyPairs = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *publicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *halfPublicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *anotherHalfPublicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
-    
+
     for (int i = 0; i < self.numberOfKeys; i++) {
         VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-        
+
         [keyPairs addObject:keyPair];
         [publicKeys addObject:keyPair.publicKey];
-        
+
         if (i < self.numberOfKeys / 2)
             [halfPublicKeys addObject:keyPair.publicKey];
         else
             [anotherHalfPublicKeys addObject:keyPair.publicKey];
     }
-    
+
     VSCVirgilRandom *random = [[VSCVirgilRandom alloc] initWithPersonalInfo:@"info"];
-    
+
     size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
-    
-    [self.keyknoxManager pushData:someData publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+
+    VSKKeyknoxManager *keyknoxManager1 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+    [keyknoxManager1 pushValue:someData previousHash:nil completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
         XCTAssert([decryptedData.value isEqualToData:someData]);
-        
+
         size_t rand1 = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
         size_t rand2 = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
-        
-        [self.keyknoxManager updateRecipientsWithPublicKeys:publicKeys privateKey:keyPairs[rand1].privateKey newPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand2].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+
+        VSKKeyknoxManager *keyknoxManager2 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:publicKeys privateKey:keyPairs[rand1].privateKey retryOnUnauthorized:NO error:nil];
+        [keyknoxManager2 updateRecipientsWithNewPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand2].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
             XCTAssert([decryptedData.value isEqualToData:someData]);
 
             size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
 
-            [self.keyknoxManager pullDataWithPublicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+            VSKKeyknoxManager *keyknoxManager3 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+            [keyknoxManager3 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                 XCTAssert(decryptedData != nil && error == nil);
                 XCTAssert([decryptedData.value isEqualToData:someData]);
-                
+
                 size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
-                
-                [self.keyknoxManager pullDataWithPublicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+
+                VSKKeyknoxManager *keyknoxManager4 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+                [keyknoxManager4 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                     XCTAssert(decryptedData == nil && error != nil);
                     XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
                     XCTAssert(error.code == VSKKeyknoxManagerErrorDecryptionFailed);
-                    
+
                     size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
-                    
-                    [self.keyknoxManager pullDataWithPublicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+
+                    VSKKeyknoxManager *keyknoxManager5 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+                    [keyknoxManager5 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                         XCTAssert(decryptedData == nil && error != nil);
                         XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
                         XCTAssert(error.code == VSKKeyknoxManagerErrorSignerNotFound);
-                        
+
                         [ex fulfill];
                     }];
                 }];
             }];
         }];
     }];
-    
+
     [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
@@ -290,67 +303,70 @@ static const NSTimeInterval timeout = 20.;
 
 - (void)test006_updateRecipientsWithData {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
-    
+
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    
+
     NSMutableArray<VSMVirgilKeyPair *> *keyPairs = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *publicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *halfPublicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
     NSMutableArray<VSMVirgilPublicKey *> *anotherHalfPublicKeys = [[NSMutableArray alloc] initWithCapacity:self.numberOfKeys];
-    
+
     for (int i = 0; i < self.numberOfKeys; i++) {
         VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-        
+
         [keyPairs addObject:keyPair];
         [publicKeys addObject:keyPair.publicKey];
-        
+
         if (i < self.numberOfKeys / 2)
             [halfPublicKeys addObject:keyPair.publicKey];
         else
             [anotherHalfPublicKeys addObject:keyPair.publicKey];
     }
-    
+
     VSCVirgilRandom *random = [[VSCVirgilRandom alloc] initWithPersonalInfo:@"info"];
-    
+
     size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
-    
-    [self.keyknoxManager pushData:someData publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+
+    VSKKeyknoxManager *keyknoxManager1 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+    [keyknoxManager1 pushValue:someData previousHash:nil completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
         XCTAssert([decryptedData.value isEqualToData:someData]);
-        
+
         size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
         
-        [self.keyknoxManager updateRecipientsWithData:decryptedData.value newPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+        [keyknoxManager1 updateRecipientsWithData:decryptedData.value previousHash:decryptedData.keyknoxHash newPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
             XCTAssert([decryptedData.value isEqualToData:someData]);
-            
+
             size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
-            
-            [self.keyknoxManager pullDataWithPublicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+
+            VSKKeyknoxManager *keyknoxManager2 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+            [keyknoxManager2 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                 XCTAssert(decryptedData != nil && error == nil);
                 XCTAssert([decryptedData.value isEqualToData:someData]);
-                
+
                 size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
-                
-                [self.keyknoxManager pullDataWithPublicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+
+                VSKKeyknoxManager *keyknoxManager3 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+                [keyknoxManager3 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                     XCTAssert(decryptedData == nil && error != nil);
                     XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
                     XCTAssert(error.code == VSKKeyknoxManagerErrorDecryptionFailed);
-                    
+
                     size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
-                    
-                    [self.keyknoxManager pullDataWithPublicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+                    VSKKeyknoxManager *keyknoxManager4 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
+                    [keyknoxManager4 pullValueWithCompletion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                         XCTAssert(decryptedData == nil && error != nil);
                         XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
                         XCTAssert(error.code == VSKKeyknoxManagerErrorSignerNotFound);
-                        
+
                         [ex fulfill];
                     }];
                 }];
             }];
         }];
     }];
-    
+
     [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);

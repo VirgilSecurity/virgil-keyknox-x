@@ -99,6 +99,7 @@
     XCTAssert([response.meta isEqualToData:meta]);
     XCTAssert([response.value isEqualToData:encryptedData]);
     XCTAssert([response.version isEqualToString:@"1.1"]);
+    XCTAssert(response.keyknoxHash.length > 0);
 
     VSKEncryptedKeyknoxData *response2 = [self.keyknoxClient pullValueWithToken:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
@@ -106,6 +107,7 @@
     XCTAssert([response2.meta isEqualToData:meta]);
     XCTAssert([response2.value isEqualToData:encryptedData]);
     XCTAssert([response2.version isEqualToString:@"1.1"]);
+    XCTAssert(response2.keyknoxHash.length > 0);
 }
 
 -(void)test002_updateData {
@@ -149,6 +151,7 @@
     XCTAssert([response2.meta isEqualToData:meta2]);
     XCTAssert([response2.value isEqualToData:encryptedData2]);
     XCTAssert([response2.version isEqualToString:@"2.1"]);
+    XCTAssert(response2.keyknoxHash.length > 0);
 }
 
 @end

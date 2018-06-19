@@ -36,8 +36,27 @@
 
 import Foundation
 
-internal struct KeyknoxData: Codable {
-    internal let meta: Data
-    internal let value: Data
-    internal let version: String
+@objc(VSKKeyknoxDataWithHash) public class KeyknoxDataWithHash: NSObject {
+    @objc public let meta: Data
+    @objc public let value: Data
+    @objc public let version: String
+    @objc public let keyknoxHash: Data
+    
+    internal convenience init(keyknoxData: KeyknoxData, keyknoxHash: Data) {
+        self.init(meta: keyknoxData.meta, value: keyknoxData.value,
+                  version: keyknoxData.version, keyknoxHash: keyknoxHash)
+    }
+    
+    internal init(meta: Data, value: Data, version: String, keyknoxHash: Data) {
+        self.meta = meta
+        self.value = value
+        self.version = version
+        self.keyknoxHash = keyknoxHash
+        
+        super.init()
+    }
 }
+
+@objc(VSKEncryptedKeyknoxData) public class EncryptedKeyknoxData: KeyknoxDataWithHash { }
+
+@objc(VSKDecryptedKeyknoxData) public class DecryptedKeyknoxData: KeyknoxDataWithHash { }

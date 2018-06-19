@@ -44,6 +44,8 @@ import VirgilCryptoAPI
     case signatureVerificationFailed = 2
     case decryptionFailed = 3
     case keyknoxIsEmpty = 4
+    case noPublicKeys = 5
+    case keysShouldBeUpdated = 6
 }
 
 @objc(VSKKeyknoxManager) open class KeyknoxManager: NSObject {
@@ -52,19 +54,41 @@ import VirgilCryptoAPI
     @objc public let accessTokenProvider: AccessTokenProvider
     /// KeyknoxClient instance used for performing queries
     @objc public let keyknoxClient: KeyknoxClientProtocol
+    @objc private(set) public var publicKeys: [PublicKey]
+    @objc private(set) public var privateKey: PrivateKey
     public let crypto: KeyknoxCryptoProtocol
     @objc public let retryOnUnauthorized: Bool
-    @objc private(set) public var previousHash: Data? = nil
+    
+    private let queue = DispatchQueue(label: "KeyknoxManagerQueue")
 
-    @objc public init(accessTokenProvider: AccessTokenProvider,
-                      keyknoxClient: KeyknoxClientProtocol = KeyknoxClient(),
-                      retryOnUnauthorized: Bool = false) {
+    public init(accessTokenProvider: AccessTokenProvider,
+                keyknoxClient: KeyknoxClientProtocol = KeyknoxClient(),
+                publicKeys: [PublicKey], privateKey: PrivateKey,
+                crypto: KeyknoxCryptoProtocol = KeyknoxCrypto(),
+                retryOnUnauthorized: Bool = false) throws {
+        guard !publicKeys.isEmpty else {
+            throw KeyknoxManagerError.noPublicKeys
+        }
+        
         self.accessTokenProvider = accessTokenProvider
         self.keyknoxClient = keyknoxClient
-        self.crypto = KeyknoxCrypto()
+        self.publicKeys = publicKeys
+        self.privateKey = privateKey
+        self.crypto = crypto
         self.retryOnUnauthorized = retryOnUnauthorized
 
         super.init()
+    }
+    
+    @objc public convenience init(accessTokenProvider: AccessTokenProvider,
+                      keyknoxClient: KeyknoxClientProtocol = KeyknoxClient(),
+                      publicKeys: [PublicKey], privateKey: PrivateKey,
+                      retryOnUnauthorized: Bool = false) throws {
+        try self.init(accessTokenProvider: accessTokenProvider,
+                      keyknoxClient: keyknoxClient,
+                      publicKeys: publicKeys, privateKey: privateKey,
+                      crypto: KeyknoxCrypto(),
+                      retryOnUnauthorized: retryOnUnauthorized)
     }
 }
 
@@ -75,8 +99,6 @@ internal extension KeyknoxManager {
                 let token: AccessToken = try operation.findDependencyResult()
 
                 let response = try self.keyknoxClient.pullValue(token: token.stringRepresentation())
-
-                self.previousHash = response.keyknoxHash
 
                 completion(response, nil)
             }
@@ -89,19 +111,260 @@ internal extension KeyknoxManager {
             }
         }
     }
-
+    
     internal func makePushValueOperation() -> GenericOperation<EncryptedKeyknoxData> {
+        return CallbackOperation { operation, completion in
+            do {
+                let token: AccessToken = try operation.findDependencyResult()
+                let data: (Data, Data) = try operation.findDependencyResult()
+                let encryptedKeyknoxData: DecryptedKeyknoxData = try operation.findDependencyResult()
+                
+                let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
+                                                                previousHash: encryptedKeyknoxData.keyknoxHash,
+                                                                token: token.stringRepresentation())
+                
+                completion(response, nil)
+            }
+            catch {
+                completion(nil, error)
+            }
+        }
+    }
+
+    internal func makePushValueOperation(previousHash: Data?) -> GenericOperation<EncryptedKeyknoxData> {
         return CallbackOperation { operation, completion in
             do {
                 let token: AccessToken = try operation.findDependencyResult()
                 let data: (Data, Data) = try operation.findDependencyResult()
 
                 let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
-                                                                previousHash: self.previousHash,
+                                                                previousHash: previousHash,
                                                                 token: token.stringRepresentation())
-                self.previousHash = response.keyknoxHash
 
                 completion(response, nil)
+            }
+            catch {
+                completion(nil, error)
+            }
+        }
+    }
+}
+
+extension KeyknoxManager {
+    open func pushValue(_ data: Data, previousHash: Data?) -> GenericOperation<DecryptedKeyknoxData> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
+            return CallbackOperation { _, completion in
+                self.queue.async {
+                    let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
+                    let getTokenOperation = OperationUtils.makeGetTokenOperation(
+                        tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
+                    let extractDataOperations = self.makeExtractDataOperation(data: data)
+                    let encryptOperation = self.makeEncryptOperation()
+                    let pushValueOperation = self.makePushValueOperation(previousHash: previousHash)
+                    let decryptOperation = self.makeDecryptOperation()
+                    
+                    encryptOperation.addDependency(extractDataOperations)
+                    pushValueOperation.addDependency(encryptOperation)
+                    pushValueOperation.addDependency(getTokenOperation)
+                    decryptOperation.addDependency(pushValueOperation)
+                    
+                    let operations = [getTokenOperation, extractDataOperations,
+                                      encryptOperation, pushValueOperation, decryptOperation]
+                    let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
+                    operations.forEach {
+                        completionOperation.addDependency($0)
+                    }
+                    
+                    let queue = OperationQueue()
+                    queue.addOperations(operations + [completionOperation], waitUntilFinished: true)
+                }
+            }
+        }
+        
+        if !self.retryOnUnauthorized {
+            return makeAggregateOperation(false)
+        }
+        else {
+            return OperationUtils.makeRetryAggregate(makeAggregateOperation: makeAggregateOperation)
+        }
+    }
+    
+    open func pullValue() -> GenericOperation<DecryptedKeyknoxData> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
+            return CallbackOperation { _, completion in
+                self.queue.async {
+                    let tokenContext = TokenContext(service: "keyknox", operation: "get", forceReload: force)
+                    let getTokenOperation = OperationUtils.makeGetTokenOperation(
+                        tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
+                    let pullValueOperation = self.makePullValueOperation()
+                    let decryptOperation = self.makeDecryptOperation()
+                    
+                    pullValueOperation.addDependency(getTokenOperation)
+                    decryptOperation.addDependency(pullValueOperation)
+                    
+                    let operations = [getTokenOperation, pullValueOperation, decryptOperation]
+                    let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
+                    operations.forEach {
+                        completionOperation.addDependency($0)
+                    }
+                    
+                    let queue = OperationQueue()
+                    queue.addOperations(operations + [completionOperation], waitUntilFinished: true)
+                }
+            }
+        }
+        
+        if !self.retryOnUnauthorized {
+            return makeAggregateOperation(false)
+        }
+        else {
+            return OperationUtils.makeRetryAggregate(makeAggregateOperation: makeAggregateOperation)
+        }
+    }
+    
+    open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
+                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxData> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
+            return CallbackOperation { _, completion in
+                self.queue.async {
+                    guard newPublicKeys != nil || newPrivateKey != nil else {
+                        completion(nil, KeyknoxManagerError.keysShouldBeUpdated)
+                        return
+                    }
+
+                    let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
+                    let getTokenOperation = OperationUtils.makeGetTokenOperation(
+                        tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
+                    let pullValueOperation = self.makePullValueOperation()
+                    let decryptOperation = self.makeDecryptOperation()
+                    let extractDataOperation = self.makeExtractDataOperation()
+                    let encryptOperation = self.makeEncryptOperation(newPublicKeys: newPublicKeys,
+                                                                     newPrivateKey: newPrivateKey)
+                    let pushValueOperation = self.makePushValueOperation()
+                    let decryptOperation2 = self.makeDecryptOperation()
+                    
+                    pullValueOperation.addDependency(getTokenOperation)
+                    decryptOperation.addDependency(pullValueOperation)
+                    extractDataOperation.addDependency(decryptOperation)
+                    encryptOperation.addDependency(extractDataOperation)
+                    pushValueOperation.addDependency(getTokenOperation)
+                    pushValueOperation.addDependency(decryptOperation)
+                    pushValueOperation.addDependency(encryptOperation)
+                    decryptOperation2.addDependency(pushValueOperation)
+                    
+                    let operations = [getTokenOperation, pullValueOperation, decryptOperation,
+                                      extractDataOperation, encryptOperation, pushValueOperation, decryptOperation2]
+                    let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
+                    operations.forEach {
+                        completionOperation.addDependency($0)
+                    }
+                    
+                    let queue = OperationQueue()
+                    queue.addOperations(operations + [completionOperation], waitUntilFinished: true)
+                }
+            }
+        }
+        
+        if !self.retryOnUnauthorized {
+            return makeAggregateOperation(false)
+        }
+        else {
+            return OperationUtils.makeRetryAggregate(makeAggregateOperation: makeAggregateOperation)
+        }
+    }
+    
+    open func updateRecipients(data: Data, previousHash: Data,
+                               newPublicKeys: [PublicKey]? = nil,
+                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxData> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
+            return CallbackOperation { _, completion in
+                self.queue.async {
+                    let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
+                    let getTokenOperation = OperationUtils.makeGetTokenOperation(
+                        tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
+                    let extractDataOperation = self.makeExtractDataOperation(data: data)
+                    let encryptOperation = self.makeEncryptOperation(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey)
+                    let pushValueOperation = self.makePushValueOperation(previousHash: previousHash)
+                    let decryptOperation = self.makeDecryptOperation()
+
+                    encryptOperation.addDependency(extractDataOperation)
+                    pushValueOperation.addDependency(getTokenOperation)
+                    pushValueOperation.addDependency(encryptOperation)
+                    decryptOperation.addDependency(pushValueOperation)
+
+                    let operations = [extractDataOperation, encryptOperation, getTokenOperation,
+                                      pushValueOperation, decryptOperation]
+                    let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
+                    operations.forEach {
+                        completionOperation.addDependency($0)
+                    }
+
+                    let queue = OperationQueue()
+                    queue.addOperations(operations + [completionOperation], waitUntilFinished: true)
+                }
+            }
+        }
+
+        if !self.retryOnUnauthorized {
+            return makeAggregateOperation(false)
+        }
+        else {
+            return OperationUtils.makeRetryAggregate(makeAggregateOperation: makeAggregateOperation)
+        }
+    }
+}
+
+extension KeyknoxManager {
+    private func makeDecryptOperation() -> GenericOperation<DecryptedKeyknoxData> {
+        return CallbackOperation { operation, completion in
+            do {
+                let keyknoxData: EncryptedKeyknoxData = try operation.findDependencyResult()
+                
+                let result = try self.crypto.decrypt(keyknoxData: keyknoxData,
+                                                     privateKey: self.privateKey, publicKeys: self.publicKeys)
+                
+                completion(result, nil)
+            }
+            catch {
+                completion(nil, error)
+            }
+        }
+    }
+    
+    private func makeExtractDataOperation(data: Data? = nil) -> GenericOperation<Data> {
+        return CallbackOperation { operation, completion in
+            if let data = data {
+                completion(data, nil)
+                return
+            }
+            
+            do {
+                let data: DecryptedKeyknoxData = try operation.findDependencyResult()
+                completion(data.value, nil)
+            }
+            catch {
+                completion(nil, error)
+            }
+        }
+    }
+    
+    private func makeEncryptOperation(newPublicKeys: [PublicKey]? = nil,
+                                      newPrivateKey: PrivateKey? = nil) -> GenericOperation<(Data, Data)> {
+        return CallbackOperation { operation, completion in
+            do {
+                let data: Data = try operation.findDependencyResult()
+                
+                if let newPublicKeys = newPublicKeys {
+                    guard !newPublicKeys.isEmpty else {
+                        throw KeyknoxManagerError.noPublicKeys
+                    }
+                    self.publicKeys = newPublicKeys
+                }
+                if let newPrivateKey = newPrivateKey {
+                    self.privateKey = newPrivateKey
+                }
+                
+                completion(try self.crypto.encrypt(data: data, privateKey: self.privateKey, publicKeys: self.publicKeys), nil)
             }
             catch {
                 completion(nil, error)
