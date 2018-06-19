@@ -87,7 +87,7 @@ extension CloudKeyStorage {
             .pushData(data, publicKeys: self.publicKeys,
                       privateKey: self.privateKey).startSync().getResult()
 
-        self.cache = try self.cloudEntrySerializer.parse(data: response.data)
+        self.cache = try self.cloudEntrySerializer.parse(data: response.value)
 
         return cloudEntries
     }
@@ -143,7 +143,7 @@ extension CloudKeyStorage {
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: response.data)
+                    self.cache = try self.cloudEntrySerializer.parse(data: response.value)
 
                     completion(cloudEntry, nil)
                 }
@@ -191,7 +191,7 @@ extension CloudKeyStorage {
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: response.data)
+                    self.cache = try self.cloudEntrySerializer.parse(data: response.value)
 
                     completion((), nil)
                 }
@@ -214,7 +214,7 @@ extension CloudKeyStorage {
                         .pushData(data, publicKeys: self.publicKeys,
                                   privateKey: self.privateKey).startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: response.data)
+                    self.cache = try self.cloudEntrySerializer.parse(data: response.value)
 
                     completion((), nil)
                 }
@@ -233,7 +233,7 @@ extension CloudKeyStorage {
                                                                 privateKey: self.privateKey)
                         .startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: data.data)
+                    self.cache = try self.cloudEntrySerializer.parse(data: data.value)
 
                     completion((), nil)
                 }

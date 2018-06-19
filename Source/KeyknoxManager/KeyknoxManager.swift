@@ -51,17 +51,61 @@ import VirgilCryptoAPI
     /// when performing queries
     @objc public let accessTokenProvider: AccessTokenProvider
     /// KeyknoxClient instance used for performing queries
-    @objc public let keyknoxClient: KeyknoxClient
+    @objc public let keyknoxClient: KeyknoxClientProtocol
     public let crypto: KeyknoxCryptoProtocol
     @objc public let retryOnUnauthorized: Bool
+    @objc private(set) public var previousHash: Data? = nil
 
     @objc public init(accessTokenProvider: AccessTokenProvider,
-                      keyknoxClient: KeyknoxClient = KeyknoxClient(), retryOnUnauthorized: Bool = false) {
+                      keyknoxClient: KeyknoxClientProtocol = KeyknoxClient(),
+                      retryOnUnauthorized: Bool = false) {
         self.accessTokenProvider = accessTokenProvider
         self.keyknoxClient = keyknoxClient
         self.crypto = KeyknoxCrypto()
         self.retryOnUnauthorized = retryOnUnauthorized
 
         super.init()
+    }
+}
+
+internal extension KeyknoxManager {
+    internal func makePullValueOperation() -> GenericOperation<EncryptedKeyknoxData> {
+        return CallbackOperation { operation, completion in
+            do {
+                let token: AccessToken = try operation.findDependencyResult()
+
+                let response = try self.keyknoxClient.pullValue(token: token.stringRepresentation())
+
+                self.previousHash = response.keyknoxHash
+
+                completion(response, nil)
+            }
+            catch let error as ServiceError
+                where error.httpStatusCode == 404 && error.errorCode == KeyknoxClientError.entityNotFound.rawValue {
+                    completion(nil, KeyknoxManagerError.keyknoxIsEmpty)
+            }
+            catch {
+                completion(nil, error)
+            }
+        }
+    }
+
+    internal func makePushValueOperation() -> GenericOperation<EncryptedKeyknoxData> {
+        return CallbackOperation { operation, completion in
+            do {
+                let token: AccessToken = try operation.findDependencyResult()
+                let data: (Data, Data) = try operation.findDependencyResult()
+
+                let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
+                                                                previousHash: self.previousHash,
+                                                                token: token.stringRepresentation())
+                self.previousHash = response.keyknoxHash
+
+                completion(response, nil)
+            }
+            catch {
+                completion(nil, error)
+            }
+        }
     }
 }

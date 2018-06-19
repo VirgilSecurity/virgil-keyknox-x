@@ -39,21 +39,37 @@ import VirgilSDK
 
 // MARK: - Queries
 extension KeyknoxClient: KeyknoxClientProtocol {
-    public func pushValue(meta: Data, data: Data, token: String) throws -> EncryptedKeyknoxData {
+    @objc public static let virgilKeyknoxHashKey = "Virgil-Keyknox-Hash"
+    @objc public static let virgilKeyknoxPreviousHashKey = "Virgil-Keyknox-Previous-Hash"
+
+    public func pushValue(meta: Data, value: Data, previousHash: Data? = nil,
+                          token: String) throws -> EncryptedKeyknoxData {
         guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
             throw KeyknoxClientError.constructingUrl
         }
 
         let params = [
             "meta": meta.base64EncodedString(),
-            "data": data.base64EncodedString()
+            "value": value.base64EncodedString()
         ]
 
-        let request = try ServiceRequest(url: url, method: .put, accessToken: token, params: params)
+        let headers: [String: String]
+        if let previousHash = previousHash {
+            headers = [KeyknoxClient.virgilKeyknoxPreviousHashKey: previousHash.base64EncodedString()]
+        }
+        else {
+            headers = [:]
+        }
+
+        let request = try ServiceRequest(url: url, method: .put, accessToken: token, params: params, headers: headers)
 
         let response = try self.connection.send(request)
 
-        return try self.processResponse(response)
+        let keyknoxData: KeyknoxData = try self.processResponse(response)
+
+        let keyknoxHash = try self.extractKeyknoxHash(response: response)
+
+        return EncryptedKeyknoxData(keyknoxData: keyknoxData, keyknoxHash: keyknoxHash)
     }
 
     public func pullValue(token: String) throws -> EncryptedKeyknoxData {
@@ -65,6 +81,21 @@ extension KeyknoxClient: KeyknoxClientProtocol {
 
         let response = try self.connection.send(request)
 
-        return try self.processResponse(response)
+        let keyknoxData: KeyknoxData = try self.processResponse(response)
+
+        let keyknoxHash = try self.extractKeyknoxHash(response: response)
+
+        return EncryptedKeyknoxData(keyknoxData: keyknoxData, keyknoxHash: keyknoxHash)
+    }
+
+    private func extractKeyknoxHash(response: Response) throws -> Data {
+        let responseHeaders = response.response.allHeaderFields as NSDictionary
+
+        guard let keyknoxHashStr = responseHeaders[KeyknoxClient.virgilKeyknoxHashKey] as? String,
+            let keyknoxHash = Data(base64Encoded: keyknoxHashStr) else {
+                throw KeyknoxClientError.invalidPreviousHashHeader
+        }
+
+        return keyknoxHash
     }
 }

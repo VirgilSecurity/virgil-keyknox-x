@@ -93,18 +93,18 @@
     NSData *meta = [cipher contentInfoWithError:nil];
     
     NSError *error;
-    VSKEncryptedKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
+    VSKEncryptedKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta value:encryptedData previousHash:nil token:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
 
     XCTAssert([response.meta isEqualToData:meta]);
-    XCTAssert([response.data isEqualToData:encryptedData]);
+    XCTAssert([response.value isEqualToData:encryptedData]);
     XCTAssert([response.version isEqualToString:@"1.1"]);
 
     VSKEncryptedKeyknoxData *response2 = [self.keyknoxClient pullValueWithToken:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
 
     XCTAssert([response2.meta isEqualToData:meta]);
-    XCTAssert([response2.data isEqualToData:encryptedData]);
+    XCTAssert([response2.value isEqualToData:encryptedData]);
     XCTAssert([response2.version isEqualToString:@"1.1"]);
 }
 
@@ -129,7 +129,7 @@
     NSData *meta = [cipher contentInfoWithError:nil];
     
     NSError *error;
-    VSKEncryptedKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta data:encryptedData token:self.tokenStr error:&error];
+    VSKEncryptedKeyknoxData *response = [self.keyknoxClient pushValueWithMeta:meta value:encryptedData previousHash:nil token:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
     
     NSData *signature2 = [signer signData:someData2 privateKey:privateKeyData keyPassword:nil error:nil];
@@ -143,11 +143,11 @@
     NSData *encryptedData2 = [cipher2 encryptData:someData2 embedContentInfo:NO error:nil];
     NSData *meta2 = [cipher2 contentInfoWithError:nil];
     
-    VSKEncryptedKeyknoxData *response2 = [self.keyknoxClient pushValueWithMeta:meta2 data:encryptedData2 token:self.tokenStr error:&error];
+    VSKEncryptedKeyknoxData *response2 = [self.keyknoxClient pushValueWithMeta:meta2 value:encryptedData2 previousHash:response.keyknoxHash token:self.tokenStr error:&error];
     XCTAssert(response2 != nil && error == nil);
     
     XCTAssert([response2.meta isEqualToData:meta2]);
-    XCTAssert([response2.data isEqualToData:encryptedData2]);
+    XCTAssert([response2.value isEqualToData:encryptedData2]);
     XCTAssert([response2.version isEqualToString:@"2.1"]);
 }
 

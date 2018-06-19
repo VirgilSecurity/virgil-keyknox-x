@@ -60,7 +60,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         let privateKeyData = self.crypto.exportPrivateKey(virgilPrivateKey)
         let decryptedData: Data
         do {
-            decryptedData = try cipher.decryptData(keyknoxData.data, recipientId: virgilPrivateKey.identifier,
+            decryptedData = try cipher.decryptData(keyknoxData.value, recipientId: virgilPrivateKey.identifier,
                                                    privateKey: privateKeyData, keyPassword: nil)
         }
         catch {
@@ -87,7 +87,8 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
             throw KeyknoxManagerError.signatureVerificationFailed
         }
 
-        return DecryptedKeyknoxData(meta: meta, data: decryptedData, version: keyknoxData.version)
+        return DecryptedKeyknoxData(meta: meta, value: decryptedData,
+                                    version: keyknoxData.version, keyknoxHash: keyknoxData.keyknoxHash)
     }
 
     open func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data) {

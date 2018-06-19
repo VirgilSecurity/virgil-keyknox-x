@@ -91,7 +91,7 @@ static const NSTimeInterval timeout = 20.;
     [self.keyknoxManager pushData:someData publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
         
-        XCTAssert([decryptedData.data isEqualToData:someData]);
+        XCTAssert([decryptedData.value isEqualToData:someData]);
         
         [ex fulfill];
     }];
@@ -112,7 +112,7 @@ static const NSTimeInterval timeout = 20.;
     [self.keyknoxManager pushData:someData publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         [self.keyknoxManager pullDataWithPublicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
-            XCTAssert([decryptedData.data isEqualToData:someData]);
+            XCTAssert([decryptedData.value isEqualToData:someData]);
             
             [ex fulfill];
         }];
@@ -147,11 +147,11 @@ static const NSTimeInterval timeout = 20.;
     
     [self.keyknoxManager pushData:someData publicKeys:halfPublicKeys privateKey:privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
-        XCTAssert([decryptedData.data isEqualToData:someData]);
+        XCTAssert([decryptedData.value isEqualToData:someData]);
 
         [self.keyknoxManager pullDataWithPublicKeys:halfPublicKeys privateKey:privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
-            XCTAssert([decryptedData.data isEqualToData:someData]);
+            XCTAssert([decryptedData.value isEqualToData:someData]);
 
             [self.keyknoxManager pullDataWithPublicKeys:anotherHalfPublicKeys privateKey:privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                 XCTAssert(decryptedData == nil && error != nil);
@@ -194,12 +194,12 @@ static const NSTimeInterval timeout = 20.;
     
     [self.keyknoxManager pushData:someData publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
-        XCTAssert([decryptedData.data isEqualToData:someData]);
+        XCTAssert([decryptedData.value isEqualToData:someData]);
         
         size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
         [self.keyknoxManager pullDataWithPublicKeys:publicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
-            XCTAssert([decryptedData.data isEqualToData:someData]);
+            XCTAssert([decryptedData.value isEqualToData:someData]);
             
             size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
             [self.keyknoxManager pullDataWithPublicKeys:publicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
@@ -246,20 +246,20 @@ static const NSTimeInterval timeout = 20.;
     
     [self.keyknoxManager pushData:someData publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
-        XCTAssert([decryptedData.data isEqualToData:someData]);
+        XCTAssert([decryptedData.value isEqualToData:someData]);
         
         size_t rand1 = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
         size_t rand2 = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
         
         [self.keyknoxManager updateRecipientsWithPublicKeys:publicKeys privateKey:keyPairs[rand1].privateKey newPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand2].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
-            XCTAssert([decryptedData.data isEqualToData:someData]);
+            XCTAssert([decryptedData.value isEqualToData:someData]);
 
             size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
 
             [self.keyknoxManager pullDataWithPublicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                 XCTAssert(decryptedData != nil && error == nil);
-                XCTAssert([decryptedData.data isEqualToData:someData]);
+                XCTAssert([decryptedData.value isEqualToData:someData]);
                 
                 size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
                 
@@ -316,19 +316,19 @@ static const NSTimeInterval timeout = 20.;
     
     [self.keyknoxManager pushData:someData publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
         XCTAssert(decryptedData != nil && error == nil);
-        XCTAssert([decryptedData.data isEqualToData:someData]);
+        XCTAssert([decryptedData.value isEqualToData:someData]);
         
         size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
         
-        [self.keyknoxManager updateRecipientsWithData:decryptedData.data newPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
+        [self.keyknoxManager updateRecipientsWithData:decryptedData.value newPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
-            XCTAssert([decryptedData.data isEqualToData:someData]);
+            XCTAssert([decryptedData.value isEqualToData:someData]);
             
             size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
             
             [self.keyknoxManager pullDataWithPublicKeys:anotherHalfPublicKeys privateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxData *decryptedData, NSError *error) {
                 XCTAssert(decryptedData != nil && error == nil);
-                XCTAssert([decryptedData.data isEqualToData:someData]);
+                XCTAssert([decryptedData.value isEqualToData:someData]);
                 
                 size_t rand = [random randomizeBetweenMin:0 andMax:self.numberOfKeys / 2 - 1];
                 

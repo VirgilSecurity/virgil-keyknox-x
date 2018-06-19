@@ -39,42 +39,6 @@ import VirgilSDK
 import VirgilCryptoAPI
 
 extension KeyknoxManager {
-    internal func makePullValueOperation() -> GenericOperation<EncryptedKeyknoxData> {
-        return CallbackOperation { operation, completion in
-            do {
-                let token: AccessToken = try operation.findDependencyResult()
-
-                let response = try self.keyknoxClient.pullValue(token: token.stringRepresentation())
-
-                completion(response, nil)
-            }
-            catch let error as ServiceError
-                where error.httpStatusCode == 404 && error.errorCode == KeyknoxClientError.entityNotFound.rawValue {
-                    completion(nil, KeyknoxManagerError.keyknoxIsEmpty)
-            }
-            catch {
-                completion(nil, error)
-            }
-        }
-    }
-
-    internal func makePushValueOperation() -> GenericOperation<EncryptedKeyknoxData> {
-        return CallbackOperation { operation, completion in
-            do {
-                let token: AccessToken = try operation.findDependencyResult()
-                let data: (Data, Data) = try operation.findDependencyResult()
-
-                let response = try self.keyknoxClient.pushValue(meta: data.0, data: data.1,
-                                                                token: token.stringRepresentation())
-
-                completion(response, nil)
-            }
-            catch {
-                completion(nil, error)
-            }
-        }
-    }
-
     internal func makeDecryptOperation(publicKeys: [PublicKey],
                                        privateKey: PrivateKey) -> GenericOperation<DecryptedKeyknoxData> {
         return CallbackOperation { operation, completion in
@@ -101,7 +65,7 @@ extension KeyknoxManager {
 
             do {
                 let data: DecryptedKeyknoxData = try operation.findDependencyResult()
-                completion(data.data, nil)
+                completion(data.value, nil)
             }
             catch {
                 completion(nil, error)
