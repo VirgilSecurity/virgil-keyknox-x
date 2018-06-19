@@ -79,7 +79,8 @@ extension CloudKeyStorage {
 
         let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
-        let response = try self.keyknoxManager.pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash).startSync().getResult()
+        let response = try self.keyknoxManager.pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
+            .startSync().getResult()
 
         self.cache = try self.cloudEntrySerializer.parse(data: response.value)
         self.decryptedKeyknoxData = response
@@ -134,7 +135,9 @@ extension CloudKeyStorage {
                 do {
                     let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
-                    let response = try self.keyknoxManager.pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash).startSync().getResult()
+                    let response = try self.keyknoxManager
+                        .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
+                        .startSync().getResult()
 
                     self.cache = try self.cloudEntrySerializer.parse(data: response.value)
                     self.decryptedKeyknoxData = response
@@ -181,7 +184,9 @@ extension CloudKeyStorage {
 
                     let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
-                    let response = try self.keyknoxManager.pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash).startSync().getResult()
+                    let response = try self.keyknoxManager
+                        .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
+                        .startSync().getResult()
 
                     self.cache = try self.cloudEntrySerializer.parse(data: response.value)
                     self.decryptedKeyknoxData = response
@@ -203,7 +208,9 @@ extension CloudKeyStorage {
 
                     let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
-                    let response = try self.keyknoxManager.pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash).startSync().getResult()
+                    let response = try self.keyknoxManager
+                        .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
+                        .startSync().getResult()
 
                     self.cache = try self.cloudEntrySerializer.parse(data: response.value)
                     self.decryptedKeyknoxData = response
@@ -222,11 +229,13 @@ extension CloudKeyStorage {
         return CallbackOperation { _, completion in
             self.queue.async {
                 do {
-                    let response = try self.keyknoxManager.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).startSync().getResult()
-                    
+                    let response = try self.keyknoxManager
+                        .updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey)
+                        .startSync().getResult()
+
                     self.cache = try self.cloudEntrySerializer.parse(data: response.value)
                     self.decryptedKeyknoxData = response
-                    
+
                     completion((), nil)
                 }
                 catch KeyknoxManagerError.keyknoxIsEmpty {

@@ -39,7 +39,7 @@ import VirgilCryptoAPI
 
 extension KeyknoxManager {
     @objc open func pushValue(_ data: Data, previousHash: Data?,
-                             completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+                              completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
         self.pushValue(data, previousHash: previousHash).start(completion: completion)
     }
 
