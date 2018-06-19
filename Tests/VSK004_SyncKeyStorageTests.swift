@@ -57,12 +57,11 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         let provider = GeneratorJwtProvider(jwtGenerator: generator, defaultIdentity: identity)
         let client = KeyknoxClient(serviceUrl: URL(string: config.ServiceURL)!)
         
-        let keyknoxManager = KeyknoxManager(accessTokenProvider: provider, keyknoxClient: client)
-        
         let keyPair = try! crypto.generateKeyPair()
+        let keyknoxManager = try! KeyknoxManager(accessTokenProvider: provider, keyknoxClient: client, publicKeys: [keyPair.publicKey], privateKey: keyPair.privateKey)
         
-        self.cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager, publicKeys: [keyPair.publicKey], privateKey: keyPair.privateKey)
-        let cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager, publicKeys: [keyPair.publicKey], privateKey: keyPair.privateKey)
+        self.cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager)
+        let cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager)
         
         self.syncKeyStorage = try! SyncKeyStorage(cloudKeyStorage: cloudKeyStorage)
 
