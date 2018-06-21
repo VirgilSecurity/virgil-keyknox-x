@@ -321,7 +321,7 @@ extension KeyknoxManager {
             do {
                 let keyknoxData: EncryptedKeyknoxValue = try operation.findDependencyResult()
 
-                let result = try self.crypto.decrypt(keyknoxData: keyknoxData,
+                let result = try self.crypto.decrypt(encryptedKeyknoxValue: keyknoxData,
                                                      privateKey: self.privateKey, publicKeys: self.publicKeys)
 
                 completion(result, nil)

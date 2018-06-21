@@ -48,7 +48,7 @@ open class KeyknoxCrypto {
 }
 
 extension KeyknoxCrypto: KeyknoxCryptoProtocol {
-    open func decrypt(keyknoxData: EncryptedKeyknoxValue, privateKey: PrivateKey,
+    open func decrypt(encryptedKeyknoxValue: EncryptedKeyknoxValue, privateKey: PrivateKey,
                       publicKeys: [PublicKey]) throws -> DecryptedKeyknoxValue {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
@@ -56,11 +56,12 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         }
 
         let cipher = Cipher()
-        try cipher.setContentInfo(keyknoxData.meta)
+        try cipher.setContentInfo(encryptedKeyknoxValue.meta)
         let privateKeyData = self.crypto.exportPrivateKey(virgilPrivateKey)
         let decryptedData: Data
         do {
-            decryptedData = try cipher.decryptData(keyknoxData.value, recipientId: virgilPrivateKey.identifier,
+            decryptedData = try cipher.decryptData(encryptedKeyknoxValue.value,
+                                                   recipientId: virgilPrivateKey.identifier,
                                                    privateKey: privateKeyData, keyPassword: nil)
         }
         catch {
@@ -88,7 +89,8 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         }
 
         return DecryptedKeyknoxValue(meta: meta, value: decryptedData,
-                                    version: keyknoxData.version, keyknoxHash: keyknoxData.keyknoxHash)
+                                    version: encryptedKeyknoxValue.version,
+                                    keyknoxHash: encryptedKeyknoxValue.keyknoxHash)
     }
 
     open func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data) {
