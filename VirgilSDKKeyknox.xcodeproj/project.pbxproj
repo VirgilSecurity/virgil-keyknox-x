@@ -38,7 +38,7 @@
 		425EF95820C8171B00CE1D4F /* SyncKeyStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF95720C8171B00CE1D4F /* SyncKeyStorage.swift */; };
 		428B15BD20D7F0B40041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */; };
 		428B15BF20D7F5DD0041CA75 /* KeychainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15BE20D7F5DD0041CA75 /* KeychainUtils.swift */; };
-		428B15D920D925FD0041CA75 /* KeyknoxDataWithHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15D820D925FD0041CA75 /* KeyknoxDataWithHash.swift */; };
+		428B15D920D925FD0041CA75 /* KeyknoxValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15D820D925FD0041CA75 /* KeyknoxValue.swift */; };
 		428B15FF20DBCEFE0041CA75 /* KeychainStorageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15FE20DBCEFE0041CA75 /* KeychainStorageWrapper.swift */; };
 		428B160A20DBD87B0041CA75 /* CloudKeyStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B160920DBD87B0041CA75 /* CloudKeyStorageProtocol.swift */; };
 		428B160C20DBD99A0041CA75 /* KeychainStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B160B20DBD99A0041CA75 /* KeychainStorageProtocol.swift */; };
@@ -436,7 +436,7 @@
 		425EF95720C8171B00CE1D4F /* SyncKeyStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncKeyStorage.swift; sourceTree = "<group>"; };
 		428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSK006_SyncKeyStorageKeychainUtilsTests.swift; sourceTree = "<group>"; };
 		428B15BE20D7F5DD0041CA75 /* KeychainUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainUtils.swift; sourceTree = "<group>"; };
-		428B15D820D925FD0041CA75 /* KeyknoxDataWithHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyknoxDataWithHash.swift; sourceTree = "<group>"; };
+		428B15D820D925FD0041CA75 /* KeyknoxValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyknoxValue.swift; sourceTree = "<group>"; };
 		428B15FE20DBCEFE0041CA75 /* KeychainStorageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStorageWrapper.swift; sourceTree = "<group>"; };
 		428B160920DBD87B0041CA75 /* CloudKeyStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKeyStorageProtocol.swift; sourceTree = "<group>"; };
 		428B160B20DBD99A0041CA75 /* KeychainStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStorageProtocol.swift; sourceTree = "<group>"; };
@@ -630,7 +630,7 @@
 			isa = PBXGroup;
 			children = (
 				42B5E02220C011380067F13E /* KeyknoxData.swift */,
-				428B15D820D925FD0041CA75 /* KeyknoxDataWithHash.swift */,
+				428B15D820D925FD0041CA75 /* KeyknoxValue.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1190,7 +1190,7 @@
 				42011EBC20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift in Sources */,
 				42B5E02820C011380067F13E /* KeyknoxData.swift in Sources */,
 				428B160A20DBD87B0041CA75 /* CloudKeyStorageProtocol.swift in Sources */,
-				428B15D920D925FD0041CA75 /* KeyknoxDataWithHash.swift in Sources */,
+				428B15D920D925FD0041CA75 /* KeyknoxValue.swift in Sources */,
 				428B15BF20D7F5DD0041CA75 /* KeychainUtils.swift in Sources */,
 				425B37A720D2AA4200EAAAEB /* CloudEntrySerializer.swift in Sources */,
 				42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */,

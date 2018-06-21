@@ -43,7 +43,7 @@ extension KeyknoxClient: KeyknoxClientProtocol {
     @objc public static let virgilKeyknoxPreviousHashKey = "Virgil-Keyknox-Previous-Hash"
 
     public func pushValue(meta: Data, value: Data, previousHash: Data? = nil,
-                          token: String) throws -> EncryptedKeyknoxData {
+                          token: String) throws -> EncryptedKeyknoxValue {
         guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
             throw KeyknoxClientError.constructingUrl
         }
@@ -69,10 +69,10 @@ extension KeyknoxClient: KeyknoxClientProtocol {
 
         let keyknoxHash = try self.extractKeyknoxHash(response: response)
 
-        return EncryptedKeyknoxData(keyknoxData: keyknoxData, keyknoxHash: keyknoxHash)
+        return EncryptedKeyknoxValue(keyknoxData: keyknoxData, keyknoxHash: keyknoxHash)
     }
 
-    public func pullValue(token: String) throws -> EncryptedKeyknoxData {
+    public func pullValue(token: String) throws -> EncryptedKeyknoxValue {
         guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
             throw KeyknoxClientError.constructingUrl
         }
@@ -85,7 +85,7 @@ extension KeyknoxClient: KeyknoxClientProtocol {
 
         let keyknoxHash = try self.extractKeyknoxHash(response: response)
 
-        return EncryptedKeyknoxData(keyknoxData: keyknoxData, keyknoxHash: keyknoxHash)
+        return EncryptedKeyknoxValue(keyknoxData: keyknoxData, keyknoxHash: keyknoxHash)
     }
 
     private func extractKeyknoxHash(response: Response) throws -> Data {

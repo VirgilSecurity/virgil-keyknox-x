@@ -36,7 +36,7 @@
 
 import Foundation
 
-@objc(VSKKeyknoxDataWithHash) public class KeyknoxDataWithHash: NSObject {
+@objc(VSKKeyknoxValue) public class KeyknoxValue: NSObject {
     @objc public let meta: Data
     @objc public let value: Data
     @objc public let version: String
@@ -57,6 +57,6 @@ import Foundation
     }
 }
 
-@objc(VSKEncryptedKeyknoxData) public class EncryptedKeyknoxData: KeyknoxDataWithHash { }
+@objc(VSKEncryptedKeyknoxValue) public class EncryptedKeyknoxValue: KeyknoxValue { }
 
-@objc(VSKDecryptedKeyknoxData) public class DecryptedKeyknoxData: KeyknoxDataWithHash { }
+@objc(VSKDecryptedKeyknoxValue) public class DecryptedKeyknoxValue: KeyknoxValue { }

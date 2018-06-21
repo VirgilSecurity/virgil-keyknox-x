@@ -39,24 +39,24 @@ import VirgilCryptoAPI
 
 extension KeyknoxManager {
     @objc open func pushValue(_ data: Data, previousHash: Data?,
-                              completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+                              completion: @escaping (DecryptedKeyknoxValue?, Error?) -> ()) {
         self.pushValue(data, previousHash: previousHash).start(completion: completion)
     }
 
-    @objc open func pullValue(completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+    @objc open func pullValue(completion: @escaping (DecryptedKeyknoxValue?, Error?) -> ()) {
         self.pullValue().start(completion: completion)
     }
 
     @objc open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
                                      newPrivateKey: PrivateKey? = nil,
-                                     completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+                                     completion: @escaping (DecryptedKeyknoxValue?, Error?) -> ()) {
         self.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start(completion: completion)
     }
 
     @objc open func updateRecipients(data: Data, previousHash: Data,
                                      newPublicKeys: [PublicKey]? = nil,
                                      newPrivateKey: PrivateKey? = nil,
-                                     completion: @escaping (DecryptedKeyknoxData?, Error?) -> ()) {
+                                     completion: @escaping (DecryptedKeyknoxValue?, Error?) -> ()) {
         self.updateRecipients(data: data, previousHash: previousHash,
                               newPublicKeys: newPublicKeys,
                               newPrivateKey: newPrivateKey).start(completion: completion)

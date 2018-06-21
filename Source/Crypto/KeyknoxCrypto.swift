@@ -48,8 +48,8 @@ open class KeyknoxCrypto {
 }
 
 extension KeyknoxCrypto: KeyknoxCryptoProtocol {
-    open func decrypt(keyknoxData: EncryptedKeyknoxData, privateKey: PrivateKey,
-                      publicKeys: [PublicKey]) throws -> DecryptedKeyknoxData {
+    open func decrypt(keyknoxData: EncryptedKeyknoxValue, privateKey: PrivateKey,
+                      publicKeys: [PublicKey]) throws -> DecryptedKeyknoxValue {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
                 throw VirgilCryptoError.passedKeyIsNotVirgil
@@ -87,7 +87,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
             throw KeyknoxManagerError.signatureVerificationFailed
         }
 
-        return DecryptedKeyknoxData(meta: meta, value: decryptedData,
+        return DecryptedKeyknoxValue(meta: meta, value: decryptedData,
                                     version: keyknoxData.version, keyknoxHash: keyknoxData.keyknoxHash)
     }
 

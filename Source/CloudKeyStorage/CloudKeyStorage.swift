@@ -47,7 +47,7 @@ import VirgilSDK
 @objc(VSKCloudKeyStorage) open class CloudKeyStorage: NSObject {
     @objc public let keyknoxManager: KeyknoxManager
     private var cache: [String: CloudEntry] = [:]
-    private var decryptedKeyknoxData: DecryptedKeyknoxData?
+    private var decryptedKeyknoxData: DecryptedKeyknoxValue?
     private let cloudEntrySerializer = CloudEntrySerializer()
 
     private let queue = DispatchQueue(label: "CloudKeyStorageQueue")

@@ -93,7 +93,7 @@ import VirgilCryptoAPI
 }
 
 internal extension KeyknoxManager {
-    internal func makePullValueOperation() -> GenericOperation<EncryptedKeyknoxData> {
+    internal func makePullValueOperation() -> GenericOperation<EncryptedKeyknoxValue> {
         return CallbackOperation { operation, completion in
             do {
                 let token: AccessToken = try operation.findDependencyResult()
@@ -112,12 +112,12 @@ internal extension KeyknoxManager {
         }
     }
 
-    internal func makePushValueOperation() -> GenericOperation<EncryptedKeyknoxData> {
+    internal func makePushValueOperation() -> GenericOperation<EncryptedKeyknoxValue> {
         return CallbackOperation { operation, completion in
             do {
                 let token: AccessToken = try operation.findDependencyResult()
                 let data: (Data, Data) = try operation.findDependencyResult()
-                let encryptedKeyknoxData: DecryptedKeyknoxData = try operation.findDependencyResult()
+                let encryptedKeyknoxData: DecryptedKeyknoxValue = try operation.findDependencyResult()
 
                 let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
                                                                 previousHash: encryptedKeyknoxData.keyknoxHash,
@@ -131,7 +131,7 @@ internal extension KeyknoxManager {
         }
     }
 
-    internal func makePushValueOperation(previousHash: Data?) -> GenericOperation<EncryptedKeyknoxData> {
+    internal func makePushValueOperation(previousHash: Data?) -> GenericOperation<EncryptedKeyknoxValue> {
         return CallbackOperation { operation, completion in
             do {
                 let token: AccessToken = try operation.findDependencyResult()
@@ -151,8 +151,8 @@ internal extension KeyknoxManager {
 }
 
 extension KeyknoxManager {
-    open func pushValue(_ data: Data, previousHash: Data?) -> GenericOperation<DecryptedKeyknoxData> {
-        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
+    open func pushValue(_ data: Data, previousHash: Data?) -> GenericOperation<DecryptedKeyknoxValue> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
                 self.queue.async {
                     let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
@@ -189,8 +189,8 @@ extension KeyknoxManager {
         }
     }
 
-    open func pullValue() -> GenericOperation<DecryptedKeyknoxData> {
-        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
+    open func pullValue() -> GenericOperation<DecryptedKeyknoxValue> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
                 self.queue.async {
                     let tokenContext = TokenContext(service: "keyknox", operation: "get", forceReload: force)
@@ -223,8 +223,8 @@ extension KeyknoxManager {
     }
 
     open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
-                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxData> {
-        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
+                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
                 self.queue.async {
                     guard newPublicKeys != nil || newPrivateKey != nil else {
@@ -275,8 +275,8 @@ extension KeyknoxManager {
 
     open func updateRecipients(data: Data, previousHash: Data,
                                newPublicKeys: [PublicKey]? = nil,
-                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxData> {
-        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxData> = { force in
+                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
+        let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
                 self.queue.async {
                     let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
@@ -316,10 +316,10 @@ extension KeyknoxManager {
 }
 
 extension KeyknoxManager {
-    private func makeDecryptOperation() -> GenericOperation<DecryptedKeyknoxData> {
+    private func makeDecryptOperation() -> GenericOperation<DecryptedKeyknoxValue> {
         return CallbackOperation { operation, completion in
             do {
-                let keyknoxData: EncryptedKeyknoxData = try operation.findDependencyResult()
+                let keyknoxData: EncryptedKeyknoxValue = try operation.findDependencyResult()
 
                 let result = try self.crypto.decrypt(keyknoxData: keyknoxData,
                                                      privateKey: self.privateKey, publicKeys: self.publicKeys)
@@ -340,7 +340,7 @@ extension KeyknoxManager {
             }
 
             do {
-                let data: DecryptedKeyknoxData = try operation.findDependencyResult()
+                let data: DecryptedKeyknoxValue = try operation.findDependencyResult()
                 completion(data.value, nil)
             }
             catch {
