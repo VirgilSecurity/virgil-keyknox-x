@@ -37,32 +37,6 @@
 import Foundation
 import VirgilSDK
 
-public protocol CloudKeyStorageProtocol {
-    func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[CloudEntry]>
-    func storeEntry(withName name: String, data: Data, meta: [String: String]?) -> GenericOperation<CloudEntry>
-    func updateEntry(withName: String, data: Data, meta: [String: String]?) -> GenericOperation<CloudEntry>
-    func retrieveAllEntries() -> [CloudEntry]
-    func retrieveEntry(withName name: String) -> CloudEntry?
-    func existsEntry(withName name: String) -> Bool
-    func deleteEntry(withName name: String) -> GenericOperation<Void>
-    func deleteEntries(withNames names: [String]) -> GenericOperation<Void>
-    func deleteAllEntries() -> GenericOperation<Void>
-    func retrieveCloudEntries() -> GenericOperation<Void>
-}
-
-extension CloudKeyStorage: CloudKeyStorageProtocol { }
-
-public protocol KeychainStorageProtocol {
-    func store(data: Data, withName name: String, meta: [String: String]?) throws -> KeychainEntry
-    func updateEntry(withName name: String, data: Data, meta: [String: String]?) throws
-    func retrieveEntry(withName name: String) throws -> KeychainEntry
-    func retrieveAllEntries() throws -> [KeychainEntry]
-    func deleteEntry(withName name: String) throws
-    func existsEntry(withName name: String) throws -> Bool
-}
-
-extension KeychainStorage: KeychainStorageProtocol { }
-
 @objc(VSKSyncKeyStorageError) public enum SyncKeyStorageError: Int, Error {
     case keychainEntryNotFoundWhileUpdating
     case cloudEntryNotFoundWhileUpdating
@@ -263,8 +237,4 @@ extension SyncKeyStorage {
             }
         }
     }
-}
-
-extension SyncKeyStorage {
-    
 }

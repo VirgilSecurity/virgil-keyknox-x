@@ -59,7 +59,7 @@ import VirgilSDK
     }
 }
 
-extension CloudKeyStorage {
+extension CloudKeyStorage: CloudKeyStorageProtocol {
     private func storeEntriesSync(_ keyEntries: [KeyEntry]) throws -> [CloudEntry] {
         for entry in keyEntries {
             guard self.cache[entry.name] == nil else {
