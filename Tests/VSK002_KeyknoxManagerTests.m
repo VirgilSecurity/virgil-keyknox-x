@@ -301,7 +301,7 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test006_updateRecipientsWithData {
+- (void)test006_updateRecipientsWithValue {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
 
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
@@ -334,7 +334,7 @@ static const NSTimeInterval timeout = 20.;
 
         size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
         
-        [keyknoxManager1 updateRecipientsWithData:decryptedData.value previousHash:decryptedData.keyknoxHash newPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
+        [keyknoxManager1 updateRecipientsWithValue:decryptedData.value previousHash:decryptedData.keyknoxHash newPublicKeys:anotherHalfPublicKeys newPrivateKey:keyPairs[rand].privateKey completion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
             XCTAssert(decryptedData != nil && error == nil);
             XCTAssert([decryptedData.value isEqualToData:someData]);
 

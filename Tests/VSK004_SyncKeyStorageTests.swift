@@ -63,7 +63,7 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         self.cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager)
         let cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager)
         
-        self.syncKeyStorage = try! SyncKeyStorage(cloudKeyStorage: cloudKeyStorage)
+        self.syncKeyStorage = try! SyncKeyStorage(identity: identity, cloudKeyStorage: cloudKeyStorage)
 
         let params = try! KeychainStorageParams.makeKeychainStorageParams()
         self.keychainStorage = KeychainStorage(storageParams: params)
