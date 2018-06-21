@@ -67,7 +67,8 @@ import VirgilSDK
 
     private static let queue = DispatchQueue(label: "SyncKeyStorageQueue")
 
-    internal init(identity: String, keychainStorage: KeychainStorageProtocol, cloudKeyStorage: CloudKeyStorageProtocol) {
+    internal init(identity: String, keychainStorage: KeychainStorageProtocol,
+                  cloudKeyStorage: CloudKeyStorageProtocol) {
         self.identity = identity
         self.keychainStorage = KeychainStorageWrapper(identity: identity, keychainStorage: keychainStorage)
         self.cloudKeyStorage = cloudKeyStorage
@@ -79,7 +80,7 @@ import VirgilSDK
     @objc public convenience init(identity: String, cloudKeyStorage: CloudKeyStorage) throws {
         let configuration = try KeychainStorageParams.makeKeychainStorageParams()
         let keychainStorage = KeychainStorage(storageParams: configuration)
-        
+
         self.init(identity: identity, keychainStorage: keychainStorage, cloudKeyStorage: cloudKeyStorage)
     }
 }

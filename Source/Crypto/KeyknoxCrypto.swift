@@ -89,8 +89,8 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         }
 
         return DecryptedKeyknoxValue(meta: meta, value: decryptedData,
-                                    version: encryptedKeyknoxValue.version,
-                                    keyknoxHash: encryptedKeyknoxValue.keyknoxHash)
+                                     version: encryptedKeyknoxValue.version,
+                                     keyknoxHash: encryptedKeyknoxValue.keyknoxHash)
     }
 
     open func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data) {
