@@ -39,6 +39,8 @@ import XCTest
 @testable import VirgilSDKKeyknox
 
 class VSK006_SyncKeyStorageKeychainUtilsTests: XCTestCase {
+    private let keychainUtils = KeychainUtils()
+    
     func test001_testMeta() {
         let data = NSUUID().uuidString.data(using: .utf8)!
         let creationDate = Date(timeIntervalSince1970: 1529330258.105006)
@@ -46,14 +48,14 @@ class VSK006_SyncKeyStorageKeychainUtilsTests: XCTestCase {
         
         let cloudEntry1 = CloudEntry(name: "name", data: data, creationDate: creationDate, modificationDate: modificationDate, meta: nil)
         let cloudEntry2 = CloudEntry(name: "name", data: data, creationDate: creationDate, modificationDate: modificationDate, meta: ["key": "value"])
-        let cloudEntry3 = CloudEntry(name: "name", data: data, creationDate: creationDate, modificationDate: modificationDate, meta: [SyncKeyStorage.KeychainUtils.keyknoxMetaCreationDateKey: "value"])
-        let cloudEntry4 = CloudEntry(name: "name", data: data, creationDate: creationDate, modificationDate: modificationDate, meta: [SyncKeyStorage.KeychainUtils.keyknoxMetaModificationDateKey: "value"])
+        let cloudEntry3 = CloudEntry(name: "name", data: data, creationDate: creationDate, modificationDate: modificationDate, meta: [KeychainUtils.keyknoxMetaCreationDateKey: "value"])
+        let cloudEntry4 = CloudEntry(name: "name", data: data, creationDate: creationDate, modificationDate: modificationDate, meta: [KeychainUtils.keyknoxMetaModificationDateKey: "value"])
         
-        let meta1 = try! SyncKeyStorage.KeychainUtils.createMetaForKeychain(from: cloudEntry1)
-        let meta2 = try! SyncKeyStorage.KeychainUtils.createMetaForKeychain(from: cloudEntry2)
+        let meta1 = try! self.keychainUtils.createMetaForKeychain(from: cloudEntry1)
+        let meta2 = try! self.keychainUtils.createMetaForKeychain(from: cloudEntry2)
         
         do {
-            _ = try SyncKeyStorage.KeychainUtils.createMetaForKeychain(from: cloudEntry3)
+            _ = try self.keychainUtils.createMetaForKeychain(from: cloudEntry3)
             XCTFail()
         }
         catch SyncKeyStorageError.invalidKeysInEntryMeta {
@@ -62,7 +64,7 @@ class VSK006_SyncKeyStorageKeychainUtilsTests: XCTestCase {
             XCTFail()
         }
         do {
-            _ = try SyncKeyStorage.KeychainUtils.createMetaForKeychain(from: cloudEntry4)
+            _ = try self.keychainUtils.createMetaForKeychain(from: cloudEntry4)
             XCTFail()
         }
         catch SyncKeyStorageError.invalidKeysInEntryMeta {

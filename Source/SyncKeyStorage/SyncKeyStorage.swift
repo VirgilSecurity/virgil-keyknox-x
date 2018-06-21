@@ -86,24 +86,27 @@ extension KeychainStorage: KeychainStorageProtocol { }
 }
 
 @objc(VSKSyncKeyStorage) open class SyncKeyStorage: NSObject {
-    private let keychainStorage: KeychainStorageProtocol
-    private let cloudKeyStorage: CloudKeyStorageProtocol
+    @objc public let identity: String
+    public let cloudKeyStorage: CloudKeyStorageProtocol
+    public let keychainStorage: KeychainStorageProtocol
+    private let keychainUtils: KeychainUtils
 
     private static let queue = DispatchQueue(label: "SyncKeyStorageQueue")
 
-    internal init(keychainStorage: KeychainStorageProtocol, cloudKeyStorage: CloudKeyStorageProtocol) {
-        self.keychainStorage = keychainStorage
+    internal init(identity: String, keychainStorage: KeychainStorageProtocol, cloudKeyStorage: CloudKeyStorageProtocol) {
+        self.identity = identity
+        self.keychainStorage = KeychainStorageWrapper(identity: identity, keychainStorage: keychainStorage)
         self.cloudKeyStorage = cloudKeyStorage
+        self.keychainUtils = KeychainUtils()
 
         super.init()
     }
 
-    @objc public init(cloudKeyStorage: CloudKeyStorage) throws {
+    @objc public convenience init(identity: String, cloudKeyStorage: CloudKeyStorage) throws {
         let configuration = try KeychainStorageParams.makeKeychainStorageParams()
-        self.keychainStorage = KeychainStorage(storageParams: configuration)
-        self.cloudKeyStorage = cloudKeyStorage
-
-        super.init()
+        let keychainStorage = KeychainStorage(storageParams: configuration)
+        
+        self.init(identity: identity, keychainStorage: keychainStorage, cloudKeyStorage: cloudKeyStorage)
     }
 }
 
@@ -122,7 +125,7 @@ extension SyncKeyStorage {
 
                     let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name, data: data,
                                                                           meta: meta).startSync().getResult()
-                    let meta = try KeychainUtils.createMetaForKeychain(from: cloudEntry)
+                    let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
                     try self.keychainStorage.updateEntry(withName: name, data: data, meta: meta)
 
                     completion((), nil)
@@ -177,7 +180,7 @@ extension SyncKeyStorage {
 
                     let cloudEntry = try self.cloudKeyStorage.storeEntry(withName: name, data: data,
                                                                          meta: meta).startSync().getResult()
-                    let meta = try KeychainUtils.createMetaForKeychain(from: cloudEntry)
+                    let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
                     let keychainEntry = try self.keychainStorage.store(data: data, withName: name, meta: meta)
 
                     completion(keychainEntry, nil)
@@ -197,7 +200,7 @@ extension SyncKeyStorage {
                     try self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
 
                     let keychainEntries = try self.keychainStorage.retrieveAllEntries()
-                        .compactMap(KeychainUtils.filterKeyknoxKeychainEntry)
+                        .compactMap(self.keychainUtils.filterKeyknoxKeychainEntry)
 
                     let keychainSet = Set<String>(keychainEntries.map { $0.name })
                     let cloudSet = Set<String>(self.cloudKeyStorage.retrieveAllEntries().map { $0.name })
@@ -234,7 +237,7 @@ extension SyncKeyStorage {
                 throw SyncKeyStorageError.cloudEntryNotFoundWhileSyncing
             }
 
-            let meta = try KeychainUtils.createMetaForKeychain(from: cloudEntry)
+            let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
 
             _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
         }
@@ -251,13 +254,17 @@ extension SyncKeyStorage {
                 throw SyncKeyStorageError.cloudEntryNotFoundWhileComparing
             }
 
-            let keychainDate = try KeychainUtils.extractModificationDate(fromKeychainEntry: keychainEntry)
+            let keychainDate = try self.keychainUtils.extractModificationDate(fromKeychainEntry: keychainEntry)
 
             if keychainDate.modificationDate < cloudEntry.modificationDate {
-                let meta = try KeychainUtils.createMetaForKeychain(from: cloudEntry)
+                let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
 
                 try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
             }
         }
     }
+}
+
+extension SyncKeyStorage {
+    
 }
