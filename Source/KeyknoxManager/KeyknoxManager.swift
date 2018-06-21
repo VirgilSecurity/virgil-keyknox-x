@@ -151,14 +151,14 @@ internal extension KeyknoxManager {
 }
 
 extension KeyknoxManager {
-    open func pushValue(_ data: Data, previousHash: Data?) -> GenericOperation<DecryptedKeyknoxValue> {
+    open func pushValue(_ value: Data, previousHash: Data?) -> GenericOperation<DecryptedKeyknoxValue> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
                 self.queue.async {
                     let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
                     let getTokenOperation = OperationUtils.makeGetTokenOperation(
                         tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
-                    let extractDataOperations = self.makeExtractDataOperation(data: data)
+                    let extractDataOperations = self.makeExtractDataOperation(data: value)
                     let encryptOperation = self.makeEncryptOperation()
                     let pushValueOperation = self.makePushValueOperation(previousHash: previousHash)
                     let decryptOperation = self.makeDecryptOperation()
@@ -273,7 +273,7 @@ extension KeyknoxManager {
         }
     }
 
-    open func updateRecipients(data: Data, previousHash: Data,
+    open func updateRecipients(value: Data, previousHash: Data,
                                newPublicKeys: [PublicKey]? = nil,
                                newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
@@ -282,7 +282,7 @@ extension KeyknoxManager {
                     let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
                     let getTokenOperation = OperationUtils.makeGetTokenOperation(
                         tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
-                    let extractDataOperation = self.makeExtractDataOperation(data: data)
+                    let extractDataOperation = self.makeExtractDataOperation(data: value)
                     let encryptOperation = self.makeEncryptOperation(newPublicKeys: newPublicKeys,
                                                                      newPrivateKey: newPrivateKey)
                     let pushValueOperation = self.makePushValueOperation(previousHash: previousHash)
