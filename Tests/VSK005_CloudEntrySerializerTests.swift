@@ -79,7 +79,7 @@ class VSK005_CloudEntrySerializerTests: XCTestCase {
 
         XCTAssert(serialized1 == serialized2)
         
-        let dict2 = try! serializer.parse(data: serialized2)
+        let dict2 = try! serializer.deserialize(data: serialized2)
         
         XCTAssert(dict[name1]! == dict2[name1]!)
         XCTAssert(dict[name2]! == dict2[name2]!)

@@ -64,6 +64,15 @@ extension CloudKeyStorage {
         }
     }
 
+    @objc open func existsEntryNoThrow(withName name: String) -> Bool {
+        do {
+            return try self.existsEntry(withName: name)
+        }
+        catch {
+            return false
+        }
+    }
+
     @objc open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil,
                                completion: @escaping (Error?) -> ()) {
         self.storeEntry(withName: name, data: data, meta: meta).start { _, error in

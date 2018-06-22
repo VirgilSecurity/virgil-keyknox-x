@@ -41,9 +41,9 @@ public protocol CloudKeyStorageProtocol {
     func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[CloudEntry]>
     func storeEntry(withName name: String, data: Data, meta: [String: String]?) -> GenericOperation<CloudEntry>
     func updateEntry(withName: String, data: Data, meta: [String: String]?) -> GenericOperation<CloudEntry>
-    func retrieveAllEntries() -> [CloudEntry]
-    func retrieveEntry(withName name: String) -> CloudEntry?
-    func existsEntry(withName name: String) -> Bool
+    func retrieveAllEntries() throws -> [CloudEntry]
+    func retrieveEntry(withName name: String) throws -> CloudEntry
+    func existsEntry(withName name: String) throws -> Bool
     func deleteEntry(withName name: String) -> GenericOperation<Void>
     func deleteEntries(withNames names: [String]) -> GenericOperation<Void>
     func deleteAllEntries() -> GenericOperation<Void>

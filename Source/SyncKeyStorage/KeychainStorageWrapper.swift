@@ -50,16 +50,30 @@ internal final class KeychainStorageWrapper {
         return "VIRGIL.IDENTITY=\(self.identity)."
     }
 
-    private func keychainName(fromEntryName entryName: String) -> String {
+    internal func keychainName(fromEntryName entryName: String) -> String {
         return "\(self.keychainPrefix())\(entryName)"
     }
 
-    private func entryName(fromKeychainName keychainName: String) -> String {
+    internal func entryName(fromKeychainName keychainName: String) -> String {
         return keychainName.replacingOccurrences(of: self.keychainPrefix(), with: "")
     }
 }
 
 extension KeychainStorageWrapper: KeychainStorageProtocol {
+    private func mapKeychainEntry(_ keychainEntry: KeychainEntry) -> KeychainEntry {
+        let entryName = self.entryName(fromKeychainName: keychainEntry.name)
+
+        return KeychainEntry(data: keychainEntry.data, name: entryName, meta: keychainEntry.meta,
+                             creationDate: keychainEntry.creationDate,
+                             modificationDate: keychainEntry.modificationDate)
+    }
+
+    private func mapKeychainEntries(_ keychainEntries: [KeychainEntry]) -> [KeychainEntry] {
+        return keychainEntries.map {
+            return self.mapKeychainEntry($0)
+        }
+    }
+
     internal func store(data: Data, withName name: String, meta: [String: String]?) throws -> KeychainEntry {
         let keychainName = self.keychainName(fromEntryName: name)
 
@@ -73,19 +87,13 @@ extension KeychainStorageWrapper: KeychainStorageProtocol {
     }
 
     internal func retrieveEntry(withName name: String) throws -> KeychainEntry {
-        let entryName = self.entryName(fromKeychainName: name)
+        let keychainName = self.keychainName(fromEntryName: name)
 
-        return try self.keychainStorage.retrieveEntry(withName: entryName)
+        return self.mapKeychainEntry(try self.keychainStorage.retrieveEntry(withName: keychainName))
     }
 
     internal func retrieveAllEntries() throws -> [KeychainEntry] {
-        return try self.keychainStorage.retrieveAllEntries().map {
-            let entryName = self.entryName(fromKeychainName: $0.name)
-
-            return KeychainEntry(data: $0.data, name: entryName, meta: $0.meta,
-                                 creationDate: $0.creationDate,
-                                 modificationDate: $0.modificationDate)
-        }
+        return self.mapKeychainEntries(try self.keychainStorage.retrieveAllEntries())
     }
 
     internal func deleteEntry(withName name: String) throws {

@@ -46,7 +46,7 @@ internal final class CloudEntrySerializer {
         return try encoder.encode(dict)
     }
 
-    internal func parse(data: Data) throws -> [String: CloudEntry] {
+    internal func deserialize(data: Data) throws -> [String: CloudEntry] {
         let decoder = JSONDecoder()
 
         decoder.dateDecodingStrategy = .custom(DateUtils.timestampMilliDateDecodingStrategy)

@@ -36,21 +36,18 @@
 
 import Foundation
 import VirgilSDK
+import VirgilCryptoAPI
 
 @objc(VSKSyncKeyStorageError) public enum SyncKeyStorageError: Int, Error {
     case keychainEntryNotFoundWhileUpdating
-    case cloudEntryNotFoundWhileUpdating
 
     case keychainEntryNotFoundWhileDeleting
-    case cloudEntryNotFoundWhileDeleting
 
     case keychainEntryNotFoundWhileComparing
     case cloudEntryNotFoundWhileComparing
 
     case keychainEntryAlreadyExistsWhileStoring
     case cloudEntryAlreadyExistsWhileStoring
-
-    case cloudEntryNotFoundWhileSyncing
 
     case invalidModificationDateInKeychainEntry
     case invalidCreationDateInKeychainEntry
@@ -83,6 +80,14 @@ import VirgilSDK
 
         self.init(identity: identity, keychainStorage: keychainStorage, cloudKeyStorage: cloudKeyStorage)
     }
+
+    @objc convenience public init(identity: String, accessTokenProvider: AccessTokenProvider,
+                                  publicKeys: [PublicKey], privateKey: PrivateKey) throws {
+        let cloudKeyStorage = try CloudKeyStorage(accessTokenProvider: accessTokenProvider,
+                                                  publicKeys: publicKeys, privateKey: privateKey)
+
+        try self.init(identity: identity, cloudKeyStorage: cloudKeyStorage)
+    }
 }
 
 extension SyncKeyStorage {
@@ -94,9 +99,7 @@ extension SyncKeyStorage {
                         throw SyncKeyStorageError.keychainEntryNotFoundWhileUpdating
                     }
 
-                    guard self.cloudKeyStorage.existsEntry(withName: name) else {
-                        throw SyncKeyStorageError.cloudEntryNotFoundWhileUpdating
-                    }
+                    _ = try self.cloudKeyStorage.existsEntry(withName: name)
 
                     let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name, data: data,
                                                                           meta: meta).startSync().getResult()
@@ -124,10 +127,7 @@ extension SyncKeyStorage {
                         throw SyncKeyStorageError.keychainEntryNotFoundWhileDeleting
                     }
 
-                    guard self.cloudKeyStorage.existsEntry(withName: name) else {
-                        throw SyncKeyStorageError.cloudEntryNotFoundWhileDeleting
-                    }
-
+                    _ = try self.cloudKeyStorage.existsEntry(withName: name)
                     _ = try self.cloudKeyStorage.deleteEntry(withName: name).startSync().getResult()
                     _ = try self.keychainStorage.deleteEntry(withName: name)
 
@@ -149,7 +149,7 @@ extension SyncKeyStorage {
                         throw SyncKeyStorageError.keychainEntryAlreadyExistsWhileStoring
                     }
 
-                    guard !self.cloudKeyStorage.existsEntry(withName: name) else {
+                    guard !(try self.cloudKeyStorage.existsEntry(withName: name)) else {
                         throw SyncKeyStorageError.cloudEntryAlreadyExistsWhileStoring
                     }
 
@@ -178,7 +178,7 @@ extension SyncKeyStorage {
                         .compactMap(self.keychainUtils.filterKeyknoxKeychainEntry)
 
                     let keychainSet = Set<String>(keychainEntries.map { $0.name })
-                    let cloudSet = Set<String>(self.cloudKeyStorage.retrieveAllEntries().map { $0.name })
+                    let cloudSet = Set<String>(try self.cloudKeyStorage.retrieveAllEntries().map { $0.name })
 
                     let entriesToDelete = [String](keychainSet.subtracting(cloudSet))
                     let entriesToStore = [String](cloudSet.subtracting(keychainSet))
@@ -208,9 +208,7 @@ extension SyncKeyStorage {
 
     private func syncStoreEntries(_ entriesToStore: [String]) throws {
         try entriesToStore.forEach {
-            guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: $0) else {
-                throw SyncKeyStorageError.cloudEntryNotFoundWhileSyncing
-            }
+            let cloudEntry = try self.cloudKeyStorage.retrieveEntry(withName: $0)
 
             let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
 
@@ -225,9 +223,7 @@ extension SyncKeyStorage {
                 throw SyncKeyStorageError.keychainEntryNotFoundWhileComparing
             }
 
-            guard let cloudEntry = self.cloudKeyStorage.retrieveEntry(withName: name) else {
-                throw SyncKeyStorageError.cloudEntryNotFoundWhileComparing
-            }
+            let cloudEntry = try self.cloudKeyStorage.retrieveEntry(withName: name)
 
             let keychainDate = try self.keychainUtils.extractModificationDate(fromKeychainEntry: keychainEntry)
 

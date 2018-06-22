@@ -42,6 +42,7 @@ import VirgilSDK
     case entryNotFound
     case entrySavingError
     case entryAlreadyExists
+    case cloudStorageOutOfSync
 }
 
 @objc(VSKCloudKeyStorage) open class CloudKeyStorage: NSObject {
@@ -49,6 +50,7 @@ import VirgilSDK
     private var cache: [String: CloudEntry] = [:]
     private var decryptedKeyknoxData: DecryptedKeyknoxValue?
     private let cloudEntrySerializer = CloudEntrySerializer()
+    @objc private(set) public var storageWasSynced = false
 
     private let queue = DispatchQueue(label: "CloudKeyStorageQueue")
 
@@ -57,10 +59,22 @@ import VirgilSDK
 
         super.init()
     }
+
+    @objc convenience public init(accessTokenProvider: AccessTokenProvider,
+                                  publicKeys: [PublicKey], privateKey: PrivateKey) throws {
+        let keyknoxManager = try KeyknoxManager(accessTokenProvider: accessTokenProvider,
+                                                publicKeys: publicKeys, privateKey: privateKey)
+
+        self.init(keyknoxManager: keyknoxManager)
+    }
 }
 
 extension CloudKeyStorage: CloudKeyStorageProtocol {
     private func storeEntriesSync(_ keyEntries: [KeyEntry]) throws -> [CloudEntry] {
+        guard self.storageWasSynced else {
+            throw CloudKeyStorageError.cloudStorageOutOfSync
+        }
+
         for entry in keyEntries {
             guard self.cache[entry.name] == nil else {
                 throw CloudKeyStorageError.entryAlreadyExists
@@ -82,7 +96,7 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         let response = try self.keyknoxManager.pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
             .startSync().getResult()
 
-        self.cache = try self.cloudEntrySerializer.parse(data: response.value)
+        self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
         self.decryptedKeyknoxData = response
 
         return cloudEntries
@@ -124,22 +138,26 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
                           meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
         return CallbackOperation { _, completion in
             self.queue.async {
-                let now = Date()
-                let creationDate = self.cache[name]?.creationDate ?? now
-
-                let cloudEntry = CloudEntry(name: name, data: data,
-                                            creationDate: creationDate, modificationDate: now, meta: meta)
-
-                self.cache[name] = cloudEntry
-
                 do {
+                    guard self.storageWasSynced else {
+                        throw CloudKeyStorageError.cloudStorageOutOfSync
+                    }
+
+                    let now = Date()
+                    let creationDate = self.cache[name]?.creationDate ?? now
+
+                    let cloudEntry = CloudEntry(name: name, data: data,
+                                                creationDate: creationDate, modificationDate: now, meta: meta)
+
+                    self.cache[name] = cloudEntry
+
                     let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
                     let response = try self.keyknoxManager
                         .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
                         .startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: response.value)
+                    self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
 
                     completion(cloudEntry, nil)
@@ -151,15 +169,31 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         }
     }
 
-    @objc open func retrieveEntry(withName name: String) -> CloudEntry? {
-        return self.cache[name]
+    @objc open func retrieveEntry(withName name: String) throws -> CloudEntry {
+        guard self.storageWasSynced else {
+            throw CloudKeyStorageError.cloudStorageOutOfSync
+        }
+
+        guard let entry = self.cache[name] else {
+            throw CloudKeyStorageError.entryNotFound
+        }
+
+        return entry
     }
 
-    @objc open func retrieveAllEntries() -> [CloudEntry] {
+    @objc open func retrieveAllEntries() throws -> [CloudEntry] {
+        guard self.storageWasSynced else {
+            throw CloudKeyStorageError.cloudStorageOutOfSync
+        }
+
         return [CloudEntry](self.cache.values)
     }
 
-    @objc open func existsEntry(withName name: String) -> Bool {
+    open func existsEntry(withName name: String) throws -> Bool {
+        guard self.storageWasSynced else {
+            throw CloudKeyStorageError.cloudStorageOutOfSync
+        }
+
         return self.cache[name] != nil
     }
 
@@ -170,14 +204,17 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
     open func deleteEntries(withNames names: [String]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
-                for name in names {
-                    guard self.cache[name] != nil else {
-                        completion(nil, CloudKeyStorageError.entryNotFound)
-                        return
-                    }
-                }
-
                 do {
+                    guard self.storageWasSynced else {
+                        throw CloudKeyStorageError.cloudStorageOutOfSync
+                    }
+
+                    for name in names {
+                        guard self.cache[name] != nil else {
+                            throw CloudKeyStorageError.entryNotFound
+                        }
+                    }
+
                     for name in names {
                         self.cache.removeValue(forKey: name)
                     }
@@ -188,7 +225,7 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
                         .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
                         .startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: response.value)
+                    self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
 
                     completion((), nil)
@@ -212,7 +249,7 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
                         .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
                         .startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: response.value)
+                    self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
 
                     completion((), nil)
@@ -229,11 +266,16 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         return CallbackOperation { _, completion in
             self.queue.async {
                 do {
+                    guard self.storageWasSynced else {
+                        throw CloudKeyStorageError.cloudStorageOutOfSync
+                    }
+
+                    // TODO: Optimize
                     let response = try self.keyknoxManager
                         .updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey)
                         .startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: response.value)
+                    self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
 
                     completion((), nil)
@@ -251,19 +293,29 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
     open func retrieveCloudEntries() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
+                let completionWrapper = { (error: Error?) in
+                    if let error = error {
+                        completion(nil, error)
+                        return
+                    }
+
+                    self.storageWasSynced = true
+                    completion((), nil)
+                }
+
                 do {
                     let response = try self.keyknoxManager.pullValue().startSync().getResult()
 
-                    self.cache = try self.cloudEntrySerializer.parse(data: response.value)
+                    self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
 
-                    completion((), nil)
+                    completionWrapper(nil)
                 }
                 catch KeyknoxManagerError.keyknoxIsEmpty {
-                    completion((), nil)
+                    completionWrapper(nil)
                 }
                 catch {
-                    completion(nil, error)
+                    completionWrapper(error)
                 }
             }
         }
