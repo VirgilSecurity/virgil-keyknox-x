@@ -89,7 +89,7 @@ extension CloudKeyStorage {
                                 completion: @escaping (CloudEntry?, Error?) -> Void) {
         self.updateEntry(withName: name, data: data, meta: meta).start(completion: completion)
     }
-    
+
     @objc open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
                                      newPrivateKey: PrivateKey? = nil,
                                      completion: @escaping (Error?) -> Void) {

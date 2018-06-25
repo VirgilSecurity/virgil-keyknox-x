@@ -40,12 +40,12 @@ import Foundation
     @objc public let name: String
     @objc public let data: Data
     @objc public let meta: [String: String]?
-    
+
     @objc public init(name: String, data: Data, meta: [String: String]? = nil) {
         self.name = name
         self.data = data
         self.meta = meta
-        
+
         super.init()
     }
 }
