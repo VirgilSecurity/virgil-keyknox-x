@@ -35,30 +35,17 @@
 //
 
 import Foundation
-import VirgilCryptoAPI
 
-extension KeyknoxManager {
-    @objc open func pushValue(_ value: Data, previousHash: Data?,
-                              completion: @escaping (DecryptedKeyknoxValue?, Error?) -> Void) {
-        self.pushValue(value, previousHash: previousHash).start(completion: completion)
-    }
-
-    @objc open func pullValue(completion: @escaping (DecryptedKeyknoxValue?, Error?) -> Void) {
-        self.pullValue().start(completion: completion)
-    }
-
-    @objc open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
-                                     newPrivateKey: PrivateKey? = nil,
-                                     completion: @escaping (DecryptedKeyknoxValue?, Error?) -> Void) {
-        self.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start(completion: completion)
-    }
-
-    @objc open func updateRecipients(value: Data, previousHash: Data,
-                                     newPublicKeys: [PublicKey]? = nil,
-                                     newPrivateKey: PrivateKey? = nil,
-                                     completion: @escaping (DecryptedKeyknoxValue?, Error?) -> Void) {
-        self.updateRecipients(value: value, previousHash: previousHash,
-                              newPublicKeys: newPublicKeys,
-                              newPrivateKey: newPrivateKey).start(completion: completion)
+@objc(VSKKeyEntry) public final class KeyEntry: NSObject {
+    @objc public let name: String
+    @objc public let data: Data
+    @objc public let meta: [String: String]?
+    
+    @objc public init(name: String, data: Data, meta: [String: String]? = nil) {
+        self.name = name
+        self.data = data
+        self.meta = meta
+        
+        super.init()
     }
 }

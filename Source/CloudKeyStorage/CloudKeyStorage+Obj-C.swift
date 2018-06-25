@@ -37,28 +37,14 @@
 import Foundation
 import VirgilCryptoAPI
 
-@objc(VSKKeyEntry) public final class KeyEntry: NSObject {
-    @objc public let name: String
-    @objc public let data: Data
-    @objc public let meta: [String: String]?
-
-    @objc public init(name: String, data: Data, meta: [String: String]? = nil) {
-        self.name = name
-        self.data = data
-        self.meta = meta
-
-        super.init()
-    }
-}
-
 extension CloudKeyStorage {
-    @objc open func retrieveCloudEntries(completion: @escaping (Error?) -> ()) {
+    @objc open func retrieveCloudEntries(completion: @escaping (Error?) -> Void) {
         self.retrieveCloudEntries().start { _, error in
             completion(error)
         }
     }
 
-    @objc open func storeEntries(_ keyEntries: [KeyEntry], completion: @escaping (Error?) -> ()) {
+    @objc open func storeEntries(_ keyEntries: [KeyEntry], completion: @escaping (Error?) -> Void) {
         self.storeEntries(keyEntries).start { _, error in
             completion(error)
         }
@@ -74,26 +60,40 @@ extension CloudKeyStorage {
     }
 
     @objc open func storeEntry(withName name: String, data: Data, meta: [String: String]? = nil,
-                               completion: @escaping (Error?) -> ()) {
+                               completion: @escaping (Error?) -> Void) {
         self.storeEntry(withName: name, data: data, meta: meta).start { _, error in
             completion(error)
         }
     }
 
-    @objc open func deleteEntry(withName name: String, completion: @escaping (Error?) -> ()) {
+    @objc open func deleteEntry(withName name: String, completion: @escaping (Error?) -> Void) {
         self.deleteEntry(withName: name).start { _, error in
             completion(error)
         }
     }
 
-    @objc open func deleteEntries(withNames names: [String], completion: @escaping (Error?) -> ()) {
+    @objc open func deleteEntries(withNames names: [String], completion: @escaping (Error?) -> Void) {
         self.deleteEntries(withNames: names).start { _, error in
             completion(error)
         }
     }
 
-    @objc open func deleteAllEntries(completion: @escaping (Error?) -> ()) {
+    @objc open func deleteAllEntries(completion: @escaping (Error?) -> Void) {
         self.deleteAllEntries().start { _, error in
+            completion(error)
+        }
+    }
+
+    @objc open func updateEntry(withName name: String, data: Data,
+                                meta: [String: String]? = nil,
+                                completion: @escaping (CloudEntry?, Error?) -> Void) {
+        self.updateEntry(withName: name, data: data, meta: meta).start(completion: completion)
+    }
+    
+    @objc open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
+                                     newPrivateKey: PrivateKey? = nil,
+                                     completion: @escaping (Error?) -> Void) {
+        self.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start { _, error in
             completion(error)
         }
     }
