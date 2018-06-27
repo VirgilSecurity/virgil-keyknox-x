@@ -46,6 +46,7 @@ import VirgilCryptoAPI
     case keyknoxIsEmpty = 4
     case noPublicKeys = 5
     case keysShouldBeUpdated = 6
+    case serverRespondedWithTamperedValue = 7
 }
 
 @objc(VSKKeyknoxManager) open class KeyknoxManager: NSObject {
@@ -123,6 +124,10 @@ internal extension KeyknoxManager {
                                                                 previousHash: encryptedKeyknoxData.keyknoxHash,
                                                                 token: token.stringRepresentation())
 
+                guard response.value == data.1 && response.meta == data.0 else {
+                    throw KeyknoxManagerError.serverRespondedWithTamperedValue
+                }
+
                 completion(response, nil)
             }
             catch {
@@ -140,6 +145,10 @@ internal extension KeyknoxManager {
                 let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
                                                                 previousHash: previousHash,
                                                                 token: token.stringRepresentation())
+
+                guard response.value == data.1 && response.meta == data.0 else {
+                    throw KeyknoxManagerError.serverRespondedWithTamperedValue
+                }
 
                 completion(response, nil)
             }
