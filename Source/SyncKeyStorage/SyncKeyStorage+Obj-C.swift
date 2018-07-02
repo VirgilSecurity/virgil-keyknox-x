@@ -36,6 +36,7 @@
 
 import Foundation
 import VirgilSDK
+import VirgilCryptoAPI
 
 extension SyncKeyStorage {
     @objc open func updateEntry(withName name: String, data: Data, meta: [String: String]?,
@@ -58,6 +59,31 @@ extension SyncKeyStorage {
 
     @objc open func sync(completion: @escaping (Error?) -> Void) {
         self.sync().start { _, error in
+            completion(error)
+        }
+    }
+
+    @objc open func storeEntries(_ keyEntries: [KeyEntry],
+                                 completion: @escaping ([KeychainEntry]?, Error?) -> Void) {
+        self.storeEntries(keyEntries).start(completion: completion)
+    }
+
+    @objc open func deleteEntries(withNames names: [String], completion: @escaping (Error?) -> Void) {
+        self.deleteEntries(withNames: names).start { _, error in
+            completion(error)
+        }
+    }
+
+    @objc open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
+                                     newPrivateKey: PrivateKey? = nil,
+                                     completion: @escaping (Error?) -> Void) {
+        self.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start { _, error in
+            completion(error)
+        }
+    }
+
+    @objc open func deleteAllEntries(completion: @escaping (Error?) -> Void) {
+        self.deleteAllEntries().start { _, error in
             completion(error)
         }
     }

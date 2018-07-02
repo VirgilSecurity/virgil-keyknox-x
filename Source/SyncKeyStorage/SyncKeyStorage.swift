@@ -41,10 +41,9 @@ import VirgilCryptoAPI
 @objc(VSKSyncKeyStorageError) public enum SyncKeyStorageError: Int, Error {
     case keychainEntryNotFoundWhileUpdating
 
-    case keychainEntryNotFoundWhileDeleting
+    case cloudEntryNotFoundWhileDeleting
 
     case keychainEntryNotFoundWhileComparing
-    case cloudEntryNotFoundWhileComparing
 
     case keychainEntryAlreadyExistsWhileStoring
     case cloudEntryAlreadyExistsWhileStoring
@@ -54,6 +53,10 @@ import VirgilCryptoAPI
     case noMetaInKeychainEntry
 
     case invalidKeysInEntryMeta
+
+    case inconsistentStateError
+
+    case entrySavingError
 }
 
 @objc(VSKSyncKeyStorage) open class SyncKeyStorage: NSObject {
@@ -62,7 +65,7 @@ import VirgilCryptoAPI
     public let keychainStorage: KeychainStorageProtocol
     private let keychainUtils: KeychainUtils
 
-    private static let queue = DispatchQueue(label: "SyncKeyStorageQueue")
+    private let queue = DispatchQueue(label: "SyncKeyStorageQueue")
 
     internal init(identity: String, keychainStorage: KeychainStorageProtocol,
                   cloudKeyStorage: CloudKeyStorageProtocol) {
@@ -93,7 +96,7 @@ import VirgilCryptoAPI
 extension SyncKeyStorage {
     open func updateEntry(withName name: String, data: Data, meta: [String: String]?) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            SyncKeyStorage.queue.async {
+            self.queue.async {
                 do {
                     guard try self.keychainStorage.existsEntry(withName: name) else {
                         throw SyncKeyStorageError.keychainEntryNotFoundWhileUpdating
@@ -119,17 +122,21 @@ extension SyncKeyStorage {
         return try self.keychainStorage.retrieveEntry(withName: name)
     }
 
-    open func deleteEntry(withName name: String) -> GenericOperation<Void> {
+    open func deleteEntries(withNames names: [String]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            SyncKeyStorage.queue.async {
+            self.queue.async {
                 do {
-                    guard try self.keychainStorage.existsEntry(withName: name) else {
-                        throw SyncKeyStorageError.keychainEntryNotFoundWhileDeleting
+                    for name in names {
+                        guard try self.cloudKeyStorage.existsEntry(withName: name) else {
+                            throw SyncKeyStorageError.cloudEntryNotFoundWhileDeleting
+                        }
                     }
 
-                    _ = try self.cloudKeyStorage.existsEntry(withName: name)
-                    _ = try self.cloudKeyStorage.deleteEntry(withName: name).startSync().getResult()
-                    _ = try self.keychainStorage.deleteEntry(withName: name)
+                    _ = try self.cloudKeyStorage.deleteEntries(withNames: names).startSync().getResult()
+
+                    for name in names {
+                        _ = try self.keychainStorage.deleteEntry(withName: name)
+                    }
 
                     completion((), nil)
                 }
@@ -140,23 +147,19 @@ extension SyncKeyStorage {
         }
     }
 
+    open func deleteEntry(withName name: String) -> GenericOperation<Void> {
+        return self.deleteEntries(withNames: [name])
+    }
+
     open func storeEntry(withName name: String, data: Data,
                          meta: [String: String]? = nil) -> GenericOperation<KeychainEntry> {
         return CallbackOperation { _, completion in
-            SyncKeyStorage.queue.async {
+            self.queue.async {
                 do {
-                    guard !(try self.keychainStorage.existsEntry(withName: name)) else {
-                        throw SyncKeyStorageError.keychainEntryAlreadyExistsWhileStoring
+                    let keychainEntries = try self.storeEntriesSync([KeyEntry(name: name, data: data, meta: meta)])
+                    guard keychainEntries.count == 1, let keychainEntry = keychainEntries.first else {
+                        throw SyncKeyStorageError.entrySavingError
                     }
-
-                    guard !(try self.cloudKeyStorage.existsEntry(withName: name)) else {
-                        throw SyncKeyStorageError.cloudEntryAlreadyExistsWhileStoring
-                    }
-
-                    let cloudEntry = try self.cloudKeyStorage.storeEntry(withName: name, data: data,
-                                                                         meta: meta).startSync().getResult()
-                    let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
-                    let keychainEntry = try self.keychainStorage.store(data: data, withName: name, meta: meta)
 
                     completion(keychainEntry, nil)
                 }
@@ -167,9 +170,53 @@ extension SyncKeyStorage {
         }
     }
 
+    open func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[KeychainEntry]> {
+        return CallbackOperation { _, completion in
+            self.queue.async {
+                do {
+                    completion(try self.storeEntriesSync(keyEntries), nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
+            }
+        }
+    }
+
+    private func storeEntriesSync(_ keyEntries: [KeyEntry]) throws -> [KeychainEntry] {
+        for keyEntry in keyEntries {
+            guard !(try self.keychainStorage.existsEntry(withName: keyEntry.name)) else {
+                throw SyncKeyStorageError.keychainEntryAlreadyExistsWhileStoring
+            }
+
+            guard !(try self.cloudKeyStorage.existsEntry(withName: keyEntry.name)) else {
+                throw SyncKeyStorageError.cloudEntryAlreadyExistsWhileStoring
+            }
+        }
+
+        let cloudEntries = try self.cloudKeyStorage.storeEntries(keyEntries).startSync().getResult()
+
+        var keychainEntries = [KeychainEntry]()
+
+        for entry in zip(keyEntries, cloudEntries) {
+            guard entry.0.name == entry.1.name else {
+                throw SyncKeyStorageError.inconsistentStateError
+            }
+
+            let meta = try self.keychainUtils.createMetaForKeychain(from: entry.1)
+            let keychainEntry = try self.keychainStorage.store(data: entry.0.data,
+                                                               withName: entry.0.name,
+                                                               meta: meta)
+
+            keychainEntries.append(keychainEntry)
+        }
+
+        return keychainEntries
+    }
+
     open func sync() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
-            SyncKeyStorage.queue.async {
+            self.queue.async {
                 do {
                     // TODO: Optimize to run concurrently
                     try self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
@@ -187,6 +234,37 @@ extension SyncKeyStorage {
                     try self.syncDeleteEntries(entriesToDelete)
                     try self.syncStoreEntries(entriesToStore)
                     try self.syncCompareEntries(entriesToCompare, keychainEntries: keychainEntries)
+
+                    completion((), nil)
+                }
+                catch {
+                    completion(nil, error)
+                }
+            }
+        }
+    }
+
+    open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
+                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<Void> {
+        return self.cloudKeyStorage.updateRecipients(newPublicKeys: newPublicKeys,
+                                                     newPrivateKey: newPrivateKey)
+    }
+
+    open func retrieveAllEntries() throws -> [KeychainEntry] {
+        return try self.keychainStorage.retrieveAllEntries().compactMap(self.keychainUtils.filterKeyknoxKeychainEntry)
+    }
+
+    open func deleteAllEntries() -> GenericOperation<Void> {
+        return CallbackOperation { _, completion in
+            self.queue.async {
+                do {
+                    _ = try self.cloudKeyStorage.deleteAllEntries().startSync().getResult()
+
+                    let entriesToDelete = try self.keychainStorage.retrieveAllEntries()
+                        .compactMap(self.keychainUtils.filterKeyknoxKeychainEntry)
+                        .map { $0.name }
+
+                    try self.syncDeleteEntries(entriesToDelete)
 
                     completion((), nil)
                 }

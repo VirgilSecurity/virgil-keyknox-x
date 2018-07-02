@@ -37,6 +37,10 @@
 import Foundation
 import VirgilSDK
 
+@objc(VSKKeychainStorageWrapperError) public enum KeychainStorageWrapperError: Int, Error {
+    case errorConvertingKeychainEntry = 0
+}
+
 internal final class KeychainStorageWrapper {
     internal let keychainStorage: KeychainStorageProtocol
     internal let identity: String
@@ -54,14 +58,20 @@ internal final class KeychainStorageWrapper {
         return "\(self.keychainPrefix())\(entryName)"
     }
 
-    internal func entryName(fromKeychainName keychainName: String) -> String {
+    internal func entryName(fromKeychainName keychainName: String) -> String? {
+        guard keychainName.hasPrefix(self.keychainPrefix()) else {
+            return nil
+        }
+
         return keychainName.replacingOccurrences(of: self.keychainPrefix(), with: "")
     }
 }
 
 extension KeychainStorageWrapper: KeychainStorageProtocol {
-    private func mapKeychainEntry(_ keychainEntry: KeychainEntry) -> KeychainEntry {
-        let entryName = self.entryName(fromKeychainName: keychainEntry.name)
+    private func mapKeychainEntry(_ keychainEntry: KeychainEntry) -> KeychainEntry? {
+        guard let entryName = self.entryName(fromKeychainName: keychainEntry.name) else {
+            return nil
+        }
 
         return KeychainEntry(data: keychainEntry.data, name: entryName, meta: keychainEntry.meta,
                              creationDate: keychainEntry.creationDate,
@@ -69,7 +79,7 @@ extension KeychainStorageWrapper: KeychainStorageProtocol {
     }
 
     private func mapKeychainEntries(_ keychainEntries: [KeychainEntry]) -> [KeychainEntry] {
-        return keychainEntries.map {
+        return keychainEntries.compactMap {
             return self.mapKeychainEntry($0)
         }
     }
@@ -89,7 +99,13 @@ extension KeychainStorageWrapper: KeychainStorageProtocol {
     internal func retrieveEntry(withName name: String) throws -> KeychainEntry {
         let keychainName = self.keychainName(fromEntryName: name)
 
-        return self.mapKeychainEntry(try self.keychainStorage.retrieveEntry(withName: keychainName))
+        let keychainEntry = try self.keychainStorage.retrieveEntry(withName: keychainName)
+
+        guard let entry = self.mapKeychainEntry(keychainEntry) else {
+            throw KeychainStorageWrapperError.errorConvertingKeychainEntry
+        }
+
+        return entry
     }
 
     internal func retrieveAllEntries() throws -> [KeychainEntry] {

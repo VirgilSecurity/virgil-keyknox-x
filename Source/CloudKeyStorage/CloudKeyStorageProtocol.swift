@@ -36,6 +36,7 @@
 
 import Foundation
 import VirgilSDK
+import VirgilCryptoAPI
 
 public protocol CloudKeyStorageProtocol {
     func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[CloudEntry]>
@@ -48,4 +49,5 @@ public protocol CloudKeyStorageProtocol {
     func deleteEntries(withNames names: [String]) -> GenericOperation<Void>
     func deleteAllEntries() -> GenericOperation<Void>
     func retrieveCloudEntries() -> GenericOperation<Void>
+    func updateRecipients(newPublicKeys: [PublicKey]?, newPrivateKey: PrivateKey?) -> GenericOperation<Void>
 }

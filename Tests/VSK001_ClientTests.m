@@ -40,7 +40,7 @@
 @import VirgilSDKKeyknox;
 @import VirgilCrypto;
 @import VirgilCryptoApiImpl;
-#import "VirgilSDKKeyknox_iOS_Tests-Swift.h"
+#import "VirgilSDKKeyknox_AppTests_iOS-Swift.h"
 
 @interface VSK001_ClientTests : XCTestCase
 

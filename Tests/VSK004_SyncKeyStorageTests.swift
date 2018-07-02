@@ -45,12 +45,14 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
     private var keychainStorageWrapper: KeychainStorageProtocol!
     private var cloudKeyStorage: CloudKeyStorage!
     private var keychainStorage: KeychainStorage!
+    private var crypto: VirgilCrypto!
     
     override func setUp() {
         super.setUp()
         
         let config = TestConfig.readFromBundle()
         let crypto = VirgilCrypto()
+        self.crypto = crypto
         let apiKey = try! crypto.importPrivateKey(from: Data(base64Encoded: config.ApiPrivateKey)!)
         
         let generator = JwtGenerator(apiKey: apiKey, apiPublicKeyIdentifier: config.ApiPublicKeyId, accessTokenSigner: VirgilAccessTokenSigner(), appId: config.AppId, ttl: 100)
@@ -230,5 +232,157 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         let keychainEntry = try! self.keychainStorageWrapper.retrieveEntry(withName: name)
         XCTAssert(keychainEntry.name == name)
         XCTAssert(keychainEntry.data == data2)
+    }
+    
+    func test005_updateRecipients() {
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        
+        let data = NSUUID().uuidString.data(using: .utf8)!
+        let name = NSUUID().uuidString
+        let _ = try! self.syncKeyStorage.storeEntry(withName: name, data: data).startSync().getResult()
+        
+        let keyPair = try! self.crypto.generateKeyPair()
+        let newPublicKeys = [keyPair.publicKey, try! self.crypto.generateKeyPair().publicKey]
+        let newPrivateKey = keyPair.privateKey
+        
+        _ = try! self.syncKeyStorage.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).startSync().getResult()
+
+        let keyknoxManager = (self.syncKeyStorage.cloudKeyStorage as! CloudKeyStorage).keyknoxManager
+        let pubIds = (keyknoxManager.publicKeys as! [VirgilPublicKey]).map { $0.identifier }
+        XCTAssert(pubIds == newPublicKeys.map { $0.identifier })
+        XCTAssert((keyknoxManager.privateKey as! VirgilPrivateKey).identifier == newPrivateKey.identifier)
+
+        let keychainEntry2 = try! self.syncKeyStorage.retrieveEntry(withName: name)
+        XCTAssert(keychainEntry2.name == name)
+        XCTAssert(keychainEntry2.data == data)
+
+        _ = try! self.syncKeyStorage.sync().startSync().getResult()
+
+        let keychainEntry3 = try! self.syncKeyStorage.retrieveEntry(withName: name)
+        XCTAssert(keychainEntry3.name == name)
+        XCTAssert(keychainEntry3.data == data)
+    }
+    
+    func test006_storeEntries() {
+        let _ = try! self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        
+        XCTAssert(try! self.keychainStorageWrapper.retrieveAllEntries().count == 0)
+        
+        let data1 = NSUUID().uuidString.data(using: .utf8)!
+        let name1 = NSUUID().uuidString
+        let data2 = NSUUID().uuidString.data(using: .utf8)!
+        let name2 = NSUUID().uuidString
+        let _ = try! self.syncKeyStorage.storeEntries([KeyEntry(name: name1, data: data1), KeyEntry(name: name2, data: data2)]).startSync().getResult()
+        
+        let _ = try! self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
+        
+        let entry1 = try! self.cloudKeyStorage.retrieveEntry(withName: name1)
+        let entry2 = try! self.cloudKeyStorage.retrieveEntry(withName: name2)
+        
+        XCTAssert(try! self.cloudKeyStorage.retrieveAllEntries().count == 2)
+        XCTAssert(entry1.name == name1)
+        XCTAssert(entry1.data == data1)
+        XCTAssert(entry2.name == name2)
+        XCTAssert(entry2.data == data2)
+        
+        let keychainEntry1 = try! self.keychainStorageWrapper.retrieveEntry(withName: name1)
+        let keychainEntry2 = try! self.keychainStorageWrapper.retrieveEntry(withName: name2)
+        XCTAssert(keychainEntry1.name == name1)
+        XCTAssert(keychainEntry1.data == data1)
+        XCTAssert(keychainEntry2.name == name2)
+        XCTAssert(keychainEntry2.data == data2)
+        
+        let syncKeychainEntry1 = try! self.syncKeyStorage.retrieveEntry(withName: name1)
+        let syncKeychainEntry2 = try! self.syncKeyStorage.retrieveEntry(withName: name2)
+        XCTAssert(syncKeychainEntry1.name == name1)
+        XCTAssert(syncKeychainEntry1.data == data1)
+        XCTAssert(syncKeychainEntry2.name == name2)
+        XCTAssert(syncKeychainEntry2.data == data2)
+    }
+    
+    func test007_deleteEntries() {
+        let _ = try! self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        
+        XCTAssert(try! self.keychainStorageWrapper.retrieveAllEntries().count == 0)
+        
+        let data1 = NSUUID().uuidString.data(using: .utf8)!
+        let name1 = NSUUID().uuidString
+        let data2 = NSUUID().uuidString.data(using: .utf8)!
+        let name2 = NSUUID().uuidString
+        let data3 = NSUUID().uuidString.data(using: .utf8)!
+        let name3 = NSUUID().uuidString
+        let _ = try! self.syncKeyStorage.storeEntries([KeyEntry(name: name1, data: data1),
+                                                       KeyEntry(name: name2, data: data2),
+                                                       KeyEntry(name: name3, data: data3)]).startSync().getResult()
+        
+        _ = try! self.syncKeyStorage.deleteEntries(withNames: [name1, name2]).startSync().getResult()
+        
+        _ = try! self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
+        
+        XCTAssert(try! self.cloudKeyStorage.retrieveAllEntries().count == 1)
+        XCTAssert(try! self.keychainStorageWrapper.retrieveAllEntries().count == 1)
+        XCTAssert(try! self.syncKeyStorage.retrieveAllEntries().count == 1)
+        
+        let entry = try! self.cloudKeyStorage.retrieveEntry(withName: name3)
+        XCTAssert(entry.name == name3)
+        XCTAssert(entry.data == data3)
+        
+        let keychainEntry = try! self.keychainStorageWrapper.retrieveEntry(withName: name3)
+        XCTAssert(keychainEntry.name == name3)
+        XCTAssert(keychainEntry.data == data3)
+        
+        let syncKeychainEntry = try! self.syncKeyStorage.retrieveEntry(withName: name3)
+        XCTAssert(syncKeychainEntry.name == name3)
+        XCTAssert(syncKeychainEntry.data == data3)
+    }
+    
+    func test008_retrieveAllEntries() {
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        
+        let data1 = NSUUID().uuidString.data(using: .utf8)!
+        let name1 = NSUUID().uuidString
+        let data2 = NSUUID().uuidString.data(using: .utf8)!
+        let name2 = NSUUID().uuidString
+        
+        let _ = try! self.syncKeyStorage.storeEntries([KeyEntry(name: name1, data: data1),
+                                                       KeyEntry(name: name2, data: data2)]).startSync().getResult()
+        
+        let fakeCloudEntry = CloudEntry(name: "name1", data: Data(), creationDate: Date(), modificationDate: Date(), meta: nil)
+        
+        // Add some random keys
+        _ = try! self.keychainStorage.store(data: Data(), withName: "name1", meta: nil)
+        _ = try! self.keychainStorage.store(data: Data(), withName: "name2", meta: KeychainUtils().createMetaForKeychain(from: fakeCloudEntry))
+        
+        let allEntries = try! self.syncKeyStorage.retrieveAllEntries()
+        
+        XCTAssert(allEntries.count == 2)
+        
+        let syncKeychainEntry1 = try! self.syncKeyStorage.retrieveEntry(withName: name1)
+        let syncKeychainEntry2 = try! self.syncKeyStorage.retrieveEntry(withName: name2)
+        XCTAssert(syncKeychainEntry1.name == name1)
+        XCTAssert(syncKeychainEntry1.data == data1)
+        XCTAssert(syncKeychainEntry2.name == name2)
+        XCTAssert(syncKeychainEntry2.data == data2)
+    }
+    
+    func test009_deleteAllEntries() {
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        
+        let data1 = NSUUID().uuidString.data(using: .utf8)!
+        let name1 = NSUUID().uuidString
+        let data2 = NSUUID().uuidString.data(using: .utf8)!
+        let name2 = NSUUID().uuidString
+        
+        let _ = try! self.syncKeyStorage.storeEntries([KeyEntry(name: name1, data: data1),
+                                                       KeyEntry(name: name2, data: data2)]).startSync().getResult()
+
+        _ = try! self.syncKeyStorage.deleteAllEntries().startSync().getResult()
+        
+        _ = try! self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
+        XCTAssert(try! self.cloudKeyStorage.retrieveAllEntries().count == 0)
+        XCTAssert(try! self.keychainStorage.retrieveAllEntries().count == 0)
+        XCTAssert(try! self.syncKeyStorage.retrieveAllEntries().count == 0)
     }
 }

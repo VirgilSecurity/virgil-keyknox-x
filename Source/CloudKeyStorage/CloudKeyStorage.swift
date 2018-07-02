@@ -270,7 +270,7 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
                         throw CloudKeyStorageError.cloudStorageOutOfSync
                     }
 
-                    // TODO: Optimize
+                    // TODO: Optimize: No need to pull value
                     let response = try self.keyknoxManager
                         .updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey)
                         .startSync().getResult()

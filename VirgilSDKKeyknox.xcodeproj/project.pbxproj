@@ -25,13 +25,9 @@
 		42011EA820CE906E00B84755 /* VirgilSDKKeyknox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		421A611E20D3E80D00BBF05D /* KeyknoxCryptoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A611D20D3E80D00BBF05D /* KeyknoxCryptoProtocol.swift */; };
 		421A612020D3E83400BBF05D /* KeyknoxCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A611F20D3E83400BBF05D /* KeyknoxCrypto.swift */; };
-		421A612220D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */; };
-		421A612420D41AFF00BBF05D /* Cloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 421A612320D41AFF00BBF05D /* Cloud.json */; };
 		425B37A720D2AA4200EAAAEB /* CloudEntrySerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425B37A620D2AA4200EAAAEB /* CloudEntrySerializer.swift */; };
 		425EF8AF20C5368400CE1D4F /* KeyknoxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88920C5368400CE1D4F /* KeyknoxManager.swift */; };
-		425EF8B920C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */; };
 		425EF8BC20C549F500CE1D4F /* KeyknoxManager+Obj-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8BA20C549CF00CE1D4F /* KeyknoxManager+Obj-C.swift */; };
-		425EF8D020C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8CF20C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m */; };
 		425EF95320C8156E00CE1D4F /* CloudKeyStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF95120C8156D00CE1D4F /* CloudKeyStorage.swift */; };
 		425EF95520C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF95420C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift */; };
 		428B15D920D925FD0041CA75 /* KeyknoxValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15D820D925FD0041CA75 /* KeyknoxValue.swift */; };
@@ -44,7 +40,6 @@
 		428B162220E11E590041CA75 /* KeychainStorageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15FE20DBCEFE0041CA75 /* KeychainStorageWrapper.swift */; };
 		428B162320E11E590041CA75 /* KeychainStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B160B20DBD99A0041CA75 /* KeychainStorageProtocol.swift */; };
 		428B162820E392DE0041CA75 /* Cloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 421A612320D41AFF00BBF05D /* Cloud.json */; };
-		42B5E01020C00DB80067F13E /* VirgilSDKKeyknox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; };
 		42B5E02520C011380067F13E /* KeyknoxClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01E20C011380067F13E /* KeyknoxClientProtocol.swift */; };
 		42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01F20C011380067F13E /* KeyknoxClient.swift */; };
 		42B5E02720C011380067F13E /* KeynoxClient+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E02020C011380067F13E /* KeynoxClient+Queries.swift */; };
@@ -54,19 +49,11 @@
 		42B5E0A920C0117E0067F13E /* VirgilCryptoApiImpl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E09120C011690067F13E /* VirgilCryptoApiImpl.framework */; };
 		42B5E0AA20C0117E0067F13E /* VirgilSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E03B20C0115D0067F13E /* VirgilSDK.framework */; };
 		42B5E0AB20C0117E0067F13E /* VSCCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E09F20C011690067F13E /* VSCCrypto.framework */; };
-		42B5E0B720C01C9B0067F13E /* VSK001_ClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E0B620C01C9B0067F13E /* VSK001_ClientTests.m */; };
-		42B5E0BD20C01E5A0067F13E /* TestConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42B5E0BA20C01E5A0067F13E /* TestConfig.plist */; };
-		42B5E0BE20C01E5A0067F13E /* TestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E0BB20C01E5A0067F13E /* TestConfig.swift */; };
-		42B5E0C020C0251A0067F13E /* VirgilCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E08320C011690067F13E /* VirgilCrypto.framework */; };
-		42B5E0C120C0251A0067F13E /* VirgilCryptoAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E05C20C011640067F13E /* VirgilCryptoAPI.framework */; };
-		42B5E0C220C0251A0067F13E /* VirgilCryptoApiImpl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E09120C011690067F13E /* VirgilCryptoApiImpl.framework */; };
-		42B5E0C320C0251A0067F13E /* VirgilSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E03B20C0115D0067F13E /* VirgilSDK.framework */; };
-		42B5E0C420C0251A0067F13E /* VSCCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B5E09F20C011690067F13E /* VSCCrypto.framework */; };
-		42B5E0C620C025400067F13E /* VirgilCrypto.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E08320C011690067F13E /* VirgilCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		42B5E0C720C025400067F13E /* VirgilCryptoApiImpl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E09120C011690067F13E /* VirgilCryptoApiImpl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		42B5E0C820C025400067F13E /* VSCCrypto.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E09F20C011690067F13E /* VSCCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		42B5E0C920C025400067F13E /* VirgilCryptoAPI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E05C20C011640067F13E /* VirgilCryptoAPI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		42B5E0CA20C025400067F13E /* VirgilSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5E03B20C0115D0067F13E /* VirgilSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42D056A520EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D056A420EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift */; };
+		42D056CA20EA5FC900FC544E /* VSK001_ClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E0B620C01C9B0067F13E /* VSK001_ClientTests.m */; };
+		42D056CB20EA5FCC00FC544E /* VSK002_KeyknoxManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */; };
+		42D056CC20EA5FCC00FC544E /* VSK003_CloudKeyStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8CF20C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m */; };
+		42D056CD20EA5FCC00FC544E /* VSK005_CloudEntrySerializerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,13 +70,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 42011E5720CE8FD400B84755;
 			remoteInfo = "KeyknoxTestApp iOS";
-		};
-		42B5E01120C00DB80067F13E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 42B5DFEC20C005300067F13E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 42B5DFF420C005300067F13E;
-			remoteInfo = "VirgilSDKKeyknox iOS";
 		};
 		42B5E03A20C0115D0067F13E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -396,20 +376,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		42B5E0C520C0252C0067F13E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				42B5E0C620C025400067F13E /* VirgilCrypto.framework in CopyFiles */,
-				42B5E0C720C025400067F13E /* VirgilCryptoApiImpl.framework in CopyFiles */,
-				42B5E0C820C025400067F13E /* VSCCrypto.framework in CopyFiles */,
-				42B5E0C920C025400067F13E /* VirgilCryptoAPI.framework in CopyFiles */,
-				42B5E0CA20C025400067F13E /* VirgilSDK.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -445,7 +411,6 @@
 		428B161C20DD0C070041CA75 /* KeyEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyEntry.swift; sourceTree = "<group>"; };
 		42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VirgilSDKKeyknox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B5DFF920C005300067F13E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "VirgilSDKKeyknox iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B5E01E20C011380067F13E /* KeyknoxClientProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxClientProtocol.swift; sourceTree = "<group>"; };
 		42B5E01F20C011380067F13E /* KeyknoxClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxClient.swift; sourceTree = "<group>"; };
 		42B5E02020C011380067F13E /* KeynoxClient+Queries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KeynoxClient+Queries.swift"; sourceTree = "<group>"; };
@@ -456,6 +421,7 @@
 		42B5E0B620C01C9B0067F13E /* VSK001_ClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VSK001_ClientTests.m; sourceTree = "<group>"; };
 		42B5E0BA20C01E5A0067F13E /* TestConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestConfig.plist; sourceTree = "<group>"; };
 		42B5E0BB20C01E5A0067F13E /* TestConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestConfig.swift; sourceTree = "<group>"; };
+		42D056A420EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSK007_KeyStorageWrapperTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -483,19 +449,6 @@
 				42B5E0A920C0117E0067F13E /* VirgilCryptoApiImpl.framework in Frameworks */,
 				42B5E0AA20C0117E0067F13E /* VirgilSDK.framework in Frameworks */,
 				42B5E0AB20C0117E0067F13E /* VSCCrypto.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		42B5E00820C00DB80067F13E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				42B5E0C020C0251A0067F13E /* VirgilCrypto.framework in Frameworks */,
-				42B5E0C120C0251A0067F13E /* VirgilCryptoAPI.framework in Frameworks */,
-				42B5E0C220C0251A0067F13E /* VirgilCryptoApiImpl.framework in Frameworks */,
-				42B5E0C320C0251A0067F13E /* VirgilSDK.framework in Frameworks */,
-				42B5E0C420C0251A0067F13E /* VSCCrypto.framework in Frameworks */,
-				42B5E01020C00DB80067F13E /* VirgilSDKKeyknox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -577,7 +530,6 @@
 			isa = PBXGroup;
 			children = (
 				42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */,
-				42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */,
 				42011E5820CE8FD400B84755 /* KeyknoxTestApp iOS.app */,
 				42011E9220CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS.xctest */,
 			);
@@ -603,6 +555,7 @@
 				42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */,
 				421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */,
 				428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */,
+				42D056A420EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -785,25 +738,6 @@
 			productReference = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		42B5E00A20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 42B5E01320C00DB80067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox iOS Tests" */;
-			buildPhases = (
-				42B5E00720C00DB80067F13E /* Sources */,
-				42B5E00820C00DB80067F13E /* Frameworks */,
-				42B5E00920C00DB80067F13E /* Resources */,
-				42B5E0C520C0252C0067F13E /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				42B5E01220C00DB80067F13E /* PBXTargetDependency */,
-			);
-			name = "VirgilSDKKeyknox iOS Tests";
-			productName = "VirgilSDKKeyknox iOS Tests";
-			productReference = 42B5E00B20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -825,10 +759,6 @@
 					42B5DFF420C005300067F13E = {
 						CreatedOnToolsVersion = 9.3.1;
 						LastSwiftMigration = 0940;
-					};
-					42B5E00A20C00DB80067F13E = {
-						CreatedOnToolsVersion = 9.3.1;
-						LastSwiftMigration = 0930;
 					};
 				};
 			};
@@ -860,7 +790,6 @@
 			projectRoot = "";
 			targets = (
 				42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */,
-				42B5E00A20C00DB80067F13E /* VirgilSDKKeyknox iOS Tests */,
 				42011E5720CE8FD400B84755 /* KeyknoxTestApp iOS */,
 				42011E9120CE8FE400B84755 /* VirgilSDKKeyknox AppTests iOS */,
 			);
@@ -1149,15 +1078,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		42B5E00920C00DB80067F13E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				42B5E0BD20C01E5A0067F13E /* TestConfig.plist in Resources */,
-				421A612420D41AFF00BBF05D /* Cloud.json in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1175,8 +1095,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				42011E9F20CE8FEE00B84755 /* VSK004_SyncKeyStorageTests.swift in Sources */,
+				42D056CB20EA5FCC00FC544E /* VSK002_KeyknoxManagerTests.m in Sources */,
+				42D056CA20EA5FC900FC544E /* VSK001_ClientTests.m in Sources */,
 				42011EA020CE901900B84755 /* TestConfig.swift in Sources */,
+				42D056A520EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift in Sources */,
 				428B161E20E118AD0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */,
+				42D056CC20EA5FCC00FC544E /* VSK003_CloudKeyStorageTests.m in Sources */,
+				42D056CD20EA5FCC00FC544E /* VSK005_CloudEntrySerializerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1207,18 +1132,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		42B5E00720C00DB80067F13E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				425EF8D020C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m in Sources */,
-				42B5E0B720C01C9B0067F13E /* VSK001_ClientTests.m in Sources */,
-				421A612220D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift in Sources */,
-				425EF8B920C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m in Sources */,
-				42B5E0BE20C01E5A0067F13E /* TestConfig.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1231,11 +1144,6 @@
 			isa = PBXTargetDependency;
 			target = 42011E5720CE8FD400B84755 /* KeyknoxTestApp iOS */;
 			targetProxy = 42011E9D20CE8FE800B84755 /* PBXContainerItemProxy */;
-		};
-		42B5E01220C00DB80067F13E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 42B5DFF420C005300067F13E /* VirgilSDKKeyknox iOS */;
-			targetProxy = 42B5E01120C00DB80067F13E /* PBXContainerItemProxy */;
 		};
 		42B5E0AD20C011A00067F13E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1536,45 +1444,6 @@
 			};
 			name = Release;
 		};
-		42B5E01420C00DB80067F13E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.virgilsecurity.VirgilSDKKeyknox-iOS-Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		42B5E01520C00DB80067F13E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.virgilsecurity.VirgilSDKKeyknox-iOS-Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1610,15 +1479,6 @@
 			buildConfigurations = (
 				42B5DFFE20C005300067F13E /* Debug */,
 				42B5DFFF20C005300067F13E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		42B5E01320C00DB80067F13E /* Build configuration list for PBXNativeTarget "VirgilSDKKeyknox iOS Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				42B5E01420C00DB80067F13E /* Debug */,
-				42B5E01520C00DB80067F13E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
