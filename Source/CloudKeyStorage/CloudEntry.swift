@@ -36,13 +36,31 @@
 
 import Foundation
 
+/// Class representing entry in cloud
 @objc(VSKCloudEntry) public final class CloudEntry: NSObject, Codable {
+    /// Entry name
     @objc public let name: String
+
+    /// Entry data
     @objc public let data: Data
+
+    /// Entry creation date
     @objc public let creationDate: Date
+
+    /// Entry modification date
     @objc public let modificationDate: Date
+
+    /// Entry meta
     @objc public let meta: [String: String]?
 
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - name: name
+    ///   - data: data
+    ///   - creationDate: creationDate
+    ///   - modificationDate: modificationDate
+    ///   - meta: meta
     @objc public init(name: String, data: Data, creationDate: Date, modificationDate: Date, meta: [String: String]?) {
         self.name = name
         self.data = data
@@ -53,6 +71,13 @@ import Foundation
         super.init()
     }
 
+    /// CodingKeys
+    ///
+    /// - name: name
+    /// - data: data
+    /// - creationDate: creationDate
+    /// - modificationDate: modificationDate
+    /// - meta: meta
     public enum CodingKeys: String, CodingKey {
         case name
         case data
@@ -62,6 +87,7 @@ import Foundation
     }
 }
 
+// MARK: - Equatable implementation
 public extension CloudEntry {
     static func == (lhs: CloudEntry, rhs: CloudEntry) -> Bool {
         return lhs.name == rhs.name

@@ -38,6 +38,12 @@ import Foundation
 import VirgilCryptoAPI
 import VirgilSDK
 
+/// Declares error types and codes for KeyknoxManager
+///
+/// - entryNotFound: Entry was not found
+/// - entrySavingError: Error while saving entry
+/// - entryAlreadyExists: Entry already exists
+/// - cloudStorageOutOfSync: Sync this storage before any other operations
 @objc(VSKCloudKeyStorageError) public enum CloudKeyStorageError: Int, Error {
     case entryNotFound
     case entrySavingError
@@ -45,21 +51,36 @@ import VirgilSDK
     case cloudStorageOutOfSync
 }
 
+/// Class responsible for storing Keys in Cloud using E2EE
 @objc(VSKCloudKeyStorage) open class CloudKeyStorage: NSObject {
+    /// KeyknoxManager
     @objc public let keyknoxManager: KeyknoxManager
+
     private var cache: [String: CloudEntry] = [:]
     private var decryptedKeyknoxData: DecryptedKeyknoxValue?
     private let cloudEntrySerializer = CloudEntrySerializer()
+
+    /// Shows whether this storage was synced
     @objc private(set) public var storageWasSynced = false
 
     private let queue = DispatchQueue(label: "CloudKeyStorageQueue")
 
+    /// Init
+    ///
+    /// - Parameter keyknoxManager: KeyknoxManager
     @objc public init(keyknoxManager: KeyknoxManager) {
         self.keyknoxManager = keyknoxManager
 
         super.init()
     }
 
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - accessTokenProvider: AccessTokenProvider implementation
+    ///   - publicKeys: Public keys used for encryption and signature verification
+    ///   - privateKey: Private key used for decryption and signature verification
+    /// - Throws: Rethrows from KeyknoxManager
     @objc convenience public init(accessTokenProvider: AccessTokenProvider,
                                   publicKeys: [PublicKey], privateKey: PrivateKey) throws {
         let keyknoxManager = try KeyknoxManager(accessTokenProvider: accessTokenProvider,
@@ -102,6 +123,10 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         return cloudEntries
     }
 
+    /// Stores entries to cloud
+    ///
+    /// - Parameter keyEntries: Entries to store
+    /// - Returns: GenericOperation<[CloudEntry]>
     open func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[CloudEntry]> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -115,6 +140,13 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         }
     }
 
+    /// Stores entry to cloud
+    ///
+    /// - Parameters:
+    ///   - name: Name
+    ///   - data: Data
+    ///   - meta: Meta
+    /// - Returns: GenericOperation<CloudEntry>
     open func storeEntry(withName name: String, data: Data,
                          meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
         return CallbackOperation { _, completion in
@@ -134,6 +166,13 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         }
     }
 
+    /// Updates entry in Cloud
+    ///
+    /// - Parameters:
+    ///   - name: Name
+    ///   - data: New data
+    ///   - meta: New meta
+    /// - Returns: GenericOperation<CloudEntry>
     open func updateEntry(withName name: String, data: Data,
                           meta: [String: String]? = nil) -> GenericOperation<CloudEntry> {
         return CallbackOperation { _, completion in
@@ -169,6 +208,11 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         }
     }
 
+    /// Retrieves entry loaded from Cloud
+    ///
+    /// - Parameter name: Name
+    /// - Returns: Entry
+    /// - Throws: CloudKeyStorageError.cloudStorageOutOfSync
     @objc open func retrieveEntry(withName name: String) throws -> CloudEntry {
         guard self.storageWasSynced else {
             throw CloudKeyStorageError.cloudStorageOutOfSync
@@ -181,6 +225,10 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         return entry
     }
 
+    /// Returns all entries loaded from Cloud
+    ///
+    /// - Returns: All entries
+    /// - Throws: CloudKeyStorageError.cloudStorageOutOfSync if storage was not synced
     @objc open func retrieveAllEntries() throws -> [CloudEntry] {
         guard self.storageWasSynced else {
             throw CloudKeyStorageError.cloudStorageOutOfSync
@@ -189,6 +237,11 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         return [CloudEntry](self.cache.values)
     }
 
+    /// Checks if entry exists in list of loaded from Cloud entries
+    ///
+    /// - Parameter name: Entry name
+    /// - Returns: true if entry exists, false - otherwise
+    /// - Throws: CloudKeyStorageError.cloudStorageOutOfSync if storage was not synced
     open func existsEntry(withName name: String) throws -> Bool {
         guard self.storageWasSynced else {
             throw CloudKeyStorageError.cloudStorageOutOfSync
@@ -197,10 +250,18 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         return self.cache[name] != nil
     }
 
+    /// Deletes entry from Cloud
+    ///
+    /// - Parameter name: Entry name
+    /// - Returns: GenericOperation<Void>
     open func deleteEntry(withName name: String) -> GenericOperation<Void> {
         return self.deleteEntries(withNames: [name])
     }
 
+    /// Deletes entries from Cloud
+    ///
+    /// - Parameter names: Names of entries to delete
+    /// - Returns: GenericOperation<Void>
     open func deleteEntries(withNames names: [String]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -237,6 +298,9 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         }
     }
 
+    /// Deletes all entries from Cloud
+    ///
+    /// - Returns: GenericOperation<Void>
     open func deleteAllEntries() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -261,6 +325,12 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         }
     }
 
+    /// Updates recipients. See KeyknoxManager.updateRecipients
+    ///
+    /// - Parameters:
+    ///   - newPublicKeys: New public keys
+    ///   - newPrivateKey: New private key
+    /// - Returns: GenericOperation<Void>
     open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
                                newPrivateKey: PrivateKey? = nil) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
@@ -290,6 +360,9 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         }
     }
 
+    /// Retrieves entries from Cloud
+    ///
+    /// - Returns: GenericOperation<Void>
     open func retrieveCloudEntries() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {

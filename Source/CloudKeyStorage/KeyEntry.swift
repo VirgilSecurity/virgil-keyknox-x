@@ -36,11 +36,23 @@
 
 import Foundation
 
+/// Class representing Key entry: name + data + meta
 @objc(VSKKeyEntry) public final class KeyEntry: NSObject {
+    /// Key entry name
     @objc public let name: String
+
+    /// Key entry data
     @objc public let data: Data
+
+    /// Key entry meta
     @objc public let meta: [String: String]?
 
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - name: name
+    ///   - data: data
+    ///   - meta: meta
     @objc public init(name: String, data: Data, meta: [String: String]? = nil) {
         self.name = name
         self.data = data
