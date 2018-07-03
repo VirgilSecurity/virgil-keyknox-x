@@ -36,21 +36,20 @@
 
 import Foundation
 
-// FIXME
 /// Declares error types and codes for SyncKeyStorage
 ///
-/// - keychainEntryNotFoundWhileUpdating:
-/// - cloudEntryNotFoundWhileUpdating:
-/// - cloudEntryNotFoundWhileDeleting:
-/// - keychainEntryNotFoundWhileComparing:
-/// - keychainEntryAlreadyExistsWhileStoring:
-/// - cloudEntryAlreadyExistsWhileStoring:
-/// - invalidModificationDateInKeychainEntry:
-/// - invalidCreationDateInKeychainEntry:
-/// - noMetaInKeychainEntry:
-/// - invalidKeysInEntryMeta:
-/// - inconsistentStateError:
-/// - entrySavingError:
+/// - keychainEntryNotFoundWhileUpdating: KeychainEntry not found while updating
+/// - cloudEntryNotFoundWhileUpdating: CloudEntry not found while updating
+/// - cloudEntryNotFoundWhileDeleting: CloudEntry notfound while deleting
+/// - keychainEntryNotFoundWhileComparing: KeychainEntry not found while comparing
+/// - keychainEntryAlreadyExistsWhileStoring: KeychainEntry already exists while storing
+/// - cloudEntryAlreadyExistsWhileStoring: CloudEntry already exists while storing
+/// - invalidModificationDateInKeychainEntry: Invalid modificationDate in KeychainEntry
+/// - invalidCreationDateInKeychainEntry: Invalid creationDate in KeychainEntry
+/// - noMetaInKeychainEntry: No meta in keychainEntry
+/// - invalidKeysInEntryMeta: Invalid keys in entry meta
+/// - inconsistentStateError: Inconsistent state error
+/// - entrySavingError: Error while saving entry
 @objc(VSKSyncKeyStorageError) public enum SyncKeyStorageError: Int, Error {
     case keychainEntryNotFoundWhileUpdating
     case cloudEntryNotFoundWhileUpdating

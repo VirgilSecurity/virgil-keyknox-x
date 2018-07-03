@@ -48,7 +48,7 @@ public protocol KeychainStorageProtocol {
     /// - Returns: Stored Keychain entry
     /// - Throws: Depends on implementation
     func store(data: Data, withName name: String, meta: [String: String]?) throws -> KeychainEntry
-    
+
     /// Updates entry
     ///
     /// - Parameters:
@@ -64,19 +64,19 @@ public protocol KeychainStorageProtocol {
     /// - Returns: Retrieved Keychain entry
     /// - Throws: Depends on implementation
     func retrieveEntry(withName name: String) throws -> KeychainEntry
-    
+
     /// Retrieves all entries from Keychain
     ///
     /// - Returns: All Keychain entries
     /// - Throws: Depends on implementation
     func retrieveAllEntries() throws -> [KeychainEntry]
-    
+
     /// Deletes keychain entry
     ///
     /// - Parameter name: Name
     /// - Throws: Depends on implementation
     func deleteEntry(withName name: String) throws
-    
+
     /// Checks if entry exists in Keychain
     ///
     /// - Parameter name: Name
