@@ -1,3 +1,3 @@
 github "VirgilSecurity/virgil-cryptoapi-x" "1.0.2"
-github "VirgilSecurity/virgil-foundation-x" "8a99c0e30c6abf920f81840342fa5fed6801e140"
-github "VirgilSecurity/virgil-sdk-x" "7835fead422535ac9678e061cdcb537f6163bffd"
+github "VirgilSecurity/virgil-foundation-x" "3.1.5"
+github "VirgilSecurity/virgil-sdk-x" "10fca2a9a3d1cd542b0251ceb85df21d0e26c33a"

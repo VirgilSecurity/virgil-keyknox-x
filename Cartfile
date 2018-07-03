@@ -1,2 +1,2 @@
-github "VirgilSecurity/virgil-sdk-x" "key-storage"
-github "VirgilSecurity/virgil-foundation-x" "develop"
+github "VirgilSecurity/virgil-sdk-x" "develop"
+github "VirgilSecurity/virgil-foundation-x" ~> 3.1.2
