@@ -67,13 +67,21 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         try! self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
         let cloudKeyStorage = CloudKeyStorage(keyknoxManager: keyknoxManager)
         
+    #if os(macOS)
+        self.syncKeyStorage = SyncKeyStorage(identity: identity, keychainStorage: KeychainStorage(storageParams: KeychainStorageParams(appName: "Tests", trustedApplications: [])), cloudKeyStorage: cloudKeyStorage)
+    #elseif os(iOS) || os(tvOS)
         self.syncKeyStorage = try! SyncKeyStorage(identity: identity, cloudKeyStorage: cloudKeyStorage)
+    #endif
 
+    #if os(macOS)
+        let params = KeychainStorageParams(appName: "Tests", trustedApplications: [])
+    #elseif os(iOS) || os(tvOS)
         let params = try! KeychainStorageParams.makeKeychainStorageParams()
+    #endif
         self.keychainStorage = KeychainStorage(storageParams: params)
         try! self.keychainStorage.deleteAllEntries()
         
-        self.keychainStorageWrapper = KeychainStorageWrapper(identity: identity, keychainStorage: keychainStorage)
+        self.keychainStorageWrapper = KeychainStorageWrapper(identity: identity, keychainStorage: self.keychainStorage)
     }
     
     func test001_syncStorage() {

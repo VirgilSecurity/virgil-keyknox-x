@@ -46,7 +46,11 @@ class VSK007_KeyStorageWrapperTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
+    #if os(macOS)
+        let params = KeychainStorageParams(appName: "Tests", trustedApplications: [])
+    #elseif os(iOS) || os(tvOS)
         let params = try! KeychainStorageParams.makeKeychainStorageParams()
+    #endif
         self.keychainStorage = KeychainStorage(storageParams: params)
         try! self.keychainStorage.deleteAllEntries()
         

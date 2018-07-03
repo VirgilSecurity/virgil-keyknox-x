@@ -67,8 +67,8 @@ import VirgilCryptoAPI
 
     private let queue = DispatchQueue(label: "SyncKeyStorageQueue")
 
-    internal init(identity: String, keychainStorage: KeychainStorageProtocol,
-                  cloudKeyStorage: CloudKeyStorageProtocol) {
+    public init(identity: String, keychainStorage: KeychainStorageProtocol,
+                cloudKeyStorage: CloudKeyStorageProtocol) {
         self.identity = identity
         self.keychainStorage = KeychainStorageWrapper(identity: identity, keychainStorage: keychainStorage)
         self.cloudKeyStorage = cloudKeyStorage
