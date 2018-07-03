@@ -57,7 +57,8 @@ extension KeyknoxManager {
         self.pullValue().start(completion: completion)
     }
 
-    /// Updates public keys for ecnryption and signature verification and private key for decryption and signature generation
+    /// Updates public keys for ecnryption and signature verification
+    /// and private key for decryption and signature generation
     ///
     /// - Parameters:
     ///   - newPublicKeys: New public keys that will be used for encryption and signature verification
@@ -69,7 +70,8 @@ extension KeyknoxManager {
         self.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start(completion: completion)
     }
 
-    /// Updates public keys for ecnryption and signature verification and private key for decryption and signature generation
+    /// Updates public keys for ecnryption and signature verification
+    /// and private key for decryption and signature generation
     ///
     /// - Parameters:
     ///   - value: Current Keyknox value

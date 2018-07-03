@@ -47,7 +47,7 @@ extension CloudKeyStorage {
             completion(error)
         }
     }
-    
+
     /// Stores entries to cloud
     ///
     /// - Parameters:

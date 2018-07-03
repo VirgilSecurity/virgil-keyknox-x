@@ -61,10 +61,10 @@ import VirgilCryptoAPI
     @objc public let keyknoxClient: KeyknoxClientProtocol
 
     /// Public keys used for encryption and signature verification
-    @objc private(set) public var publicKeys: [PublicKey]
+    @objc internal(set) public var publicKeys: [PublicKey]
 
     /// Private key used for decryption and signing
-    @objc private(set) public var privateKey: PrivateKey
+    @objc internal(set) public var privateKey: PrivateKey
 
     /// KeyknoxCryptoProtocol implementation
     public let crypto: KeyknoxCryptoProtocol
@@ -121,72 +121,6 @@ import VirgilCryptoAPI
                       publicKeys: publicKeys, privateKey: privateKey,
                       crypto: KeyknoxCrypto(),
                       retryOnUnauthorized: retryOnUnauthorized)
-    }
-}
-
-internal extension KeyknoxManager {
-    internal func makePullValueOperation() -> GenericOperation<EncryptedKeyknoxValue> {
-        return CallbackOperation { operation, completion in
-            do {
-                let token: AccessToken = try operation.findDependencyResult()
-
-                let response = try self.keyknoxClient.pullValue(token: token.stringRepresentation())
-
-                completion(response, nil)
-            }
-            catch let error as ServiceError
-                where error.httpStatusCode == 404 && error.errorCode == 50002 {
-                    completion(nil, KeyknoxManagerError.keyknoxIsEmpty)
-            }
-            catch {
-                completion(nil, error)
-            }
-        }
-    }
-
-    internal func makePushValueOperation() -> GenericOperation<EncryptedKeyknoxValue> {
-        return CallbackOperation { operation, completion in
-            do {
-                let token: AccessToken = try operation.findDependencyResult()
-                let data: (Data, Data) = try operation.findDependencyResult()
-                let encryptedKeyknoxData: DecryptedKeyknoxValue = try operation.findDependencyResult()
-
-                let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
-                                                                previousHash: encryptedKeyknoxData.keyknoxHash,
-                                                                token: token.stringRepresentation())
-
-                guard response.value == data.1 && response.meta == data.0 else {
-                    throw KeyknoxManagerError.serverRespondedWithTamperedValue
-                }
-
-                completion(response, nil)
-            }
-            catch {
-                completion(nil, error)
-            }
-        }
-    }
-
-    internal func makePushValueOperation(previousHash: Data?) -> GenericOperation<EncryptedKeyknoxValue> {
-        return CallbackOperation { operation, completion in
-            do {
-                let token: AccessToken = try operation.findDependencyResult()
-                let data: (Data, Data) = try operation.findDependencyResult()
-
-                let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
-                                                                previousHash: previousHash,
-                                                                token: token.stringRepresentation())
-
-                guard response.value == data.1 && response.meta == data.0 else {
-                    throw KeyknoxManagerError.serverRespondedWithTamperedValue
-                }
-
-                completion(response, nil)
-            }
-            catch {
-                completion(nil, error)
-            }
-        }
     }
 }
 
@@ -272,7 +206,8 @@ extension KeyknoxManager {
         }
     }
 
-    /// Updates public keys for ecnryption and signature verification and private key for decryption and signature generation
+    /// Updates public keys for ecnryption and signature verification
+    /// and private key for decryption and signature generation
     ///
     /// - Parameters:
     ///   - newPublicKeys: New public keys that will be used for encryption and signature verification
@@ -330,7 +265,8 @@ extension KeyknoxManager {
         }
     }
 
-    /// Updates public keys for ecnryption and signature verification and private key for decryption and signature generation
+    /// Updates public keys for ecnryption and signature verification
+    /// and private key for decryption and signature generation
     ///
     /// - Parameters:
     ///   - value: Current Keyknox value
@@ -376,66 +312,6 @@ extension KeyknoxManager {
         }
         else {
             return OperationUtils.makeRetryAggregate(makeAggregateOperation: makeAggregateOperation)
-        }
-    }
-}
-
-extension KeyknoxManager {
-    private func makeDecryptOperation() -> GenericOperation<DecryptedKeyknoxValue> {
-        return CallbackOperation { operation, completion in
-            do {
-                let keyknoxData: EncryptedKeyknoxValue = try operation.findDependencyResult()
-
-                let result = try self.crypto.decrypt(encryptedKeyknoxValue: keyknoxData,
-                                                     privateKey: self.privateKey, publicKeys: self.publicKeys)
-
-                completion(result, nil)
-            }
-            catch {
-                completion(nil, error)
-            }
-        }
-    }
-
-    private func makeExtractDataOperation(data: Data? = nil) -> GenericOperation<Data> {
-        return CallbackOperation { operation, completion in
-            if let data = data {
-                completion(data, nil)
-                return
-            }
-
-            do {
-                let data: DecryptedKeyknoxValue = try operation.findDependencyResult()
-                completion(data.value, nil)
-            }
-            catch {
-                completion(nil, error)
-            }
-        }
-    }
-
-    private func makeEncryptOperation(newPublicKeys: [PublicKey]? = nil,
-                                      newPrivateKey: PrivateKey? = nil) -> GenericOperation<(Data, Data)> {
-        return CallbackOperation { operation, completion in
-            do {
-                let data: Data = try operation.findDependencyResult()
-
-                if let newPublicKeys = newPublicKeys {
-                    guard !newPublicKeys.isEmpty else {
-                        throw KeyknoxManagerError.noPublicKeys
-                    }
-                    self.publicKeys = newPublicKeys
-                }
-                if let newPrivateKey = newPrivateKey {
-                    self.privateKey = newPrivateKey
-                }
-
-                completion(try self.crypto.encrypt(data: data, privateKey: self.privateKey,
-                                                   publicKeys: self.publicKeys), nil)
-            }
-            catch {
-                completion(nil, error)
-            }
         }
     }
 }
