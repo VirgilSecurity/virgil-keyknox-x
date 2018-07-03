@@ -168,7 +168,7 @@ static const NSTimeInterval timeout = 20.;
             [keyknoxManager2 pullValueWithCompletion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
                 XCTAssert(decryptedData == nil && error != nil);
                 XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
-                XCTAssert(error.code == VSKKeyknoxManagerErrorSignerNotFound);
+                XCTAssert(error.code == VSKKeyknoxCryptoErrorSignerNotFound);
 
                 [ex fulfill];
             }];
@@ -220,7 +220,7 @@ static const NSTimeInterval timeout = 20.;
             [keyknoxManager3 pullValueWithCompletion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
                 XCTAssert(decryptedData == nil && error != nil);
                 XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
-                XCTAssert(error.code == VSKKeyknoxManagerErrorDecryptionFailed);
+                XCTAssert(error.code == VSKKeyknoxCryptoErrorDecryptionFailed);
 
                 [ex fulfill];
             }];
@@ -285,7 +285,7 @@ static const NSTimeInterval timeout = 20.;
                 [keyknoxManager4 pullValueWithCompletion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
                     XCTAssert(decryptedData == nil && error != nil);
                     XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
-                    XCTAssert(error.code == VSKKeyknoxManagerErrorDecryptionFailed);
+                    XCTAssert(error.code == VSKKeyknoxCryptoErrorDecryptionFailed);
 
                     size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
 
@@ -293,7 +293,7 @@ static const NSTimeInterval timeout = 20.;
                     [keyknoxManager5 pullValueWithCompletion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
                         XCTAssert(decryptedData == nil && error != nil);
                         XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
-                        XCTAssert(error.code == VSKKeyknoxManagerErrorSignerNotFound);
+                        XCTAssert(error.code == VSKKeyknoxCryptoErrorSignerNotFound);
 
                         [ex fulfill];
                     }];
@@ -358,14 +358,14 @@ static const NSTimeInterval timeout = 20.;
                 [keyknoxManager3 pullValueWithCompletion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
                     XCTAssert(decryptedData == nil && error != nil);
                     XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
-                    XCTAssert(error.code == VSKKeyknoxManagerErrorDecryptionFailed);
+                    XCTAssert(error.code == VSKKeyknoxCryptoErrorDecryptionFailed);
 
                     size_t rand = [random randomizeBetweenMin:self.numberOfKeys / 2 andMax:self.numberOfKeys - 1];
                     VSKKeyknoxManager *keyknoxManager4 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:halfPublicKeys privateKey:keyPairs[rand].privateKey retryOnUnauthorized:NO error:nil];
                     [keyknoxManager4 pullValueWithCompletion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
                         XCTAssert(decryptedData == nil && error != nil);
                         XCTAssert([error.domain isEqualToString:VSKKeyknoxManagerErrorDomain]);
-                        XCTAssert(error.code == VSKKeyknoxManagerErrorSignerNotFound);
+                        XCTAssert(error.code == VSKKeyknoxCryptoErrorSignerNotFound);
 
                         [ex fulfill];
                     }];
