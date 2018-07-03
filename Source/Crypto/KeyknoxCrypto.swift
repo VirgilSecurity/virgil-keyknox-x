@@ -39,15 +39,33 @@ import VirgilCryptoAPI
 import VirgilCryptoApiImpl
 import VirgilCrypto
 
+/// KeyknoxCryptoProtocol implementation using VirgilCrypto
 open class KeyknoxCrypto {
+    /// VirgilCrypto
     public let crypto: VirgilCrypto
 
+    /// Init
+    ///
+    /// - Parameter crypto: VirgilCrypto instance
     public init(crypto: VirgilCrypto = VirgilCrypto()) {
         self.crypto = crypto
     }
 }
 
+// MARK: - KeyknoxCryptoProtocol implementation
 extension KeyknoxCrypto: KeyknoxCryptoProtocol {
+    /// Decrypts EncryptedKeyknoxValue
+    ///
+    /// - Parameters:
+    ///   - encryptedKeyknoxValue: encrypted value from Keyknox service
+    ///   - privateKey: private key to decrypt data. Should be of type VirgilPrivateKey
+    ///   - publicKeys: allowed public keys to verify signature. Should be of type VirgilPublicKey
+    /// - Returns: DecryptedKeyknoxValue
+    /// - Throws: VirgilCryptoError.passedKeyIsNotVirgil if passed keys have wrong type
+    ///           KeyknoxManagerError.decryptionFailed if decryption failed
+    ///           KeyknoxManagerError.signerNotFound if data signer is not present in PublicKeys array
+    ///           KeyknoxManagerError.signatureVerificationFailed signature is not verified
+    ///           Rethrows from Cipher
     open func decrypt(encryptedKeyknoxValue: EncryptedKeyknoxValue, privateKey: PrivateKey,
                       publicKeys: [PublicKey]) throws -> DecryptedKeyknoxValue {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
@@ -93,6 +111,15 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
                                      keyknoxHash: encryptedKeyknoxValue.keyknoxHash)
     }
 
+    /// Encrypts data for Keyknox
+    ///
+    /// - Parameters:
+    ///   - data: Data to encrypt
+    ///   - privateKey: Private key to sign data. Should be of type VirgilPrivateKey
+    ///   - publicKeys: Public keys to encrypt data. Should be of type VirgilPublicKey
+    /// - Returns: Meta information and encrypted blob
+    /// - Throws: VirgilCryptoError.passedKeyIsNotVirgil if passed keys have wrong type
+    ///           Rethrows from Cipher, Signer
     open func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data) {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
