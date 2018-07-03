@@ -39,6 +39,17 @@ import VirgilCryptoAPI
 import VirgilCryptoApiImpl
 import VirgilCrypto
 
+/// Declares error types and codes for KeyknoxCrypto
+///
+/// - signerNotFound: Data signer is not present in PublicKeys array
+/// - signatureVerificationFailed: Signature is not verified
+/// - decryptionFailed: Decryption failed
+@objc(VSKKeyknoxCryptoError) public enum KeyknoxCryptoError: Int, Error {
+    case signerNotFound = 1
+    case signatureVerificationFailed = 2
+    case decryptionFailed = 3
+}
+
 /// KeyknoxCryptoProtocol implementation using VirgilCrypto
 open class KeyknoxCrypto {
     /// VirgilCrypto
@@ -83,7 +94,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
                                                    privateKey: privateKeyData, keyPassword: nil)
         }
         catch {
-            throw KeyknoxManagerError.decryptionFailed
+            throw KeyknoxCryptoError.decryptionFailed
         }
 
         let meta = try cipher.contentInfo()
@@ -94,7 +105,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         let signer = Signer(hash: kHashNameSHA512)
 
         guard let publicKey = virgilPublicKeys.first(where: { $0.identifier == signedId }) else {
-            throw KeyknoxManagerError.signerNotFound
+            throw KeyknoxCryptoError.signerNotFound
         }
 
         let publicKeyData = self.crypto.exportPublicKey(publicKey)
@@ -103,7 +114,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
             try signer.verifySignature(signature, data: decryptedData, publicKey: publicKeyData)
         }
         catch {
-            throw KeyknoxManagerError.signatureVerificationFailed
+            throw KeyknoxCryptoError.signatureVerificationFailed
         }
 
         return DecryptedKeyknoxValue(meta: meta, value: decryptedData,

@@ -38,30 +38,52 @@ import Foundation
 import VirgilSDK
 import VirgilCryptoAPI
 
-/// Declares error types and codes for CardManager
+/// Declares error types and codes for KeyknoxManager
+///
+/// - keyknoxIsEmpty: Keyknox value is absent
+/// - noPublicKeys: Public keys array is empty
+/// - keysShouldBeUpdated: Both private and publice keys are absent
+/// - serverRespondedWithTamperedValue: Value pushed to Keyknox and returned from Keyknox doesn't match
 @objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
-    case signerNotFound = 1
-    case signatureVerificationFailed = 2
-    case decryptionFailed = 3
-    case keyknoxIsEmpty = 4
-    case noPublicKeys = 5
-    case keysShouldBeUpdated = 6
-    case serverRespondedWithTamperedValue = 7
+    case keyknoxIsEmpty = 0
+    case noPublicKeys = 1
+    case keysShouldBeUpdated = 2
+    case serverRespondedWithTamperedValue = 3
 }
 
+/// Class responsible for managing Keyknox value with E2EE
 @objc(VSKKeyknoxManager) open class KeyknoxManager: NSObject {
     /// AccessTokenProvider instance used for getting Access Token
     /// when performing queries
     @objc public let accessTokenProvider: AccessTokenProvider
+
     /// KeyknoxClient instance used for performing queries
     @objc public let keyknoxClient: KeyknoxClientProtocol
+
+    /// Public keys used for encryption and signature verification
     @objc private(set) public var publicKeys: [PublicKey]
+
+    /// Private key used for decryption and signing
     @objc private(set) public var privateKey: PrivateKey
+
+    /// KeyknoxCryptoProtocol implementation
     public let crypto: KeyknoxCryptoProtocol
+
+    /// Retry on 401 error
     @objc public let retryOnUnauthorized: Bool
 
     private let queue = DispatchQueue(label: "KeyknoxManagerQueue")
 
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - accessTokenProvider: AccessTokenProvider implementation
+    ///   - keyknoxClient: KeyknoxClientProtocol implementation
+    ///   - publicKeys: Public keys used for encryption and signature verification
+    ///   - privateKey: Private key used for decryption and signing
+    ///   - crypto: KeyknoxCryptoProtocol implementation
+    ///   - retryOnUnauthorized: Retry on 401 error
+    /// - Throws: KeyknoxManagerError.noPublicKeys if public keys array is empty
     public init(accessTokenProvider: AccessTokenProvider,
                 keyknoxClient: KeyknoxClientProtocol = KeyknoxClient(),
                 publicKeys: [PublicKey], privateKey: PrivateKey,
@@ -81,6 +103,15 @@ import VirgilCryptoAPI
         super.init()
     }
 
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - accessTokenProvider: AccessTokenProvider implementation
+    ///   - keyknoxClient: KeyknoxClientProtocol implementation
+    ///   - publicKeys: Public keys used for encryption and signature verification
+    ///   - privateKey: Private key used for decryption and signing
+    ///   - retryOnUnauthorized: Retry on 401 error
+    /// - Throws: KeyknoxManagerError.noPublicKeys
     @objc public convenience init(accessTokenProvider: AccessTokenProvider,
                                   keyknoxClient: KeyknoxClientProtocol = KeyknoxClient(),
                                   publicKeys: [PublicKey], privateKey: PrivateKey,
@@ -159,7 +190,14 @@ internal extension KeyknoxManager {
     }
 }
 
+// MARK: - Queries
 extension KeyknoxManager {
+    /// Signs then encrypts and pushed value to Keyknox service
+    ///
+    /// - Parameters:
+    ///   - value: value to push
+    ///   - previousHash: previous value hash
+    /// - Returns: CallbackOperation<DecryptedKeyknoxValue>
     open func pushValue(_ value: Data, previousHash: Data?) -> GenericOperation<DecryptedKeyknoxValue> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
@@ -198,6 +236,9 @@ extension KeyknoxManager {
         }
     }
 
+    /// Pull value, decrypt then verify signature
+    ///
+    /// - Returns: CallbackOperation<DecryptedKeyknoxValue>
     open func pullValue() -> GenericOperation<DecryptedKeyknoxValue> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
@@ -231,14 +272,21 @@ extension KeyknoxManager {
         }
     }
 
+    /// Updates public keys for ecnryption and signature verification and private key for decryption and signature generation
+    ///
+    /// - Parameters:
+    ///   - newPublicKeys: New public keys that will be used for encryption and signature verification
+    ///   - newPrivateKey: New private key that will be used for decryption and signature generation
+    /// - Returns: CallbackOperation<DecryptedKeyknoxValue>
     open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
                                newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
                 self.queue.async {
-                    guard newPublicKeys != nil || newPrivateKey != nil else {
-                        completion(nil, KeyknoxManagerError.keysShouldBeUpdated)
-                        return
+                    guard (newPublicKeys != nil && !(newPublicKeys?.isEmpty ?? true))
+                        || newPrivateKey != nil else {
+                            completion(nil, KeyknoxManagerError.keysShouldBeUpdated)
+                            return
                     }
 
                     let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
@@ -282,6 +330,14 @@ extension KeyknoxManager {
         }
     }
 
+    /// Updates public keys for ecnryption and signature verification and private key for decryption and signature generation
+    ///
+    /// - Parameters:
+    ///   - value: Current Keyknox value
+    ///   - previousHash: Previous Keyknox value hash
+    ///   - newPublicKeys: New public keys that will be used for encryption and signature verification
+    ///   - newPrivateKey: New private key that will be used for decryption and signature generation
+    /// - Returns: CallbackOperation<DecryptedKeyknoxValue>
     open func updateRecipients(value: Data, previousHash: Data,
                                newPublicKeys: [PublicKey]? = nil,
                                newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
