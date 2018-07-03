@@ -41,6 +41,7 @@ excluded:
   - Carthage
   - Tests
   - KeyknoxTestApp iOS
+  - KeyknoxTestApp tvOS
 
 warning_threshold: 15
 
