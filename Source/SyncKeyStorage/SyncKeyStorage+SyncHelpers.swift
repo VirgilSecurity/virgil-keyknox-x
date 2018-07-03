@@ -37,52 +37,40 @@
 import Foundation
 import VirgilSDK
 
-/// Protocol with Keychain operations
-public protocol KeychainStorageProtocol {
-    /// Stores key in Keychain
-    ///
-    /// - Parameters:
-    ///   - data: Data
-    ///   - name: Name
-    ///   - meta: Meta
-    /// - Returns: Stored Keychain entry
-    /// - Throws: Depends on implementation
-    func store(data: Data, withName name: String, meta: [String: String]?) throws -> KeychainEntry
+// MARK: Sync helpers
+extension SyncKeyStorage {
+    internal func syncDeleteEntries(_ entriesToDelete: [String]) throws {
+        try entriesToDelete.forEach {
+            try self.keychainStorage.deleteEntry(withName: $0)
+        }
+    }
     
-    /// Updates entry
-    ///
-    /// - Parameters:
-    ///   - name: Name
-    ///   - data: New data
-    ///   - meta: New meta
-    /// - Throws: Depends on implementation
-    func updateEntry(withName name: String, data: Data, meta: [String: String]?) throws
-
-    /// Retrieves entry from Keychain
-    ///
-    /// - Parameter name: Name
-    /// - Returns: Retrieved Keychain entry
-    /// - Throws: Depends on implementation
-    func retrieveEntry(withName name: String) throws -> KeychainEntry
+    internal func syncStoreEntries(_ entriesToStore: [String]) throws {
+        try entriesToStore.forEach {
+            let cloudEntry = try self.cloudKeyStorage.retrieveEntry(withName: $0)
+            
+            let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
+            
+            _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
+        }
+    }
     
-    /// Retrieves all entries from Keychain
-    ///
-    /// - Returns: All Keychain entries
-    /// - Throws: Depends on implementation
-    func retrieveAllEntries() throws -> [KeychainEntry]
-    
-    /// Deletes keychain entry
-    ///
-    /// - Parameter name: Name
-    /// - Throws: Depends on implementation
-    func deleteEntry(withName name: String) throws
-    
-    /// Checks if entry exists in Keychain
-    ///
-    /// - Parameter name: Name
-    /// - Returns: true if entry exists, false - otherwise
-    /// - Throws: Depends on implementation
-    func existsEntry(withName name: String) throws -> Bool
+    internal func syncCompareEntries(_ entriesToCompare: [String], keychainEntries: [KeychainEntry]) throws {
+        // Determine newest version and either update keychain entry or upload newer version to cloud
+        try entriesToCompare.forEach { name in
+            guard let keychainEntry = keychainEntries.first(where: { $0.name == name }) else {
+                throw SyncKeyStorageError.keychainEntryNotFoundWhileComparing
+            }
+            
+            let cloudEntry = try self.cloudKeyStorage.retrieveEntry(withName: name)
+            
+            let keychainDate = try self.keychainUtils.extractModificationDate(fromKeychainEntry: keychainEntry)
+            
+            if keychainDate.modificationDate < cloudEntry.modificationDate {
+                let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
+                
+                try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
+            }
+        }
+    }
 }
-
-extension KeychainStorage: KeychainStorageProtocol { }

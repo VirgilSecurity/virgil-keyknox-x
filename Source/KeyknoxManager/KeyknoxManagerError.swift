@@ -35,54 +35,16 @@
 //
 
 import Foundation
-import VirgilSDK
 
-/// Protocol with Keychain operations
-public protocol KeychainStorageProtocol {
-    /// Stores key in Keychain
-    ///
-    /// - Parameters:
-    ///   - data: Data
-    ///   - name: Name
-    ///   - meta: Meta
-    /// - Returns: Stored Keychain entry
-    /// - Throws: Depends on implementation
-    func store(data: Data, withName name: String, meta: [String: String]?) throws -> KeychainEntry
-    
-    /// Updates entry
-    ///
-    /// - Parameters:
-    ///   - name: Name
-    ///   - data: New data
-    ///   - meta: New meta
-    /// - Throws: Depends on implementation
-    func updateEntry(withName name: String, data: Data, meta: [String: String]?) throws
-
-    /// Retrieves entry from Keychain
-    ///
-    /// - Parameter name: Name
-    /// - Returns: Retrieved Keychain entry
-    /// - Throws: Depends on implementation
-    func retrieveEntry(withName name: String) throws -> KeychainEntry
-    
-    /// Retrieves all entries from Keychain
-    ///
-    /// - Returns: All Keychain entries
-    /// - Throws: Depends on implementation
-    func retrieveAllEntries() throws -> [KeychainEntry]
-    
-    /// Deletes keychain entry
-    ///
-    /// - Parameter name: Name
-    /// - Throws: Depends on implementation
-    func deleteEntry(withName name: String) throws
-    
-    /// Checks if entry exists in Keychain
-    ///
-    /// - Parameter name: Name
-    /// - Returns: true if entry exists, false - otherwise
-    /// - Throws: Depends on implementation
-    func existsEntry(withName name: String) throws -> Bool
+/// Declares error types and codes for KeyknoxManager
+///
+/// - keyknoxIsEmpty: Keyknox value is absent
+/// - noPublicKeys: Public keys array is empty
+/// - keysShouldBeUpdated: Both private and publice keys are absent
+/// - serverRespondedWithTamperedValue: Value pushed to Keyknox and returned from Keyknox doesn't match
+@objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
+    case keyknoxIsEmpty = 0
+    case noPublicKeys = 1
+    case keysShouldBeUpdated = 2
+    case serverRespondedWithTamperedValue = 3
 }
-
-extension KeychainStorage: KeychainStorageProtocol { }

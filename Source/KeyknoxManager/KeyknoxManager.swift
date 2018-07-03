@@ -38,19 +38,6 @@ import Foundation
 import VirgilSDK
 import VirgilCryptoAPI
 
-/// Declares error types and codes for KeyknoxManager
-///
-/// - keyknoxIsEmpty: Keyknox value is absent
-/// - noPublicKeys: Public keys array is empty
-/// - keysShouldBeUpdated: Both private and publice keys are absent
-/// - serverRespondedWithTamperedValue: Value pushed to Keyknox and returned from Keyknox doesn't match
-@objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
-    case keyknoxIsEmpty = 0
-    case noPublicKeys = 1
-    case keysShouldBeUpdated = 2
-    case serverRespondedWithTamperedValue = 3
-}
-
 /// Class responsible for managing Keyknox value with E2EE
 @objc(VSKKeyknoxManager) open class KeyknoxManager: NSObject {
     /// AccessTokenProvider instance used for getting Access Token

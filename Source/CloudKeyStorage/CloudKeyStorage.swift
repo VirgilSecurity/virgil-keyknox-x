@@ -38,19 +38,6 @@ import Foundation
 import VirgilCryptoAPI
 import VirgilSDK
 
-/// Declares error types and codes for KeyknoxManager
-///
-/// - entryNotFound: Entry was not found
-/// - entrySavingError: Error while saving entry
-/// - entryAlreadyExists: Entry already exists
-/// - cloudStorageOutOfSync: Sync this storage before any other operations
-@objc(VSKCloudKeyStorageError) public enum CloudKeyStorageError: Int, Error {
-    case entryNotFound
-    case entrySavingError
-    case entryAlreadyExists
-    case cloudStorageOutOfSync
-}
-
 /// Class responsible for storing Keys in Cloud using E2EE
 @objc(VSKCloudKeyStorage) open class CloudKeyStorage: NSObject {
     /// KeyknoxManager

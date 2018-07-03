@@ -37,6 +37,9 @@
 import Foundation
 import VirgilSDK
 
+/// Declares error types and codes for KeychainStorageWrapper
+///
+/// - errorConvertingKeychainEntry: Invalid Keychain entry
 @objc(VSKKeychainStorageWrapperError) public enum KeychainStorageWrapperError: Int, Error {
     case errorConvertingKeychainEntry = 0
 }

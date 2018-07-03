@@ -38,35 +38,25 @@ import Foundation
 import VirgilSDK
 import VirgilCryptoAPI
 
-@objc(VSKSyncKeyStorageError) public enum SyncKeyStorageError: Int, Error {
-    case keychainEntryNotFoundWhileUpdating
-
-    case cloudEntryNotFoundWhileDeleting
-
-    case keychainEntryNotFoundWhileComparing
-
-    case keychainEntryAlreadyExistsWhileStoring
-    case cloudEntryAlreadyExistsWhileStoring
-
-    case invalidModificationDateInKeychainEntry
-    case invalidCreationDateInKeychainEntry
-    case noMetaInKeychainEntry
-
-    case invalidKeysInEntryMeta
-
-    case inconsistentStateError
-
-    case entrySavingError
-}
-
+/// Class responsible for synchronization between Keychain and Keyknox Cloud
 @objc(VSKSyncKeyStorage) open class SyncKeyStorage: NSObject {
+    /// User's identity to separate keys in Keychain
     @objc public let identity: String
+
+    /// CloudKeyStorageProtocol implementation
     public let cloudKeyStorage: CloudKeyStorageProtocol
-    public let keychainStorage: KeychainStorageProtocol
-    private let keychainUtils: KeychainUtils
+
+    internal let keychainStorage: KeychainStorageProtocol
+    internal let keychainUtils: KeychainUtils
 
     private let queue = DispatchQueue(label: "SyncKeyStorageQueue")
 
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - identity: User's identity to separate keys in Keychain
+    ///   - keychainStorage: KeychainStorageProtocol implementation
+    ///   - cloudKeyStorage: CloudKeyStorageProtocol implementation
     public init(identity: String, keychainStorage: KeychainStorageProtocol,
                 cloudKeyStorage: CloudKeyStorageProtocol) {
         self.identity = identity
@@ -77,6 +67,12 @@ import VirgilCryptoAPI
         super.init()
     }
 
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - identity: User's identity to separate keys in Keychain
+    ///   - cloudKeyStorage: CloudKeyStorageProtocol implementation
+    /// - Throws: Rethrows from KeychainStorageParams
     @objc public convenience init(identity: String, cloudKeyStorage: CloudKeyStorage) throws {
         let configuration = try KeychainStorageParams.makeKeychainStorageParams()
         let keychainStorage = KeychainStorage(storageParams: configuration)
@@ -84,6 +80,14 @@ import VirgilCryptoAPI
         self.init(identity: identity, keychainStorage: keychainStorage, cloudKeyStorage: cloudKeyStorage)
     }
 
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - identity: User's identity to separate keys in Keychain
+    ///   - accessTokenProvider: AccessTokenProvider implementation
+    ///   - publicKeys: Public keys used for encryption and signature verification
+    ///   - privateKey: Private key used for decryption and signature generation
+    /// - Throws: Rethrows from CloudKeyStorage and KeychainStorageParams
     @objc convenience public init(identity: String, accessTokenProvider: AccessTokenProvider,
                                   publicKeys: [PublicKey], privateKey: PrivateKey) throws {
         let cloudKeyStorage = try CloudKeyStorage(accessTokenProvider: accessTokenProvider,
@@ -93,7 +97,15 @@ import VirgilCryptoAPI
     }
 }
 
+// MARK: - Extension with Queries
 extension SyncKeyStorage {
+    /// Updates entry in Keyknox Cloud and Keychain
+    ///
+    /// - Parameters:
+    ///   - name: Name
+    ///   - data: New data
+    ///   - meta: New meta
+    /// - Returns: GenericOperation<Void>
     open func updateEntry(withName name: String, data: Data, meta: [String: String]?) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -102,7 +114,12 @@ extension SyncKeyStorage {
                         throw SyncKeyStorageError.keychainEntryNotFoundWhileUpdating
                     }
 
-                    _ = try self.cloudKeyStorage.existsEntry(withName: name)
+                    do {
+                        _ = try self.cloudKeyStorage.existsEntry(withName: name)
+                    }
+                    catch {
+                        throw SyncKeyStorageError.cloudEntryNotFoundWhileUpdating
+                    }
 
                     let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name, data: data,
                                                                           meta: meta).startSync().getResult()
@@ -118,10 +135,19 @@ extension SyncKeyStorage {
         }
     }
 
+    /// Retrieves entry from Keychain
+    ///
+    /// - Parameter name: Name
+    /// - Returns: KeychainEntry
+    /// - Throws: Rethrows from KeychainStorage
     @objc open func retrieveEntry(withName name: String) throws -> KeychainEntry {
         return try self.keychainStorage.retrieveEntry(withName: name)
     }
 
+    /// Deletes entries from both Keychain and Keyknox Cloud
+    ///
+    /// - Parameter names: Names to delete
+    /// - Returns: GenericOperation<Void>
     open func deleteEntries(withNames names: [String]) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -147,10 +173,21 @@ extension SyncKeyStorage {
         }
     }
 
+    /// Deletes entry from both Keychain and Keyknox Cloud
+    ///
+    /// - Parameter name: Name
+    /// - Returns: GenericOperation<Void>
     open func deleteEntry(withName name: String) -> GenericOperation<Void> {
         return self.deleteEntries(withNames: [name])
     }
 
+    /// Stores entry in both Keychain and Keyknox Cloud
+    ///
+    /// - Parameters:
+    ///   - name: Name
+    ///   - data: Data
+    ///   - meta: Meta
+    /// - Returns: GenericOperation<KeychainEntry>
     open func storeEntry(withName name: String, data: Data,
                          meta: [String: String]? = nil) -> GenericOperation<KeychainEntry> {
         return CallbackOperation { _, completion in
@@ -170,6 +207,10 @@ extension SyncKeyStorage {
         }
     }
 
+    /// Stores entries in both Keychain and Keyknox Cloud
+    ///
+    /// - Parameter keyEntries: Key entries to store
+    /// - Returns: GenericOperation<[KeychainEntry]>
     open func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[KeychainEntry]> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -214,6 +255,9 @@ extension SyncKeyStorage {
         return keychainEntries
     }
 
+    /// Performs synchronization between Keychain and Keyknox Cloud
+    ///
+    /// - Returns: GenericOperation<Void>
     open func sync() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -244,16 +288,29 @@ extension SyncKeyStorage {
         }
     }
 
+    /// Updates recipients. See KeyknoxManager.updateRecipients
+    ///
+    /// - Parameters:
+    ///   - newPublicKeys: New public keys
+    ///   - newPrivateKey: New private key
+    /// - Returns: GenericOperation<Void>
     open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
                                newPrivateKey: PrivateKey? = nil) -> GenericOperation<Void> {
         return self.cloudKeyStorage.updateRecipients(newPublicKeys: newPublicKeys,
                                                      newPrivateKey: newPrivateKey)
     }
 
+    /// Retrieves all entries from Keychain
+    ///
+    /// - Returns: Keychain entries
+    /// - Throws: Rethrows from KeychainStorage
     open func retrieveAllEntries() throws -> [KeychainEntry] {
         return try self.keychainStorage.retrieveAllEntries().compactMap(self.keychainUtils.filterKeyknoxKeychainEntry)
     }
 
+    /// Deletes all entries in both Keychain and Keyknox Cloud
+    ///
+    /// - Returns: GenericOperation<Void>
     open func deleteAllEntries() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
@@ -271,44 +328,6 @@ extension SyncKeyStorage {
                 catch {
                     completion(nil, error)
                 }
-            }
-        }
-    }
-}
-
-// MARK: Sync helpers
-extension SyncKeyStorage {
-    private func syncDeleteEntries(_ entriesToDelete: [String]) throws {
-        try entriesToDelete.forEach {
-            try self.keychainStorage.deleteEntry(withName: $0)
-        }
-    }
-
-    private func syncStoreEntries(_ entriesToStore: [String]) throws {
-        try entriesToStore.forEach {
-            let cloudEntry = try self.cloudKeyStorage.retrieveEntry(withName: $0)
-
-            let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
-
-            _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
-        }
-    }
-
-    private func syncCompareEntries(_ entriesToCompare: [String], keychainEntries: [KeychainEntry]) throws {
-        // Determine newest version and either update keychain entry or upload newer version to cloud
-        try entriesToCompare.forEach { name in
-            guard let keychainEntry = keychainEntries.first(where: { $0.name == name }) else {
-                throw SyncKeyStorageError.keychainEntryNotFoundWhileComparing
-            }
-
-            let cloudEntry = try self.cloudKeyStorage.retrieveEntry(withName: name)
-
-            let keychainDate = try self.keychainUtils.extractModificationDate(fromKeychainEntry: keychainEntry)
-
-            if keychainDate.modificationDate < cloudEntry.modificationDate {
-                let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
-
-                try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
             }
         }
     }
