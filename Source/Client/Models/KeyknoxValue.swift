@@ -36,10 +36,18 @@
 
 import Foundation
 
+/// Value stored on Keyknox service
 @objc(VSKKeyknoxValue) public class KeyknoxValue: NSObject {
+    /// Meta info
     @objc public let meta: Data
+
+    /// Value
     @objc public let value: Data
+
+    /// Value in X.Y format. X - major version, Y - minor
     @objc public let version: String
+
+    /// Keyknox hash
     @objc public let keyknoxHash: Data
 
     internal convenience init(keyknoxData: KeyknoxData, keyknoxHash: Data) {
@@ -57,6 +65,8 @@ import Foundation
     }
 }
 
+/// Represent encrypted Keyknox value
 @objc(VSKEncryptedKeyknoxValue) public class EncryptedKeyknoxValue: KeyknoxValue { }
 
+/// Represent decrypted Keyknox value
 @objc(VSKDecryptedKeyknoxValue) public class DecryptedKeyknoxValue: KeyknoxValue { }
