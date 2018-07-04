@@ -10,7 +10,6 @@
 ## Introduction
 
 <a href="https://developer.virgilsecurity.com/docs"><img width="230px" src="https://cdn.virgilsecurity.com/assets/images/github/logos/virgil-logo-red.png" align="left" hspace="10" vspace="6"></a>[Virgil Security](https://virgilsecurity.com) provides an SDK which allows you to communicate with Virgil Keyknox Service.
-
 Virgil Keyknox Service allows users to store their encrypted sensitive data (such as Private Key) for using and sharing it between different devices.
 
 ## SDK Features
