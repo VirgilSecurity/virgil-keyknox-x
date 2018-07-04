@@ -5,15 +5,16 @@
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
 
 
-[Introduction](#introduction) | [SDK Features](#sdk-features) | [Install and configure SDK](#install-and-configure-sdk) | [Usage Examples](#usage-examples) | [Docs](#docs) | [Support](#support)
+[Introduction](#introduction) | [SDK Features](#sdk-features) | [Install and configure SDK](#install-and-configure-sdk) | [Docs](#docs) | [Support](#support)
 
 ## Introduction
 
-<a href="https://developer.virgilsecurity.com/docs"><img width="230px" src="https://cdn.virgilsecurity.com/assets/images/github/logos/virgil-logo-red.png" align="left" hspace="10" vspace="6"></a>[Virgil Security](https://virgilsecurity.com) provides an SDK which allows you to communicate with [Virgil Keyknox Service][_virgil_keyknox] which allows users to store their encrypted sensitive data (such as Private Key) for using and sharing it between different devices.
+<a href="https://developer.virgilsecurity.com/docs"><img width="230px" src="https://cdn.virgilsecurity.com/assets/images/github/logos/virgil-logo-red.png" align="left" hspace="10" vspace="6"></a>[Virgil Security](https://virgilsecurity.com) provides an SDK which allows you to communicate with Virgil Keyknox Service.
+Virgil Keyknox Service allows users to store their encrypted sensitive data (such as Private Key) for using and sharing it between different devices.
 
 ## SDK Features
 - use [Virgil Crypto library][_virgil_crypto]
-- upload encrypted sensitive data to [Virgil Keyknox Service][_virgil_keyknox]
+- upload encrypted sensitive data to Virgil Keyknox Service
 - download the data from Virgil Keyknox Service
 - update and synchronize the data
 
@@ -21,7 +22,7 @@
 
 ### Installation
 
-Virgil Keyknox is provided as a set of frameworks. These frameworks are distributed via Carthage and CocoaPods. Also in this guide, you find one more package called VirgilCrypto (Virgil Crypto Library) that is used by the SDK to perform cryptographic operations.
+Virgil Keyknox SDK is provided as a set of frameworks. These frameworks are distributed via Carthage and CocoaPods. Also in this guide, you find one more package called VirgilCrypto (Virgil Crypto Library) that is used by the SDK to perform cryptographic operations.
 
 Frameworks are available for:
 - iOS 9.0+
@@ -143,12 +144,33 @@ Next, on your application target's “General” settings tab, in the “Embedde
 
  ### Configure SDK
 
-## Usage Examples
+To begin using Virgil Keyknox SDK you'll need to initialize `SyncKeyStorage` class. This class is responsible for synchronization between Keychain and Keyknox Cloud.
+In order to initialize `SyncKeyStorage` class you'll need the following values:
+- `accessTokenProvider`
+- `public keys` of the device/user
+- `private key` of the device/user
+- `identity` of the user (the device can have different users)
+
+```swift
+/// - Parameters:
+    ///   - identity: User's identity to separate keys in Keychain
+    ///   - accessTokenProvider: AccessTokenProvider implementation
+    ///   - publicKeys: Public keys used for encryption and signature verification
+    ///   - privateKey: Private key used for decryption and signature generation
+    /// - Throws: Rethrows from CloudKeyStorage and KeychainStorageParams
+@objc convenience public init(identity: String, accessTokenProvider: AccessTokenProvider,
+                                  publicKeys: [PublicKey], privateKey: PrivateKey) throws {
+        let cloudKeyStorage = try CloudKeyStorage(accessTokenProvider: accessTokenProvider,
+                                                  publicKeys: publicKeys, privateKey: privateKey)
+
+        try self.init(identity: identity, cloudKeyStorage: cloudKeyStorage)
+    }
+```
 
 ## Docs
 Virgil Security has a powerful set of APIs, and the documentation below can get you started today.
 
-* [Virgil Security Documenation][_documentation]
+* [Virgil Security Documentation][_documentation]
 
 ## License
 
@@ -161,7 +183,6 @@ You can find us on [Twitter](https://twitter.com/VirgilSecurity) or send us emai
 
 Also, get extra help from our support team on [Slack](https://virgilsecurity.slack.com/join/shared_invite/enQtMjg4MDE4ODM3ODA4LTc2OWQwOTQ3YjNhNTQ0ZjJiZDc2NjkzYjYxNTI0YzhmNTY2ZDliMGJjYWQ5YmZiOGU5ZWEzNmJiMWZhYWVmYTM).
 
-[_virgil_keyknox]: https://github.com/VirgilSecurity/virgil-services-keyknox
 [_virgil_crypto]: https://github.com/VirgilSecurity/virgil-crypto
 [_documentation]: https://developer.virgilsecurity.com/
 [_dashboard]: https://dashboard.virgilsecurity.com/
