@@ -57,6 +57,13 @@ extension KeyknoxManager {
         self.pullValue().start(completion: completion)
     }
 
+    /// Resets Keyknox value (makes it empty). Also increments version
+    ///
+    /// - Returns: Completion handler
+    @objc open func resetValue(completion: @escaping(DecryptedKeyknoxValue?, Error?) -> Void) {
+        self.resetValue().start(completion: completion)
+    }
+
     /// Updates public keys for ecnryption and signature verification
     /// and private key for decryption and signature generation
     ///

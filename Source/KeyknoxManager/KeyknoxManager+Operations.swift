@@ -48,10 +48,6 @@ extension KeyknoxManager {
 
                 completion(response, nil)
             }
-            catch let error as ServiceError
-                where error.httpStatusCode == 404 && error.errorCode == 50002 {
-                    completion(nil, KeyknoxManagerError.keyknoxIsEmpty)
-            }
             catch {
                 completion(nil, error)
             }
@@ -63,7 +59,7 @@ extension KeyknoxManager {
             do {
                 let token: AccessToken = try operation.findDependencyResult()
                 let data: (Data, Data) = try operation.findDependencyResult()
-                let encryptedKeyknoxData: DecryptedKeyknoxValue = try operation.findDependencyResult()
+                let encryptedKeyknoxData: EncryptedKeyknoxValue = try operation.findDependencyResult()
 
                 let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
                                                                 previousHash: encryptedKeyknoxData.keyknoxHash,
@@ -92,6 +88,25 @@ extension KeyknoxManager {
                                                                 token: token.stringRepresentation())
 
                 guard response.value == data.1 && response.meta == data.0 else {
+                    throw KeyknoxManagerError.serverRespondedWithTamperedValue
+                }
+
+                completion(response, nil)
+            }
+            catch {
+                completion(nil, error)
+            }
+        }
+    }
+
+    internal func makeResetValueOperation() -> GenericOperation<DecryptedKeyknoxValue> {
+        return CallbackOperation { operation, completion in
+            do {
+                let token: AccessToken = try operation.findDependencyResult()
+
+                let response = try self.keyknoxClient.resetValue(token: token.stringRepresentation())
+
+                guard response.value.isEmpty && response.meta.isEmpty else {
                     throw KeyknoxManagerError.serverRespondedWithTamperedValue
                 }
 

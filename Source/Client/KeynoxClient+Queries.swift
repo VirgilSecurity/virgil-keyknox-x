@@ -109,6 +109,29 @@ extension KeyknoxClient: KeyknoxClientProtocol {
         return EncryptedKeyknoxValue(keyknoxData: keyknoxData, keyknoxHash: keyknoxHash)
     }
 
+    /// Resets Keyknox value (makes it empty). Also increments version
+    ///
+    /// - Parameter token: auth token
+    /// - Returns: DecryptedKeyknoxValue
+    /// - Throws: KeyknoxClientError.constructingUrl if URL init failed
+    ///           KeyknoxClientError.invalidPreviousHashHeader if extracting previousHash from response header failed
+    ///           Rethrows from ServiceRequest, Connection, BaseClient
+    @objc open func resetValue(token: String) throws -> DecryptedKeyknoxValue {
+        guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
+            throw KeyknoxClientError.constructingUrl
+        }
+
+        let request = try ServiceRequest(url: url, method: .delete, accessToken: token)
+
+        let response = try self.connection.send(request)
+
+        let keyknoxData: KeyknoxData = try self.processResponse(response)
+
+        let keyknoxHash = try self.extractKeyknoxHash(response: response)
+
+        return DecryptedKeyknoxValue(keyknoxData: keyknoxData, keyknoxHash: keyknoxHash)
+    }
+
     private func extractKeyknoxHash(response: Response) throws -> Data {
         let responseHeaders = response.response.allHeaderFields as NSDictionary
 

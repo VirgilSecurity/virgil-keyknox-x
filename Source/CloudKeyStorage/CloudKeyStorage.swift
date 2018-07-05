@@ -48,7 +48,7 @@ import VirgilSDK
     private let cloudEntrySerializer = CloudEntrySerializer()
 
     /// Shows whether this storage was synced
-    @objc private(set) public var storageWasSynced = false
+    @objc public var storageWasSynced: Bool { return self.decryptedKeyknoxData != nil }
 
     private let queue = DispatchQueue(label: "CloudKeyStorageQueue")
 
@@ -292,13 +292,8 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         return CallbackOperation { _, completion in
             self.queue.async {
                 do {
-                    self.cache = [:]
-
-                    let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
-
                     let response = try self.keyknoxManager
-                        .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
-                        .startSync().getResult()
+                        .resetValue().startSync().getResult()
 
                     self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
@@ -323,21 +318,25 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         return CallbackOperation { _, completion in
             self.queue.async {
                 do {
-                    guard self.storageWasSynced else {
+                    guard let decryptedKeyknoxData = self.decryptedKeyknoxData else {
                         throw CloudKeyStorageError.cloudStorageOutOfSync
                     }
 
-                    // TODO: Optimize: No need to pull value
+                    // Cloud is empty, no need to update anything
+                    guard !decryptedKeyknoxData.value.isEmpty || !decryptedKeyknoxData.meta.isEmpty else {
+                        completion((), nil)
+                        return
+                    }
+
                     let response = try self.keyknoxManager
-                        .updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey)
+                        .updateRecipients(value: decryptedKeyknoxData.value,
+                                          previousHash: decryptedKeyknoxData.keyknoxHash,
+                                          newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey)
                         .startSync().getResult()
 
                     self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
 
-                    completion((), nil)
-                }
-                catch KeyknoxManagerError.keyknoxIsEmpty {
                     completion((), nil)
                 }
                 catch {
@@ -353,29 +352,16 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
     open func retrieveCloudEntries() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
-                let completionWrapper = { (error: Error?) in
-                    if let error = error {
-                        completion(nil, error)
-                        return
-                    }
-
-                    self.storageWasSynced = true
-                    completion((), nil)
-                }
-
                 do {
                     let response = try self.keyknoxManager.pullValue().startSync().getResult()
 
                     self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
 
-                    completionWrapper(nil)
-                }
-                catch KeyknoxManagerError.keyknoxIsEmpty {
-                    completionWrapper(nil)
+                    completion((), nil)
                 }
                 catch {
-                    completionWrapper(error)
+                    completion(nil, error)
                 }
             }
         }

@@ -380,4 +380,55 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
+- (void)test006_resetValue {
+    XCTestExpectation *ex = [self expectationWithDescription:@""];
+    
+    NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [self.keyknoxManager pushValue:someData previousHash:nil completion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
+        XCTAssert(decryptedData != nil && error == nil);
+        
+        [self.keyknoxManager resetValueWithCompletion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
+              XCTAssert(decryptedData != nil && error == nil);
+              XCTAssert(decryptedData.value.length == 0 && decryptedData.meta.length == 0);
+            
+              [ex fulfill];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
+        if (error != nil)
+            XCTFail(@"Expectation failed: %@", error);
+    }];
+}
+
+- (void)test007_resetInvalidValue {
+    XCTestExpectation *ex = [self expectationWithDescription:@""];
+    
+    NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    VSMVirgilKeyPair *keyPair1 = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+    VSMVirgilKeyPair *keyPair2 = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+    
+    VSKKeyknoxManager *keyknoxManager1 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:@[keyPair1.publicKey] privateKey:keyPair1.privateKey retryOnUnauthorized:NO error:nil];
+    
+    [keyknoxManager1 pushValue:someData previousHash:nil completion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
+        XCTAssert(decryptedData != nil && error == nil);
+        
+        VSKKeyknoxManager *keyknoxManager2 = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:self.provider keyknoxClient:self.keyknoxClient publicKeys:@[keyPair2.publicKey] privateKey:keyPair2.privateKey retryOnUnauthorized:NO error:nil];
+        
+        [keyknoxManager2 resetValueWithCompletion:^(VSKDecryptedKeyknoxValue *decryptedData, NSError *error) {
+            XCTAssert(decryptedData != nil && error == nil);
+            XCTAssert(decryptedData.value.length == 0 && decryptedData.meta.length == 0);
+            
+            [ex fulfill];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
+        if (error != nil)
+            XCTFail(@"Expectation failed: %@", error);
+    }];
+}
+
 @end

@@ -44,10 +44,14 @@ import VirgilCrypto
 /// - signerNotFound: Data signer is not present in PublicKeys array
 /// - signatureVerificationFailed: Signature is not verified
 /// - decryptionFailed: Decryption failed
+/// - emptyPublicKeysList: Public keys list is empty
+/// - emptyData: Trying to encrypt empty data
 @objc(VSKKeyknoxCryptoError) public enum KeyknoxCryptoError: Int, Error {
     case signerNotFound = 1
     case signatureVerificationFailed = 2
     case decryptionFailed = 3
+    case emptyPublicKeysList = 4
+    case emptyData = 5
 }
 
 /// KeyknoxCryptoProtocol implementation using VirgilCrypto
@@ -79,6 +83,13 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
     ///           Rethrows from Cipher
     open func decrypt(encryptedKeyknoxValue: EncryptedKeyknoxValue, privateKey: PrivateKey,
                       publicKeys: [PublicKey]) throws -> DecryptedKeyknoxValue {
+        if encryptedKeyknoxValue.value.isEmpty && encryptedKeyknoxValue.meta.isEmpty {
+            return DecryptedKeyknoxValue(meta: Data(),
+                                         value: Data(),
+                                         version: encryptedKeyknoxValue.version,
+                                         keyknoxHash: encryptedKeyknoxValue.keyknoxHash)
+        }
+
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
                 throw VirgilCryptoError.passedKeyIsNotVirgil
@@ -135,6 +146,14 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
             let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
                 throw VirgilCryptoError.passedKeyIsNotVirgil
+        }
+
+        guard !virgilPublicKeys.isEmpty else {
+            throw KeyknoxCryptoError.emptyPublicKeysList
+        }
+
+        guard !data.isEmpty else {
+            throw KeyknoxCryptoError.emptyData
         }
 
         let signer = Signer(hash: kHashNameSHA512)

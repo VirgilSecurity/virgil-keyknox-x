@@ -85,6 +85,19 @@ extension SyncKeyStorage {
         }
     }
 
+    /// Checks if entry exists in Keychain
+    ///
+    /// - Parameter name: Entry name
+    /// - Returns: true if entry exists, false - otherwise
+    @objc open func existsEntryNoThrow(withName name: String) -> Bool {
+        do {
+            return try self.existsEntry(withName: name)
+        }
+        catch {
+            return false
+        }
+    }
+
     /// Stores entries in both Keychain and Keyknox Cloud
     ///
     /// - Parameters:

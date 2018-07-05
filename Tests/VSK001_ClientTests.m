@@ -80,7 +80,7 @@
     [super tearDown];
 }
 
--(void)test001_pushValue {
+- (void)test001_pushValue {
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
@@ -117,7 +117,7 @@
     XCTAssert(response2.keyknoxHash.length > 0);
 }
 
--(void)test002_updateData {
+- (void)test002_updateData {
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     NSData *someData2 = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
@@ -159,6 +159,33 @@
     XCTAssert([response2.value isEqualToData:encryptedData2]);
     XCTAssert([response2.version isEqualToString:@"2.1"]);
     XCTAssert(response2.keyknoxHash.length > 0);
+}
+
+- (void)test003_pullEmpty {
+    NSError *error;
+    VSKEncryptedKeyknoxValue *response = [self.keyknoxClient pullValueWithToken:self.tokenStr error:&error];
+    XCTAssert(response != nil && error == nil);
+    
+    XCTAssert(response.value.length == 0);
+    XCTAssert(response.meta.length == 0);
+    XCTAssert([response.version isEqualToString:@"1.0"]);
+}
+
+- (void)test004_resetValue {
+    NSError *error;
+    
+    NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *someMeta = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    VSKEncryptedKeyknoxValue *response = [self.keyknoxClient pushValueWithMeta:someMeta value:someData previousHash:nil token:self.tokenStr error:&error];
+    XCTAssert(response != nil && error == nil);
+    
+    VSKDecryptedKeyknoxValue *response2 = [self.keyknoxClient resetValueWithToken:self.tokenStr error:&error];
+    XCTAssert(response2 != nil && error == nil);
+    
+    XCTAssert(response2.value.length == 0);
+    XCTAssert(response2.meta.length == 0);
+    XCTAssert([response2.version isEqualToString:@"2.0"]);
 }
 
 @end

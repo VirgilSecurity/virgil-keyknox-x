@@ -261,29 +261,53 @@ extension SyncKeyStorage {
     open func sync() -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
-                do {
-                    // TODO: Optimize to run concurrently
-                    try self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
+                let retrieveCloudEntriesOperation = self.cloudKeyStorage.retrieveCloudEntries()
+                let retrieveKeychainEntriesOperation = CallbackOperation<[KeychainEntry]> { _, completion in
+                    do {
+                        let keychainEntries = try self.keychainStorage.retrieveAllEntries()
+                            .compactMap(self.keychainUtils.filterKeyknoxKeychainEntry)
 
-                    let keychainEntries = try self.keychainStorage.retrieveAllEntries()
-                        .compactMap(self.keychainUtils.filterKeyknoxKeychainEntry)
-
-                    let keychainSet = Set<String>(keychainEntries.map { $0.name })
-                    let cloudSet = Set<String>(try self.cloudKeyStorage.retrieveAllEntries().map { $0.name })
-
-                    let entriesToDelete = [String](keychainSet.subtracting(cloudSet))
-                    let entriesToStore = [String](cloudSet.subtracting(keychainSet))
-                    let entriesToCompare = [String](keychainSet.intersection(cloudSet))
-
-                    try self.syncDeleteEntries(entriesToDelete)
-                    try self.syncStoreEntries(entriesToStore)
-                    try self.syncCompareEntries(entriesToCompare, keychainEntries: keychainEntries)
-
-                    completion((), nil)
+                        completion(keychainEntries, nil)
+                    }
+                    catch {
+                        completion(nil, error)
+                    }
                 }
-                catch {
-                    completion(nil, error)
+
+                let syncOperation = CallbackOperation<Void> { operation, completion in
+                    do {
+                        let keychainEntries: [KeychainEntry] = try operation.findDependencyResult()
+
+                        let keychainSet = Set<String>(keychainEntries.map { $0.name })
+                        let cloudSet = Set<String>(try self.cloudKeyStorage.retrieveAllEntries().map { $0.name })
+
+                        let entriesToDelete = [String](keychainSet.subtracting(cloudSet))
+                        let entriesToStore = [String](cloudSet.subtracting(keychainSet))
+                        let entriesToCompare = [String](keychainSet.intersection(cloudSet))
+
+                        try self.syncDeleteEntries(entriesToDelete)
+                        try self.syncStoreEntries(entriesToStore)
+                        try self.syncCompareEntries(entriesToCompare, keychainEntries: keychainEntries)
+
+                        completion((), nil)
+                    }
+                    catch {
+                        completion(nil, error)
+                    }
                 }
+
+                syncOperation.addDependency(retrieveCloudEntriesOperation)
+                syncOperation.addDependency(retrieveKeychainEntriesOperation)
+
+                let operations = [retrieveCloudEntriesOperation, retrieveKeychainEntriesOperation,
+                                  syncOperation]
+                let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
+                operations.forEach {
+                    completionOperation.addDependency($0)
+                }
+
+                let queue = OperationQueue()
+                queue.addOperations(operations + [completionOperation], waitUntilFinished: true)
             }
         }
     }
@@ -306,6 +330,15 @@ extension SyncKeyStorage {
     /// - Throws: Rethrows from KeychainStorage
     open func retrieveAllEntries() throws -> [KeychainEntry] {
         return try self.keychainStorage.retrieveAllEntries().compactMap(self.keychainUtils.filterKeyknoxKeychainEntry)
+    }
+
+    /// Checks if entry exists in Keychain
+    ///
+    /// - Parameter name: Entry name
+    /// - Returns: true if entry exists, false - otherwise
+    /// - Throws: Rethrows from KeychainStorage
+    open func existsEntry(withName name: String) throws -> Bool {
+        return try self.keychainStorage.existsEntry(withName: name)
     }
 
     /// Deletes all entries in both Keychain and Keyknox Cloud

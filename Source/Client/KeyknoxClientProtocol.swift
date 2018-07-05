@@ -57,4 +57,11 @@ import Foundation
     /// - Returns: EncryptedKeyknoxValue
     /// - Throws: Depends on implementation
     @objc func pullValue(token: String) throws -> EncryptedKeyknoxValue
+
+    /// Resets Keyknox value (makes it empty). Also increments version
+    ///
+    /// - Parameter token: auth token
+    /// - Returns: DecryptedKeyknoxValue
+    /// - Throws: Depends on implementation
+    @objc func resetValue(token: String) throws -> DecryptedKeyknoxValue
 }

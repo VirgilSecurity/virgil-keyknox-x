@@ -43,8 +43,7 @@ import Foundation
 /// - keysShouldBeUpdated: Both private and publice keys are absent
 /// - serverRespondedWithTamperedValue: Value pushed to Keyknox and returned from Keyknox doesn't match
 @objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
-    case keyknoxIsEmpty = 0
-    case noPublicKeys = 1
-    case keysShouldBeUpdated = 2
-    case serverRespondedWithTamperedValue = 3
+    case noPublicKeys = 0
+    case keysShouldBeUpdated = 1
+    case serverRespondedWithTamperedValue = 2
 }

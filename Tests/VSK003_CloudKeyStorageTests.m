@@ -475,8 +475,6 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-
-
 - (void)test008_updateRecipients {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
     
@@ -509,6 +507,33 @@ static const NSTimeInterval timeout = 20.;
     }];
     
     [self waitForExpectationsWithTimeout:timeout + numberOfKeys / 4 handler:^(NSError *error) {
+        if (error != nil)
+            XCTFail(@"Expectation failed: %@", error);
+    }];
+}
+
+- (void)test009_deleteAllKeysEmpty {
+    XCTestExpectation *ex = [self expectationWithDescription:@""];
+
+    [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
+        [self.keyStorage deleteAllEntriesWithCompletion:^(NSError *error) {
+            XCTAssert(error == nil);
+            NSError *err;
+            XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 0);
+            XCTAssert(err == nil);
+            
+            [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
+                XCTAssert(error == nil);
+                NSError *err;
+                XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 0);
+                XCTAssert(err == nil);
+                
+                [ex fulfill];
+            }];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
     }];
