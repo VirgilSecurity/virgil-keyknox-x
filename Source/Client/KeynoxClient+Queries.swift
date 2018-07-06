@@ -117,11 +117,11 @@ extension KeyknoxClient: KeyknoxClientProtocol {
     ///           KeyknoxClientError.invalidPreviousHashHeader if extracting previousHash from response header failed
     ///           Rethrows from ServiceRequest, Connection, BaseClient
     @objc open func resetValue(token: String) throws -> DecryptedKeyknoxValue {
-        guard let url = URL(string: "keyknox/v1", relativeTo: self.serviceUrl) else {
+        guard let url = URL(string: "keyknox/v1/reset", relativeTo: self.serviceUrl) else {
             throw KeyknoxClientError.constructingUrl
         }
 
-        let request = try ServiceRequest(url: url, method: .delete, accessToken: token)
+        let request = try ServiceRequest(url: url, method: .post, accessToken: token)
 
         let response = try self.connection.send(request)
 

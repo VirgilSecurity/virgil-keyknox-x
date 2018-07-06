@@ -394,7 +394,7 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         XCTAssert(try! self.syncKeyStorage.retrieveAllEntries().count == 0)
     }
     
-    func test010_deleteAllEntries() {
+    func test010_deleteAllEntries_empty() {
         let _ = try! self.syncKeyStorage.sync().startSync().getResult()
         
         _ = try! self.syncKeyStorage.deleteAllEntries().startSync().getResult()

@@ -51,7 +51,7 @@ class VSK005_CloudEntrySerializerTests: XCTestCase {
         self.cloud = try! JSONSerialization.jsonObject(with: data, options: []) as! NSDictionary
     }
     
-    func test001() {
+    func test001_serialize_deserialize() {
         let serializer = CloudEntrySerializer()
 
         let name1 = self.cloud["kName1"] as! String
@@ -83,5 +83,13 @@ class VSK005_CloudEntrySerializerTests: XCTestCase {
         
         XCTAssert(dict[name1]! == dict2[name1]!)
         XCTAssert(dict[name2]! == dict2[name2]!)
+    }
+    
+    func test002_deserialize_empty() {
+        let serializer = CloudEntrySerializer()
+
+        let dict = try! serializer.deserialize(data: Data())
+        
+        XCTAssert(dict.isEmpty)
     }
 }
