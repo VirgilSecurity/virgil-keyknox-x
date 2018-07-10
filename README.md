@@ -1,7 +1,9 @@
 # Virgil KeyKnox Objective-C/Swift SDK
 
 [![Build Status](https://api.travis-ci.org/VirgilSecurity/keyknox-x.svg?branch=master)](https://travis-ci.org/VirgilSecurity/keyknox-x)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/VirgilKeyknox.svg)](https://img.shields.io/cocoapods/v/VirgilKeyknox.svg)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Platform](https://img.shields.io/cocoapods/p/VirgilKeyknox.svg?style=flat)](http://cocoadocs.org/docsets/VirgilKeyknox)
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
 
 
@@ -10,10 +12,11 @@
 ## Introduction
 
 <a href="https://developer.virgilsecurity.com/docs"><img width="230px" src="https://cdn.virgilsecurity.com/assets/images/github/logos/virgil-logo-red.png" align="left" hspace="10" vspace="6"></a>[Virgil Security](https://virgilsecurity.com) provides an SDK which allows you to communicate with Virgil Keyknox Service.
-Virgil Keyknox Service allows users to store their encrypted sensitive data (such as Private Key) for using and sharing it between different devices.
+Virgil Keyknox Service allows users to store their sensitive data (such as Private Key) encrypted (with end-to-end encryption) for using and sharing it between different devices.
 
 ## SDK Features
 - use [Virgil Crypto library][_virgil_crypto]
+- use [Virgil SDK][_virgil_sdk]
 - upload encrypted sensitive data to Virgil Keyknox Service
 - download the data from Virgil Keyknox Service
 - update and synchronize the data
@@ -44,7 +47,7 @@ To integrate Virgil Keyknox into your Xcode project using CocoaPods, specify it 
 target '<Your Target Name>' do
   use_frameworks!
 
-  pod 'VirgilKeyKnox', '~> 0.1.0'
+  pod 'VirgilKeyknox', '~> 0.1.0'
 end
 ```
 
@@ -68,7 +71,7 @@ $ brew install carthage
 To integrate Virgil Keyknox into your Xcode project using Carthage, create an empty file with name *Cartfile* in your project's root folder and add following lines to your *Cartfile*
 
 ```
-github "VirgilSecurity/keyknox-x" ~> 0.2.0
+github "VirgilSecurity/keyknox-x" ~> 0.1.0
 ```
 
 #### Linking against prebuilt binaries
@@ -76,7 +79,7 @@ github "VirgilSecurity/keyknox-x" ~> 0.2.0
 To link prebuilt frameworks to your app, run following command:
 
 ```bash
-$ carthage update --no-use-binaries
+$ carthage update
 ```
 
 This will build each dependency or download a pre-compiled framework from github Releases.
@@ -147,24 +150,28 @@ Next, on your application target's “General” settings tab, in the “Embedde
 To begin using Virgil Keyknox SDK you'll need to initialize `SyncKeyStorage` class. This class is responsible for synchronization between Keychain and Keyknox Cloud.
 In order to initialize `SyncKeyStorage` class you'll need the following values:
 - `accessTokenProvider`
-- `public keys` of the device/user
-- `private key` of the device/user
+- `public keys` of all devices/users that should have access to data
+- `private key` of current device/user
 - `identity` of the user (the device can have different users)
 
 ```swift
-/// - Parameters:
-    ///   - identity: User's identity to separate keys in Keychain
-    ///   - accessTokenProvider: AccessTokenProvider implementation
-    ///   - publicKeys: Public keys used for encryption and signature verification
-    ///   - privateKey: Private key used for decryption and signature generation
-    /// - Throws: Rethrows from CloudKeyStorage and KeychainStorageParams
-@objc convenience public init(identity: String, accessTokenProvider: AccessTokenProvider,
-                                  publicKeys: [PublicKey], privateKey: PrivateKey) throws {
-        let cloudKeyStorage = try CloudKeyStorage(accessTokenProvider: accessTokenProvider,
-                                                  publicKeys: publicKeys, privateKey: privateKey)
+import VirgilSDK
+import VirgilSDKKeyknox
 
-        try self.init(identity: identity, cloudKeyStorage: cloudKeyStorage)
-    }
+// Setup Access Token provider to provide access token for Virgil services
+// Check https://github.com/VirgilSecurity/virgil-sdk-x
+let accessTokenProvider = ""
+
+// Download public keys of users that should have access to data from Virgil Cards service
+// Check https://github.com/VirgilSecurity/virgil-sdk-x
+let publicKeys = []
+
+// Load private key from Keychain
+let privateKey = ""
+
+let syncKeyStorage = SyncKeyStorage(identity: "Alice",
+                                    accessTokenProvider: accessTokenProvider,
+                                    publicKeys: publicKeys, privateKey: privateKey)
 ```
 
 ## Docs
@@ -184,6 +191,7 @@ You can find us on [Twitter](https://twitter.com/VirgilSecurity) or send us emai
 Also, get extra help from our support team on [Slack](https://virgilsecurity.slack.com/join/shared_invite/enQtMjg4MDE4ODM3ODA4LTc2OWQwOTQ3YjNhNTQ0ZjJiZDc2NjkzYjYxNTI0YzhmNTY2ZDliMGJjYWQ5YmZiOGU5ZWEzNmJiMWZhYWVmYTM).
 
 [_virgil_crypto]: https://github.com/VirgilSecurity/virgil-crypto
+[_virgil_sdk]: https://github.com/VirgilSecurity/virgil-sdk-x
 [_documentation]: https://developer.virgilsecurity.com/
 [_dashboard]: https://dashboard.virgilsecurity.com/
 
