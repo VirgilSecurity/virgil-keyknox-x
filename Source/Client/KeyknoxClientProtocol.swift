@@ -40,7 +40,28 @@ import Foundation
 ///
 /// See: KeyknoxClient for default implementation
 @objc(VSKKeyknoxClientProtocol) public protocol KeyknoxClientProtocol: class {
+    /// Push value to Keyknox service
+    ///
+    /// - Parameters:
+    ///   - meta: meta data
+    ///   - value: encrypted blob
+    ///   - previousHash: hash of previous blob
+    ///   - token: auth token
+    /// - Returns: EncryptedKeyknoxValue
+    /// - Throws: Depends on implementation
     @objc func pushValue(meta: Data, value: Data, previousHash: Data?, token: String) throws -> EncryptedKeyknoxValue
 
+    /// Pulls values from Keyknox service
+    ///
+    /// - Parameter token: auth token
+    /// - Returns: EncryptedKeyknoxValue
+    /// - Throws: Depends on implementation
     @objc func pullValue(token: String) throws -> EncryptedKeyknoxValue
+
+    /// Resets Keyknox value (makes it empty). Also increments version
+    ///
+    /// - Parameter token: auth token
+    /// - Returns: DecryptedKeyknoxValue
+    /// - Throws: Depends on implementation
+    @objc func resetValue(token: String) throws -> DecryptedKeyknoxValue
 }

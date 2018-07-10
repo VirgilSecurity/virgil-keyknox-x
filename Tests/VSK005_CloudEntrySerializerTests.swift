@@ -51,7 +51,7 @@ class VSK005_CloudEntrySerializerTests: XCTestCase {
         self.cloud = try! JSONSerialization.jsonObject(with: data, options: []) as! NSDictionary
     }
     
-    func test001() {
+    func test01_KTC17_serialize_deserialize() {
         let serializer = CloudEntrySerializer()
 
         let name1 = self.cloud["kName1"] as! String
@@ -69,19 +69,28 @@ class VSK005_CloudEntrySerializerTests: XCTestCase {
         let meta1 = self.cloud["kMeta1"] as? [String: String]
         let meta2 = self.cloud["kMeta2"] as? [String: String]
 
-        let dict = [
+        let dict1 = [
             name1: CloudEntry(name: name1, data: data1, creationDate: date11, modificationDate: date12, meta: meta1),
             name2: CloudEntry(name: name2, data: data2, creationDate: date21, modificationDate: date22, meta: meta2)
         ]
 
-        let serialized1 = try! serializer.serialize(dict: dict)
+        let serialized1 = try! serializer.serialize(dict: dict1)
         let serialized2 = Data(base64Encoded: self.cloud["kExpectedResult"] as! String)!
 
         XCTAssert(serialized1 == serialized2)
         
         let dict2 = try! serializer.deserialize(data: serialized2)
         
-        XCTAssert(dict[name1]! == dict2[name1]!)
-        XCTAssert(dict[name2]! == dict2[name2]!)
+        XCTAssert(dict1[name1]! == dict2[name1]!)
+        XCTAssert(dict1[name2]! == dict2[name2]!)
+        XCTAssert(dict1.keys.count == dict2.keys.count)
+    }
+    
+    func test02_KTC18_deserialize_empty() {
+        let serializer = CloudEntrySerializer()
+
+        let dict = try! serializer.deserialize(data: Data())
+        
+        XCTAssert(dict.isEmpty)
     }
 }

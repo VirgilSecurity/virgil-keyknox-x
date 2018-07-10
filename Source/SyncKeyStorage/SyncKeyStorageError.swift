@@ -36,37 +36,31 @@
 
 import Foundation
 
-/// Value stored on Keyknox service
-@objc(VSKKeyknoxValue) public class KeyknoxValue: NSObject {
-    /// Meta info
-    @objc public let meta: Data
-
-    /// Value
-    @objc public let value: Data
-
-    /// Value in X.Y format. X - major version, Y - minor
-    @objc public let version: String
-
-    /// Keyknox hash
-    @objc public let keyknoxHash: Data
-
-    internal convenience init(keyknoxData: KeyknoxData, keyknoxHash: Data) {
-        self.init(meta: keyknoxData.meta, value: keyknoxData.value,
-                  version: keyknoxData.version, keyknoxHash: keyknoxHash)
-    }
-
-    internal init(meta: Data, value: Data, version: String, keyknoxHash: Data) {
-        self.meta = meta
-        self.value = value
-        self.version = version
-        self.keyknoxHash = keyknoxHash
-
-        super.init()
-    }
+/// Declares error types and codes for SyncKeyStorage
+///
+/// - keychainEntryNotFoundWhileUpdating: KeychainEntry not found while updating
+/// - cloudEntryNotFoundWhileUpdating: CloudEntry not found while updating
+/// - cloudEntryNotFoundWhileDeleting: CloudEntry notfound while deleting
+/// - keychainEntryNotFoundWhileComparing: KeychainEntry not found while comparing
+/// - keychainEntryAlreadyExistsWhileStoring: KeychainEntry already exists while storing
+/// - cloudEntryAlreadyExistsWhileStoring: CloudEntry already exists while storing
+/// - invalidModificationDateInKeychainEntry: Invalid modificationDate in KeychainEntry
+/// - invalidCreationDateInKeychainEntry: Invalid creationDate in KeychainEntry
+/// - noMetaInKeychainEntry: No meta in keychainEntry
+/// - invalidKeysInEntryMeta: Invalid keys in entry meta
+/// - inconsistentStateError: Inconsistent state error
+/// - entrySavingError: Error while saving entry
+@objc(VSKSyncKeyStorageError) public enum SyncKeyStorageError: Int, Error {
+    case keychainEntryNotFoundWhileUpdating
+    case cloudEntryNotFoundWhileUpdating
+    case cloudEntryNotFoundWhileDeleting
+    case keychainEntryNotFoundWhileComparing
+    case keychainEntryAlreadyExistsWhileStoring
+    case cloudEntryAlreadyExistsWhileStoring
+    case invalidModificationDateInKeychainEntry
+    case invalidCreationDateInKeychainEntry
+    case noMetaInKeychainEntry
+    case invalidKeysInEntryMeta
+    case inconsistentStateError
+    case entrySavingError
 }
-
-/// Represent encrypted Keyknox value
-@objc(VSKEncryptedKeyknoxValue) public class EncryptedKeyknoxValue: KeyknoxValue { }
-
-/// Represent decrypted Keyknox value
-@objc(VSKDecryptedKeyknoxValue) public class DecryptedKeyknoxValue: KeyknoxValue { }

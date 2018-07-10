@@ -35,38 +35,42 @@
 //
 
 import Foundation
+import VirgilSDK
 
-/// Value stored on Keyknox service
-@objc(VSKKeyknoxValue) public class KeyknoxValue: NSObject {
-    /// Meta info
-    @objc public let meta: Data
-
-    /// Value
-    @objc public let value: Data
-
-    /// Value in X.Y format. X - major version, Y - minor
-    @objc public let version: String
-
-    /// Keyknox hash
-    @objc public let keyknoxHash: Data
-
-    internal convenience init(keyknoxData: KeyknoxData, keyknoxHash: Data) {
-        self.init(meta: keyknoxData.meta, value: keyknoxData.value,
-                  version: keyknoxData.version, keyknoxHash: keyknoxHash)
+// MARK: Sync helpers
+extension SyncKeyStorage {
+    internal func syncDeleteEntries(_ entriesToDelete: [String]) throws {
+        try entriesToDelete.forEach {
+            try self.keychainStorage.deleteEntry(withName: $0)
+        }
     }
 
-    internal init(meta: Data, value: Data, version: String, keyknoxHash: Data) {
-        self.meta = meta
-        self.value = value
-        self.version = version
-        self.keyknoxHash = keyknoxHash
+    internal func syncStoreEntries(_ entriesToStore: [String]) throws {
+        try entriesToStore.forEach {
+            let cloudEntry = try self.cloudKeyStorage.retrieveEntry(withName: $0)
 
-        super.init()
+            let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
+
+            _ = try self.keychainStorage.store(data: cloudEntry.data, withName: cloudEntry.name, meta: meta)
+        }
+    }
+
+    internal func syncCompareEntries(_ entriesToCompare: [String], keychainEntries: [KeychainEntry]) throws {
+        // Determine newest version and either update keychain entry or upload newer version to cloud
+        try entriesToCompare.forEach { name in
+            guard let keychainEntry = keychainEntries.first(where: { $0.name == name }) else {
+                throw SyncKeyStorageError.keychainEntryNotFoundWhileComparing
+            }
+
+            let cloudEntry = try self.cloudKeyStorage.retrieveEntry(withName: name)
+
+            let keychainDate = try self.keychainUtils.extractModificationDate(fromKeychainEntry: keychainEntry)
+
+            if keychainDate.modificationDate < cloudEntry.modificationDate {
+                let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
+
+                try self.keychainStorage.updateEntry(withName: cloudEntry.name, data: cloudEntry.data, meta: meta)
+            }
+        }
     }
 }
-
-/// Represent encrypted Keyknox value
-@objc(VSKEncryptedKeyknoxValue) public class EncryptedKeyknoxValue: KeyknoxValue { }
-
-/// Represent decrypted Keyknox value
-@objc(VSKDecryptedKeyknoxValue) public class DecryptedKeyknoxValue: KeyknoxValue { }

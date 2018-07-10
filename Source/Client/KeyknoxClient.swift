@@ -40,10 +40,10 @@ import VirgilSDK
 /// Declares client error types and codes
 ///
 /// - constructingUrl: constructing url of endpoint failed
+/// - invalidPreviousHashHeader: error whilte extracting previousHash from response header
 @objc(VSKKeyknoxClientError) public enum KeyknoxClientError: Int, Error {
     case constructingUrl = 1
     case invalidPreviousHashHeader = 2
-    case entityNotFound = 50002
 }
 
 /// Class representing operations with Virgil Keyknox service

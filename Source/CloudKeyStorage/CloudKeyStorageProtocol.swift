@@ -38,16 +38,79 @@ import Foundation
 import VirgilSDK
 import VirgilCryptoAPI
 
+/// Cloud KeyStorage protocol
 public protocol CloudKeyStorageProtocol {
+    /// Store entries to cloud
+    ///
+    /// - Parameter keyEntries: Entries to store
+    /// - Returns: GenericOperation<[CloudEntry]>
     func storeEntries(_ keyEntries: [KeyEntry]) -> GenericOperation<[CloudEntry]>
+
+    /// Store entry to cloud
+    ///
+    /// - Parameters:
+    ///   - name: name
+    ///   - data: data
+    ///   - meta: meta
+    /// - Returns: GenericOperation<CloudEntry>
     func storeEntry(withName name: String, data: Data, meta: [String: String]?) -> GenericOperation<CloudEntry>
-    func updateEntry(withName: String, data: Data, meta: [String: String]?) -> GenericOperation<CloudEntry>
+
+    /// Update entry in Cloud
+    ///
+    /// - Parameters:
+    ///   - name: name
+    ///   - data: data
+    ///   - meta: meta
+    /// - Returns: GenericOperation<CloudEntry>
+    func updateEntry(withName name: String, data: Data, meta: [String: String]?) -> GenericOperation<CloudEntry>
+
+    /// Returns all entries loaded from Cloud
+    ///
+    /// - Returns: All entries
+    /// - Throws: Depends on implementation
     func retrieveAllEntries() throws -> [CloudEntry]
+
+    /// Retrieve entry loaded from Cloud
+    ///
+    /// - Parameter name: name
+    /// - Returns: Entry
+    /// - Throws: Depends on implementation
     func retrieveEntry(withName name: String) throws -> CloudEntry
+
+    /// Check if entry exists in list of loaded from Cloud entries
+    ///
+    /// - Parameter name: entry name
+    /// - Returns: true if entry exists, false - otherwise
+    /// - Throws: Depends on implementation
     func existsEntry(withName name: String) throws -> Bool
+
+    /// Deletes entry from Cloud
+    ///
+    /// - Parameter name: entry name
+    /// - Returns: GenericOperation<Void>
     func deleteEntry(withName name: String) -> GenericOperation<Void>
+
+    /// Deletes entries from Cloud
+    ///
+    /// - Parameter names: names of entries to delete
+    /// - Returns: GenericOperation<Void>
     func deleteEntries(withNames names: [String]) -> GenericOperation<Void>
+
+    /// Deletes all entries from Cloud
+    ///
+    /// - Returns: GenericOperation<Void>
     func deleteAllEntries() -> GenericOperation<Void>
+
+    /// Retrieves entries from Cloud
+    ///
+    /// - Returns: GenericOperation<Void>
     func retrieveCloudEntries() -> GenericOperation<Void>
+
+    /// Updated recipients. See KeyknoxManager.updateRecipients
+    ///
+    /// - Parameters:
+    ///   - newPublicKeys: New public keys
+    ///   - newPrivateKey: New private key
+    /// - Returns: GenericOperation<Void>
     func updateRecipients(newPublicKeys: [PublicKey]?, newPrivateKey: PrivateKey?) -> GenericOperation<Void>
 }

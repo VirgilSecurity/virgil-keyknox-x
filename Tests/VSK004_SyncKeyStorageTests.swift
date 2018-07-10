@@ -393,4 +393,27 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         XCTAssert(try! self.keychainStorage.retrieveAllEntries().count == 0)
         XCTAssert(try! self.syncKeyStorage.retrieveAllEntries().count == 0)
     }
+    
+    func test010_deleteAllEntries_empty() {
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        
+        _ = try! self.syncKeyStorage.deleteAllEntries().startSync().getResult()
+        
+        _ = try! self.cloudKeyStorage.retrieveCloudEntries().startSync().getResult()
+        XCTAssert(try! self.cloudKeyStorage.retrieveAllEntries().count == 0)
+        XCTAssert(try! self.keychainStorage.retrieveAllEntries().count == 0)
+        XCTAssert(try! self.syncKeyStorage.retrieveAllEntries().count == 0)
+    }
+    
+    func test011_existsEntry() {
+        let _ = try! self.syncKeyStorage.sync().startSync().getResult()
+        
+        let data = NSUUID().uuidString.data(using: .utf8)!
+        let name1 = NSUUID().uuidString
+        let name2 = NSUUID().uuidString
+        let _ = try! self.syncKeyStorage.storeEntry(withName: name1, data: data).startSync().getResult()
+        
+        XCTAssert(try! self.syncKeyStorage.existsEntry(withName: name1))
+        XCTAssert(!(try! self.syncKeyStorage.existsEntry(withName: name2)))
+    }
 }

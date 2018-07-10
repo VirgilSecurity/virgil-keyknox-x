@@ -36,37 +36,15 @@
 
 import Foundation
 
-/// Value stored on Keyknox service
-@objc(VSKKeyknoxValue) public class KeyknoxValue: NSObject {
-    /// Meta info
-    @objc public let meta: Data
-
-    /// Value
-    @objc public let value: Data
-
-    /// Value in X.Y format. X - major version, Y - minor
-    @objc public let version: String
-
-    /// Keyknox hash
-    @objc public let keyknoxHash: Data
-
-    internal convenience init(keyknoxData: KeyknoxData, keyknoxHash: Data) {
-        self.init(meta: keyknoxData.meta, value: keyknoxData.value,
-                  version: keyknoxData.version, keyknoxHash: keyknoxHash)
-    }
-
-    internal init(meta: Data, value: Data, version: String, keyknoxHash: Data) {
-        self.meta = meta
-        self.value = value
-        self.version = version
-        self.keyknoxHash = keyknoxHash
-
-        super.init()
-    }
+/// Declares error types and codes for KeyknoxManager
+///
+/// - noPublicKeys: Public keys array is empty
+/// - keysShouldBeUpdated: Both private and publice keys are absent
+/// - serverRespondedWithTamperedValue: Value pushed to Keyknox and returned from Keyknox doesn't match
+/// - dataIsEmpty: Data is empty
+@objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
+    case noPublicKeys = 0
+    case keysShouldBeUpdated = 1
+    case serverRespondedWithTamperedValue = 2
+    case dataIsEmpty
 }
-
-/// Represent encrypted Keyknox value
-@objc(VSKEncryptedKeyknoxValue) public class EncryptedKeyknoxValue: KeyknoxValue { }
-
-/// Represent decrypted Keyknox value
-@objc(VSKDecryptedKeyknoxValue) public class DecryptedKeyknoxValue: KeyknoxValue { }

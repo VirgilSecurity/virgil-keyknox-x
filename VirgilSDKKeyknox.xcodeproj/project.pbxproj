@@ -42,6 +42,30 @@
 		42011EA820CE906E00B84755 /* VirgilSDKKeyknox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42B5DFF520C005300067F13E /* VirgilSDKKeyknox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		421A611E20D3E80D00BBF05D /* KeyknoxCryptoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A611D20D3E80D00BBF05D /* KeyknoxCryptoProtocol.swift */; };
 		421A612020D3E83400BBF05D /* KeyknoxCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A611F20D3E83400BBF05D /* KeyknoxCrypto.swift */; };
+		424B9C2120EBCDDB00415ED4 /* KeyknoxManager+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C2020EBCDDB00415ED4 /* KeyknoxManager+Operations.swift */; };
+		424B9C2220EBCDDB00415ED4 /* KeyknoxManager+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C2020EBCDDB00415ED4 /* KeyknoxManager+Operations.swift */; };
+		424B9C2320EBCDDB00415ED4 /* KeyknoxManager+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C2020EBCDDB00415ED4 /* KeyknoxManager+Operations.swift */; };
+		424B9C2420EBCDDB00415ED4 /* KeyknoxManager+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C2020EBCDDB00415ED4 /* KeyknoxManager+Operations.swift */; };
+		424B9C4120EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4020EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift */; };
+		424B9C4220EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4020EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift */; };
+		424B9C4320EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4020EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift */; };
+		424B9C4420EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4020EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift */; };
+		424B9C4620EBD03500415ED4 /* CloudKeyStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4520EBD03500415ED4 /* CloudKeyStorageError.swift */; };
+		424B9C4720EBD03500415ED4 /* CloudKeyStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4520EBD03500415ED4 /* CloudKeyStorageError.swift */; };
+		424B9C4820EBD03500415ED4 /* CloudKeyStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4520EBD03500415ED4 /* CloudKeyStorageError.swift */; };
+		424B9C4920EBD03500415ED4 /* CloudKeyStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4520EBD03500415ED4 /* CloudKeyStorageError.swift */; };
+		424B9C4B20EBD05300415ED4 /* KeyknoxManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4A20EBD05300415ED4 /* KeyknoxManagerError.swift */; };
+		424B9C4C20EBD05300415ED4 /* KeyknoxManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4A20EBD05300415ED4 /* KeyknoxManagerError.swift */; };
+		424B9C4D20EBD05300415ED4 /* KeyknoxManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4A20EBD05300415ED4 /* KeyknoxManagerError.swift */; };
+		424B9C4E20EBD05300415ED4 /* KeyknoxManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4A20EBD05300415ED4 /* KeyknoxManagerError.swift */; };
+		424B9C5020EBD06700415ED4 /* SyncKeyStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4F20EBD06700415ED4 /* SyncKeyStorageError.swift */; };
+		424B9C5120EBD06700415ED4 /* SyncKeyStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4F20EBD06700415ED4 /* SyncKeyStorageError.swift */; };
+		424B9C5220EBD06700415ED4 /* SyncKeyStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4F20EBD06700415ED4 /* SyncKeyStorageError.swift */; };
+		424B9C5320EBD06700415ED4 /* SyncKeyStorageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9C4F20EBD06700415ED4 /* SyncKeyStorageError.swift */; };
+		424B9CC420EE28ED00415ED4 /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9CC320EE28ED00415ED4 /* KeyknoxManager+Queries.swift */; };
+		424B9CC520EE28ED00415ED4 /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9CC320EE28ED00415ED4 /* KeyknoxManager+Queries.swift */; };
+		424B9CC620EE28ED00415ED4 /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9CC320EE28ED00415ED4 /* KeyknoxManager+Queries.swift */; };
+		424B9CC720EE28ED00415ED4 /* KeyknoxManager+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424B9CC320EE28ED00415ED4 /* KeyknoxManager+Queries.swift */; };
 		425B37A720D2AA4200EAAAEB /* CloudEntrySerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425B37A620D2AA4200EAAAEB /* CloudEntrySerializer.swift */; };
 		425EF8AF20C5368400CE1D4F /* KeyknoxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF88920C5368400CE1D4F /* KeyknoxManager.swift */; };
 		425EF8BC20C549F500CE1D4F /* KeyknoxManager+Obj-C.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8BA20C549CF00CE1D4F /* KeyknoxManager+Obj-C.swift */; };
@@ -179,19 +203,40 @@
 			remoteGlobalIDString = 42011E5720CE8FD400B84755;
 			remoteInfo = "KeyknoxTestApp iOS";
 		};
+		424B9C3820EBCDDC00415ED4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 42D0589120EB894500FC544E;
+			remoteInfo = "SDKTestApp iOS";
+		};
+		424B9C3A20EBCDDC00415ED4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 42D058A720EB896200FC544E;
+			remoteInfo = "VirgilSDK AppTests iOS";
+		};
+		424B9C3C20EBCDDC00415ED4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 42D058B520EB897200FC544E;
+			remoteInfo = "SDKTestApp tvOS";
+		};
+		424B9C3E20EBCDDC00415ED4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 42D058F420EB89E000FC544E;
+			remoteInfo = "VirgilSDK AppTests tvOS";
+		};
 		42B5E03A20C0115D0067F13E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 42EB30E41DB8EC17001DF4C0;
 			remoteInfo = "VirgilSDK iOS";
-		};
-		42B5E03C20C0115D0067F13E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 42B7E35B1DB8F72200D70C12;
-			remoteInfo = "VirgilSDK iOS Tests";
 		};
 		42B5E03E20C0115D0067F13E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -214,47 +259,12 @@
 			remoteGlobalIDString = 4284C3861F6BE95700B75491;
 			remoteInfo = "VirgilSDK tvOS";
 		};
-		42B5E04420C0115D0067F13E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4284C3A31F6BE9A200B75491;
-			remoteInfo = "VirgilSDK tvOS Tests";
-		};
 		42B5E04620C0115D0067F13E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 4284C3951F6BE97C00B75491;
 			remoteInfo = "VirgilSDK watchOS";
-		};
-		42B5E04820C0115D0067F13E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4244F75D203305080053EE4B;
-			remoteInfo = "TestApp iOS";
-		};
-		42B5E04A20C0115D0067F13E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4244F7752033055C0053EE4B;
-			remoteInfo = "VirgilSDK iOS KeyStorage Tests";
-		};
-		42B5E04C20C0115D0067F13E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4244F7C6203306FA0053EE4B;
-			remoteInfo = "TestApp tvOS";
-		};
-		42B5E04E20C0115D0067F13E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 42B5E02920C0115D0067F13E /* VirgilSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4244F7D92033071D0053EE4B;
-			remoteInfo = "VirgilSDK tvOS KeyStorage Tests";
 		};
 		42B5E05B20C011640067F13E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -671,6 +681,12 @@
 		421A611F20D3E83400BBF05D /* KeyknoxCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyknoxCrypto.swift; sourceTree = "<group>"; };
 		421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSK005_CloudEntrySerializerTests.swift; sourceTree = "<group>"; };
 		421A612320D41AFF00BBF05D /* Cloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Cloud.json; sourceTree = "<group>"; };
+		424B9C2020EBCDDB00415ED4 /* KeyknoxManager+Operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Operations.swift"; sourceTree = "<group>"; };
+		424B9C4020EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncKeyStorage+SyncHelpers.swift"; sourceTree = "<group>"; };
+		424B9C4520EBD03500415ED4 /* CloudKeyStorageError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKeyStorageError.swift; sourceTree = "<group>"; };
+		424B9C4A20EBD05300415ED4 /* KeyknoxManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyknoxManagerError.swift; sourceTree = "<group>"; };
+		424B9C4F20EBD06700415ED4 /* SyncKeyStorageError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncKeyStorageError.swift; sourceTree = "<group>"; };
+		424B9CC320EE28ED00415ED4 /* KeyknoxManager+Queries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyknoxManager+Queries.swift"; sourceTree = "<group>"; };
 		425B37A620D2AA4200EAAAEB /* CloudEntrySerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudEntrySerializer.swift; sourceTree = "<group>"; };
 		425EF88920C5368400CE1D4F /* KeyknoxManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyknoxManager.swift; sourceTree = "<group>"; };
 		425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VSK002_KeyknoxManagerTests.m; sourceTree = "<group>"; };
@@ -812,7 +828,10 @@
 			isa = PBXGroup;
 			children = (
 				425EF88920C5368400CE1D4F /* KeyknoxManager.swift */,
+				424B9C4A20EBD05300415ED4 /* KeyknoxManagerError.swift */,
+				424B9CC320EE28ED00415ED4 /* KeyknoxManager+Queries.swift */,
 				425EF8BA20C549CF00CE1D4F /* KeyknoxManager+Obj-C.swift */,
+				424B9C2020EBCDDB00415ED4 /* KeyknoxManager+Operations.swift */,
 			);
 			path = KeyknoxManager;
 			sourceTree = "<group>";
@@ -821,6 +840,7 @@
 			isa = PBXGroup;
 			children = (
 				425EF95120C8156D00CE1D4F /* CloudKeyStorage.swift */,
+				424B9C4520EBD03500415ED4 /* CloudKeyStorageError.swift */,
 				425EF95420C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift */,
 				42011DBD20CACC5400B84755 /* CloudEntry.swift */,
 				425B37A620D2AA4200EAAAEB /* CloudEntrySerializer.swift */,
@@ -834,6 +854,8 @@
 			isa = PBXGroup;
 			children = (
 				425EF95720C8171B00CE1D4F /* SyncKeyStorage.swift */,
+				424B9C4F20EBD06700415ED4 /* SyncKeyStorageError.swift */,
+				424B9C4020EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift */,
 				42011EBB20CFEA3A00B84755 /* SyncKeyStorage+Obj-C.swift */,
 				428B15BE20D7F5DD0041CA75 /* KeychainUtils.swift */,
 				428B15FE20DBCEFE0041CA75 /* KeychainStorageWrapper.swift */,
@@ -934,16 +956,14 @@
 			isa = PBXGroup;
 			children = (
 				42B5E03B20C0115D0067F13E /* VirgilSDK.framework */,
-				42B5E03D20C0115D0067F13E /* VirgilSDK iOS Tests.xctest */,
+				424B9C3920EBCDDC00415ED4 /* SDKTestApp iOS.app */,
+				424B9C3B20EBCDDC00415ED4 /* VirgilSDK AppTests iOS.xctest */,
 				42B5E03F20C0115D0067F13E /* VirgilSDK.framework */,
 				42B5E04120C0115D0067F13E /* VirgilSDK macOS Tests.xctest */,
 				42B5E04320C0115D0067F13E /* VirgilSDK.framework */,
-				42B5E04520C0115D0067F13E /* VirgilSDK tvOS Tests.xctest */,
+				424B9C3D20EBCDDC00415ED4 /* SDKTestApp tvOS.app */,
+				424B9C3F20EBCDDC00415ED4 /* VirgilSDK AppTests tvOS.xctest */,
 				42B5E04720C0115D0067F13E /* VirgilSDK.framework */,
-				42B5E04920C0115D0067F13E /* TestApp iOS.app */,
-				42B5E04B20C0115D0067F13E /* VirgilSDK iOS KeyStorage Tests.xctest */,
-				42B5E04D20C0115D0067F13E /* TestApp tvOS.app */,
-				42B5E04F20C0115D0067F13E /* VirgilSDK tvOS KeyStorage Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1321,18 +1341,39 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		424B9C3920EBCDDC00415ED4 /* SDKTestApp iOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "SDKTestApp iOS.app";
+			remoteRef = 424B9C3820EBCDDC00415ED4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		424B9C3B20EBCDDC00415ED4 /* VirgilSDK AppTests iOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "VirgilSDK AppTests iOS.xctest";
+			remoteRef = 424B9C3A20EBCDDC00415ED4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		424B9C3D20EBCDDC00415ED4 /* SDKTestApp tvOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "SDKTestApp tvOS.app";
+			remoteRef = 424B9C3C20EBCDDC00415ED4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		424B9C3F20EBCDDC00415ED4 /* VirgilSDK AppTests tvOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "VirgilSDK AppTests tvOS.xctest";
+			remoteRef = 424B9C3E20EBCDDC00415ED4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		42B5E03B20C0115D0067F13E /* VirgilSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = VirgilSDK.framework;
 			remoteRef = 42B5E03A20C0115D0067F13E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		42B5E03D20C0115D0067F13E /* VirgilSDK iOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "VirgilSDK iOS Tests.xctest";
-			remoteRef = 42B5E03C20C0115D0067F13E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		42B5E03F20C0115D0067F13E /* VirgilSDK.framework */ = {
@@ -1356,46 +1397,11 @@
 			remoteRef = 42B5E04220C0115D0067F13E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		42B5E04520C0115D0067F13E /* VirgilSDK tvOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "VirgilSDK tvOS Tests.xctest";
-			remoteRef = 42B5E04420C0115D0067F13E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		42B5E04720C0115D0067F13E /* VirgilSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = VirgilSDK.framework;
 			remoteRef = 42B5E04620C0115D0067F13E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		42B5E04920C0115D0067F13E /* TestApp iOS.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "TestApp iOS.app";
-			remoteRef = 42B5E04820C0115D0067F13E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		42B5E04B20C0115D0067F13E /* VirgilSDK iOS KeyStorage Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "VirgilSDK iOS KeyStorage Tests.xctest";
-			remoteRef = 42B5E04A20C0115D0067F13E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		42B5E04D20C0115D0067F13E /* TestApp tvOS.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "TestApp tvOS.app";
-			remoteRef = 42B5E04C20C0115D0067F13E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		42B5E04F20C0115D0067F13E /* VirgilSDK tvOS KeyStorage Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "VirgilSDK tvOS KeyStorage Tests.xctest";
-			remoteRef = 42B5E04E20C0115D0067F13E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		42B5E05C20C011640067F13E /* VirgilCryptoAPI.framework */ = {
@@ -1682,6 +1688,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				425EF8AF20C5368400CE1D4F /* KeyknoxManager.swift in Sources */,
+				424B9C2120EBCDDB00415ED4 /* KeyknoxManager+Operations.swift in Sources */,
 				425EF95520C8160800CE1D4F /* CloudKeyStorage+Obj-C.swift in Sources */,
 				428B162020E11E590041CA75 /* SyncKeyStorage+Obj-C.swift in Sources */,
 				421A611E20D3E80D00BBF05D /* KeyknoxCryptoProtocol.swift in Sources */,
@@ -1690,6 +1697,8 @@
 				425EF95320C8156E00CE1D4F /* CloudKeyStorage.swift in Sources */,
 				428B162120E11E590041CA75 /* KeychainUtils.swift in Sources */,
 				421A612020D3E83400BBF05D /* KeyknoxCrypto.swift in Sources */,
+				424B9C4B20EBD05300415ED4 /* KeyknoxManagerError.swift in Sources */,
+				424B9C4620EBD03500415ED4 /* CloudKeyStorageError.swift in Sources */,
 				42B5E02820C011380067F13E /* KeyknoxData.swift in Sources */,
 				428B160A20DBD87B0041CA75 /* CloudKeyStorageProtocol.swift in Sources */,
 				428B15D920D925FD0041CA75 /* KeyknoxValue.swift in Sources */,
@@ -1698,9 +1707,12 @@
 				42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */,
 				428B161D20DD0C070041CA75 /* KeyEntry.swift in Sources */,
 				42B5E02520C011380067F13E /* KeyknoxClientProtocol.swift in Sources */,
+				424B9C4120EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift in Sources */,
 				428B162220E11E590041CA75 /* KeychainStorageWrapper.swift in Sources */,
+				424B9CC420EE28ED00415ED4 /* KeyknoxManager+Queries.swift in Sources */,
 				425EF8BC20C549F500CE1D4F /* KeyknoxManager+Obj-C.swift in Sources */,
 				428B162320E11E590041CA75 /* KeychainStorageProtocol.swift in Sources */,
+				424B9C5020EBD06700415ED4 /* SyncKeyStorageError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1709,6 +1721,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42D057F920EAA25800FC544E /* KeyknoxClient.swift in Sources */,
+				424B9C2220EBCDDB00415ED4 /* KeyknoxManager+Operations.swift in Sources */,
 				42D057FA20EAA25800FC544E /* KeynoxClient+Queries.swift in Sources */,
 				42D057F820EAA25800FC544E /* KeyknoxClientProtocol.swift in Sources */,
 				42D0580220EAA25B00FC544E /* KeyknoxValue.swift in Sources */,
@@ -1717,6 +1730,8 @@
 				42D057D120EAA24800FC544E /* SyncKeyStorage.swift in Sources */,
 				42D057E320EAA24D00FC544E /* CloudEntrySerializer.swift in Sources */,
 				42D057D520EAA24800FC544E /* KeychainStorageProtocol.swift in Sources */,
+				424B9C4C20EBD05300415ED4 /* KeyknoxManagerError.swift in Sources */,
+				424B9C4720EBD03500415ED4 /* CloudKeyStorageError.swift in Sources */,
 				42D057CC20EAA24400FC544E /* KeyknoxCrypto.swift in Sources */,
 				42D057D220EAA24800FC544E /* SyncKeyStorage+Obj-C.swift in Sources */,
 				42D057D320EAA24800FC544E /* KeychainUtils.swift in Sources */,
@@ -1725,9 +1740,12 @@
 				42D057E020EAA24D00FC544E /* CloudKeyStorage.swift in Sources */,
 				42D057E220EAA24D00FC544E /* CloudEntry.swift in Sources */,
 				42D057CB20EAA24400FC544E /* KeyknoxCryptoProtocol.swift in Sources */,
+				424B9C4220EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift in Sources */,
 				42D057E120EAA24D00FC544E /* CloudKeyStorage+Obj-C.swift in Sources */,
+				424B9CC520EE28ED00415ED4 /* KeyknoxManager+Queries.swift in Sources */,
 				42D057D420EAA24800FC544E /* KeychainStorageWrapper.swift in Sources */,
 				42D057E420EAA24D00FC544E /* CloudKeyStorageProtocol.swift in Sources */,
+				424B9C5120EBD06700415ED4 /* SyncKeyStorageError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1736,6 +1754,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42D057FC20EAA25800FC544E /* KeyknoxClient.swift in Sources */,
+				424B9C2320EBCDDB00415ED4 /* KeyknoxManager+Operations.swift in Sources */,
 				42D057FD20EAA25800FC544E /* KeynoxClient+Queries.swift in Sources */,
 				42D057FB20EAA25800FC544E /* KeyknoxClientProtocol.swift in Sources */,
 				42D0580420EAA25C00FC544E /* KeyknoxValue.swift in Sources */,
@@ -1744,6 +1763,8 @@
 				42D057D620EAA24900FC544E /* SyncKeyStorage.swift in Sources */,
 				42D057E920EAA24E00FC544E /* CloudEntrySerializer.swift in Sources */,
 				42D057DA20EAA24900FC544E /* KeychainStorageProtocol.swift in Sources */,
+				424B9C4D20EBD05300415ED4 /* KeyknoxManagerError.swift in Sources */,
+				424B9C4820EBD03500415ED4 /* CloudKeyStorageError.swift in Sources */,
 				42D057CE20EAA24500FC544E /* KeyknoxCrypto.swift in Sources */,
 				42D057D720EAA24900FC544E /* SyncKeyStorage+Obj-C.swift in Sources */,
 				42D057D820EAA24900FC544E /* KeychainUtils.swift in Sources */,
@@ -1752,9 +1773,12 @@
 				42D057E620EAA24E00FC544E /* CloudKeyStorage.swift in Sources */,
 				42D057E820EAA24E00FC544E /* CloudEntry.swift in Sources */,
 				42D057CD20EAA24500FC544E /* KeyknoxCryptoProtocol.swift in Sources */,
+				424B9C4320EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift in Sources */,
 				42D057E720EAA24E00FC544E /* CloudKeyStorage+Obj-C.swift in Sources */,
+				424B9CC620EE28ED00415ED4 /* KeyknoxManager+Queries.swift in Sources */,
 				42D057D920EAA24900FC544E /* KeychainStorageWrapper.swift in Sources */,
 				42D057EA20EAA24E00FC544E /* CloudKeyStorageProtocol.swift in Sources */,
+				424B9C5220EBD06700415ED4 /* SyncKeyStorageError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1763,6 +1787,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42D057FF20EAA25900FC544E /* KeyknoxClient.swift in Sources */,
+				424B9C2420EBCDDB00415ED4 /* KeyknoxManager+Operations.swift in Sources */,
 				42D0580020EAA25900FC544E /* KeynoxClient+Queries.swift in Sources */,
 				42D057FE20EAA25900FC544E /* KeyknoxClientProtocol.swift in Sources */,
 				42D0580620EAA25C00FC544E /* KeyknoxValue.swift in Sources */,
@@ -1771,6 +1796,8 @@
 				42D057DB20EAA24900FC544E /* SyncKeyStorage.swift in Sources */,
 				42D057EF20EAA24F00FC544E /* CloudEntrySerializer.swift in Sources */,
 				42D057DF20EAA24900FC544E /* KeychainStorageProtocol.swift in Sources */,
+				424B9C4E20EBD05300415ED4 /* KeyknoxManagerError.swift in Sources */,
+				424B9C4920EBD03500415ED4 /* CloudKeyStorageError.swift in Sources */,
 				42D057D020EAA24500FC544E /* KeyknoxCrypto.swift in Sources */,
 				42D057DC20EAA24900FC544E /* SyncKeyStorage+Obj-C.swift in Sources */,
 				42D057DD20EAA24900FC544E /* KeychainUtils.swift in Sources */,
@@ -1779,9 +1806,12 @@
 				42D057EC20EAA24F00FC544E /* CloudKeyStorage.swift in Sources */,
 				42D057EE20EAA24F00FC544E /* CloudEntry.swift in Sources */,
 				42D057CF20EAA24500FC544E /* KeyknoxCryptoProtocol.swift in Sources */,
+				424B9C4420EBCF1A00415ED4 /* SyncKeyStorage+SyncHelpers.swift in Sources */,
 				42D057ED20EAA24F00FC544E /* CloudKeyStorage+Obj-C.swift in Sources */,
+				424B9CC720EE28ED00415ED4 /* KeyknoxManager+Queries.swift in Sources */,
 				42D057DE20EAA24900FC544E /* KeychainStorageWrapper.swift in Sources */,
 				42D057F020EAA24F00FC544E /* CloudKeyStorageProtocol.swift in Sources */,
+				424B9C5320EBD06700415ED4 /* SyncKeyStorageError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
