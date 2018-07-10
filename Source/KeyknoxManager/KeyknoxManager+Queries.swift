@@ -190,7 +190,7 @@ extension KeyknoxManager {
                     let extractDataOperation = CallbackOperation<Data> { operation, completion in
                         do {
                             let data: DecryptedKeyknoxValue = try operation.findDependencyResult()
-                            
+
                             // Empty data, no need to reencrypt anything
                             guard !data.value.isEmpty || !data.meta.isEmpty else {
                                 completionOperation.removeDependency(encryptOperation)
@@ -207,11 +207,11 @@ extension KeyknoxManager {
                                 }
                                 completionOperation.addDependency(newOperation)
                                 queue.addOperation(newOperation)
-                                
+
                                 completion(data.value, nil)
                                 return
                             }
-                            
+
                             completion(data.value, nil)
                         }
                         catch {
