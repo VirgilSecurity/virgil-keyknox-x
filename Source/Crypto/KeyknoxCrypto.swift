@@ -141,6 +141,8 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
     ///   - publicKeys: Public keys to encrypt data. Should be of type VirgilPublicKey
     /// - Returns: Meta information and encrypted blob
     /// - Throws: VirgilCryptoError.passedKeyIsNotVirgil if passed keys have wrong type
+    ///           KeyknoxCryptoError.emptyPublicKeysList is public keys list is empty
+    ///           KeyknoxCryptoError.emptyData if data if empty
     ///           Rethrows from Cipher, Signer
     open func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data) {
         guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,

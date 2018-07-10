@@ -134,23 +134,6 @@ extension KeyknoxManager {
         }
     }
 
-    internal func makeExtractDataOperation(data: Data? = nil) -> GenericOperation<Data> {
-        return CallbackOperation { operation, completion in
-            if let data = data {
-                completion(data, nil)
-                return
-            }
-
-            do {
-                let data: DecryptedKeyknoxValue = try operation.findDependencyResult()
-                completion(data.value, nil)
-            }
-            catch {
-                completion(nil, error)
-            }
-        }
-    }
-
     internal func makeEncryptOperation(newPublicKeys: [PublicKey]? = nil,
                                        newPrivateKey: PrivateKey? = nil) -> GenericOperation<(Data, Data)> {
         return CallbackOperation { operation, completion in

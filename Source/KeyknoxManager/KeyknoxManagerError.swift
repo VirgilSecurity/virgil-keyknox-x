@@ -38,12 +38,13 @@ import Foundation
 
 /// Declares error types and codes for KeyknoxManager
 ///
-/// - keyknoxIsEmpty: Keyknox value is absent
 /// - noPublicKeys: Public keys array is empty
 /// - keysShouldBeUpdated: Both private and publice keys are absent
 /// - serverRespondedWithTamperedValue: Value pushed to Keyknox and returned from Keyknox doesn't match
+/// - dataIsEmpty: Data is empty
 @objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
     case noPublicKeys = 0
     case keysShouldBeUpdated = 1
     case serverRespondedWithTamperedValue = 2
+    case dataIsEmpty
 }

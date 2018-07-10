@@ -53,7 +53,9 @@ extension KeyknoxManager {
                     let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
                     let getTokenOperation = OperationUtils.makeGetTokenOperation(
                         tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
-                    let extractDataOperations = self.makeExtractDataOperation(data: value)
+                    let extractDataOperations = CallbackOperation { _, completion in
+                        completion(value, nil)
+                    }
                     let encryptOperation = self.makeEncryptOperation()
                     let pushValueOperation = self.makePushValueOperation(previousHash: previousHash)
                     let decryptOperation = self.makeDecryptOperation()
@@ -177,11 +179,45 @@ extension KeyknoxManager {
                         tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
                     let pullValueOperation = self.makePullValueOperation()
                     let decryptOperation = self.makeDecryptOperation()
-                    let extractDataOperation = self.makeExtractDataOperation()
                     let encryptOperation = self.makeEncryptOperation(newPublicKeys: newPublicKeys,
                                                                      newPrivateKey: newPrivateKey)
                     let pushValueOperation = self.makePushValueOperation()
                     let decryptOperation2 = self.makeDecryptOperation()
+
+                    let queue = OperationQueue()
+                    let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
+
+                    let extractDataOperation = CallbackOperation<Data> { operation, completion in
+                        do {
+                            let data: DecryptedKeyknoxValue = try operation.findDependencyResult()
+                            
+                            // Empty data, no need to reencrypt anything
+                            guard !data.value.isEmpty || !data.meta.isEmpty else {
+                                completionOperation.removeDependency(encryptOperation)
+                                encryptOperation.cancel()
+
+                                completionOperation.removeDependency(pushValueOperation)
+                                pushValueOperation.cancel()
+
+                                completionOperation.removeDependency(decryptOperation2)
+                                decryptOperation2.cancel()
+
+                                let newOperation = CallbackOperation { _, completion in
+                                    completion(data, nil)
+                                }
+                                completionOperation.addDependency(newOperation)
+                                queue.addOperation(newOperation)
+                                
+                                completion(data.value, nil)
+                                return
+                            }
+                            
+                            completion(data.value, nil)
+                        }
+                        catch {
+                            completion(nil, error)
+                        }
+                    }
 
                     pullValueOperation.addDependency(getTokenOperation)
                     decryptOperation.addDependency(pullValueOperation)
@@ -194,12 +230,10 @@ extension KeyknoxManager {
 
                     let operations = [getTokenOperation, pullValueOperation, decryptOperation,
                                       extractDataOperation, encryptOperation, pushValueOperation, decryptOperation2]
-                    let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
                     operations.forEach {
                         completionOperation.addDependency($0)
                     }
 
-                    let queue = OperationQueue()
                     queue.addOperations(operations + [completionOperation], waitUntilFinished: true)
                 }
             }
@@ -228,10 +262,17 @@ extension KeyknoxManager {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             return CallbackOperation { _, completion in
                 self.queue.async {
+                    guard !value.isEmpty else {
+                        completion(nil, KeyknoxManagerError.dataIsEmpty)
+                        return
+                    }
+
                     let tokenContext = TokenContext(service: "keyknox", operation: "put", forceReload: force)
                     let getTokenOperation = OperationUtils.makeGetTokenOperation(
                         tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
-                    let extractDataOperation = self.makeExtractDataOperation(data: value)
+                    let extractDataOperation = CallbackOperation { _, completion in
+                        completion(value, nil)
+                    }
                     let encryptOperation = self.makeEncryptOperation(newPublicKeys: newPublicKeys,
                                                                      newPrivateKey: newPrivateKey)
                     let pushValueOperation = self.makePushValueOperation(previousHash: previousHash)

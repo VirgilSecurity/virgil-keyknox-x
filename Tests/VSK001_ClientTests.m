@@ -80,7 +80,7 @@
     [super tearDown];
 }
 
-- (void)test001_pushValue {
+- (void)test01_KTC1_pushValue {
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
@@ -114,10 +114,10 @@
     XCTAssert([response2.meta isEqualToData:meta]);
     XCTAssert([response2.value isEqualToData:encryptedData]);
     XCTAssert([response2.version isEqualToString:@"1.0"]);
-    XCTAssert(response2.keyknoxHash.length > 0);
+    XCTAssert([response2.keyknoxHash isEqualToData:response.keyknoxHash]);
 }
 
-- (void)test002_updateData {
+- (void)test02_KTC2_updateData {
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     NSData *someData2 = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
@@ -161,7 +161,7 @@
     XCTAssert(response2.keyknoxHash.length > 0);
 }
 
-- (void)test003_pullEmpty {
+- (void)test03_KTC3_pullEmpty {
     NSError *error;
     VSKEncryptedKeyknoxValue *response = [self.keyknoxClient pullValueWithToken:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
@@ -171,7 +171,7 @@
     XCTAssert([response.version isEqualToString:@"1.0"]);
 }
 
-- (void)test004_resetValue {
+- (void)test04_KTC4_resetValue {
     NSError *error;
     
     NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
@@ -186,6 +186,17 @@
     XCTAssert(response2.value.length == 0);
     XCTAssert(response2.meta.length == 0);
     XCTAssert([response2.version isEqualToString:@"2.0"]);
+}
+
+- (void)test05_KTC5_resetEmptyValue {
+    NSError *error;
+    
+    VSKDecryptedKeyknoxValue *response = [self.keyknoxClient resetValueWithToken:self.tokenStr error:&error];
+    XCTAssert(response != nil && error == nil);
+    
+    XCTAssert(response.value.length == 0);
+    XCTAssert(response.meta.length == 0);
+    XCTAssert([response.version isEqualToString:@"1.0"]);
 }
 
 @end
