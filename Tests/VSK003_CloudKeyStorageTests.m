@@ -57,6 +57,7 @@ static const NSTimeInterval timeout = 20.;
 @property (nonatomic) VSMVirgilCrypto *crypto;
 @property (nonatomic) VSMVirgilKeyPair *keyPair;
 @property (nonatomic) VSKCloudKeyStorage *keyStorage;
+@property (nonatomic) VSKKeyknoxManager *keyknoxManager;
 @property (nonatomic) NSInteger numberOfKeys;
 
 @end
@@ -86,6 +87,7 @@ static const NSTimeInterval timeout = 20.;
     NSError *err;
     
     VSKKeyknoxManager *keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey retryOnUnauthorized:NO error:&err];
+    self.keyknoxManager = keyknoxManager;
     
     XCTAssert(err == nil);
     
@@ -594,6 +596,29 @@ static const NSTimeInterval timeout = 20.;
     }];
     
     [self waitForExpectationsWithTimeout:timeout + numberOfKeys / 4 handler:^(NSError *error) {
+        if (error != nil)
+            XCTFail(@"Expectation failed: %@", error);
+    }];
+}
+
+- (void)test11_KTC41_deleteInvalidValue {
+    XCTestExpectation *ex = [self expectationWithDescription:@""];
+    
+    [self.keyknoxManager pushValue:[[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding] previousHash:nil completion:^(VSKDecryptedKeyknoxValue *value, NSError *error) {
+        XCTAssert(value != nil && error == nil);
+        
+        [self.keyStorage deleteAllEntriesWithCompletion:^(NSError *error) {
+            XCTAssert(error == nil);
+            
+            NSError *err;
+            XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 0);
+            XCTAssert(err == nil);
+            
+            [ex fulfill];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
         if (error != nil)
             XCTFail(@"Expectation failed: %@", error);
     }];
