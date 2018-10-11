@@ -55,7 +55,9 @@ static const NSTimeInterval timeout = 20.;
 
 @property (nonatomic) TestConfig *config;
 @property (nonatomic) VSMVirgilCrypto *crypto;
+@property (nonatomic) VSMVirgilKeyPair *keyPair;
 @property (nonatomic) VSKCloudKeyStorage *keyStorage;
+@property (nonatomic) VSKKeyknoxManager *keyknoxManager;
 @property (nonatomic) NSInteger numberOfKeys;
 
 @end
@@ -80,10 +82,12 @@ static const NSTimeInterval timeout = 20.;
     }];
 
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+    self.keyPair = keyPair;
 
     NSError *err;
     
     VSKKeyknoxManager *keyknoxManager = [[VSKKeyknoxManager alloc] initWithAccessTokenProvider:provider keyknoxClient:keyknoxClient publicKeys:@[keyPair.publicKey] privateKey:keyPair.privateKey retryOnUnauthorized:NO error:&err];
+    self.keyknoxManager = keyknoxManager;
     
     XCTAssert(err == nil);
     
@@ -94,7 +98,7 @@ static const NSTimeInterval timeout = 20.;
     [super tearDown];
 }
 
-- (void)test001_retrieveCloudEntriesEmptyKeyknox {
+- (void)test01_KTC19_retrieveCloudEntriesEmptyKeyknox {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
     
     [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
@@ -112,7 +116,7 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test002_storeKey {
+- (void)test02_KTC20_storeKey {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
     
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
@@ -163,7 +167,7 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test003_existsKey {
+- (void)test03_KTC21_existsKey {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
 
     VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
@@ -177,6 +181,7 @@ static const NSTimeInterval timeout = 20.;
             XCTAssert(err == nil);
 
             XCTAssert([self.keyStorage existsEntryNoThrowWithName:@"test"]);
+            XCTAssert(![self.keyStorage existsEntryNoThrowWithName:@"test2"]);
 
             [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
                 XCTAssert(error == nil);
@@ -185,6 +190,7 @@ static const NSTimeInterval timeout = 20.;
                 XCTAssert(err == nil);
 
                 XCTAssert([self.keyStorage existsEntryNoThrowWithName:@"test"]);
+                XCTAssert(![self.keyStorage existsEntryNoThrowWithName:@"test2"]);
 
                 [ex fulfill];
             }];
@@ -197,7 +203,7 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test004_storeMultipleKeys {
+- (void)test04_KTC22_storeMultipleKeys {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
 
     int numberOfKeys = 100;
@@ -221,14 +227,6 @@ static const NSTimeInterval timeout = 20.;
     NSData *privateKeyData = [self.crypto exportPrivateKey:privateKeys[0]];
     [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
         [self.keyStorage storeEntryWithName:@"first" data:privateKeyData meta:nil completion:^(NSError *error) {
-            XCTAssert(error == nil);
-            NSError *err;
-            XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 1);
-            XCTAssert(err == nil);
-            VSMVirgilPrivateKey *privateKey = [self.crypto importPrivateKeyFrom:[self.keyStorage retrieveEntryWithName:@"first" error:&err].data password:nil error:nil];
-            XCTAssert(err == nil);
-            XCTAssert([privateKey.identifier isEqualToData:privateKeys[0].identifier]);
-
             [self.keyStorage storeEntries:keyEntries completion:^(NSError *error) {
                 XCTAssert(error == nil);
                 NSError *err;
@@ -310,7 +308,7 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test005_deleteAllKeys {
+- (void)test05_KTC23_deleteAllKeys {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
 
     int numberOfKeys = 100;
@@ -351,7 +349,32 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test006_deleteKeys {
+- (void)test06_KTC24_deleteAllKeysEmpty {
+    XCTestExpectation *ex = [self expectationWithDescription:@""];
+    
+    [self.keyStorage deleteAllEntriesWithCompletion:^(NSError *error) {
+        XCTAssert(error == nil);
+        NSError *err;
+        XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 0);
+        XCTAssert(err == nil);
+        
+        [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
+            XCTAssert(error == nil);
+            NSError *err;
+            XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 0);
+            XCTAssert(err == nil);
+            
+            [ex fulfill];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:timeout handler:^(NSError *error) {
+        if (error != nil)
+            XCTFail(@"Expectation failed: %@", error);
+    }];
+}
+
+- (void)test07_KTC25_deleteKeys {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
     
     int numberOfKeys = 10;
@@ -421,7 +444,7 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test007_updateEntry {
+- (void)test08_KTC26_updateEntry {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
     
     int numberOfKeys = 10;
@@ -475,7 +498,7 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test008_updateRecipients {
+- (void)test09_KTC27_updateRecipients {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
     
     int numberOfKeys = 10;
@@ -497,8 +520,16 @@ static const NSTimeInterval timeout = 20.;
             [self.keyStorage updateRecipientsWithNewPublicKeys:@[keyPair.publicKey] newPrivateKey:keyPair.privateKey completion:^(NSError *error) {
                 XCTAssert(error == nil);
                 
+                NSError *err;
+                XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == numberOfKeys);
+                XCTAssert(err == nil);
+                
                 [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
                     XCTAssert(error == nil);
+                    
+                    NSError *err;
+                    XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == numberOfKeys);
+                    XCTAssert(err == nil);
 
                     [ex fulfill];
                 }];
@@ -512,24 +543,78 @@ static const NSTimeInterval timeout = 20.;
     }];
 }
 
-- (void)test009_deleteAllKeysEmpty {
+- (void)test10_KTC28_outOfSyncError {
     XCTestExpectation *ex = [self expectationWithDescription:@""];
 
-    [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
+    NSError *err;
+    NSArray *entries = [self.keyStorage retrieveAllEntriesAndReturnError:&err];
+    XCTAssert(entries == nil && [err.domain isEqualToString:VSKCloudKeyStorageErrorDomain] && err.code == VSKCloudKeyStorageErrorCloudStorageOutOfSync);
+    err = nil;
+    
+    VSKCloudEntry *entry = [self.keyStorage retrieveEntryWithName:@"test" error:&err];
+    XCTAssert(entry == nil && [err.domain isEqualToString:VSKCloudKeyStorageErrorDomain] && err.code == VSKCloudKeyStorageErrorCloudStorageOutOfSync);
+    err = nil;
+    
+    XCTAssert(![self.keyStorage existsEntryNoThrowWithName:@"test"]);
+    
+    int numberOfKeys = 10;
+    
+    NSMutableArray<VSKKeyEntry *> *keyEntries = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < numberOfKeys; i++) {
+        VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
+        NSString *name = [NSString stringWithFormat:@"%d", i];
+        NSData *privateKeyData = [self.crypto exportPrivateKey:keyPair.privateKey];
+        VSKKeyEntry *keyEntry = [[VSKKeyEntry alloc] initWithName:name data:privateKeyData meta:nil];
+        [keyEntries addObject:keyEntry];
+    }
+    
+    [self.keyStorage storeEntryWithName:keyEntries[0].name data:keyEntries[0].data meta:nil completion:^(NSError *error) {
+        XCTAssert([error.domain isEqualToString:VSKCloudKeyStorageErrorDomain] && error.code == VSKCloudKeyStorageErrorCloudStorageOutOfSync);
+        
+        [self.keyStorage storeEntries:keyEntries completion:^(NSError *error) {
+            XCTAssert([error.domain isEqualToString:VSKCloudKeyStorageErrorDomain] && error.code == VSKCloudKeyStorageErrorCloudStorageOutOfSync);
+            
+            [self.keyStorage updateEntryWithName:keyEntries[0].name data:keyEntries[0].data meta:nil completion:^(VSKCloudEntry *entry, NSError *error) {
+                XCTAssert(entry == nil && [error.domain isEqualToString:VSKCloudKeyStorageErrorDomain] && error.code == VSKCloudKeyStorageErrorCloudStorageOutOfSync);
+                
+                [self.keyStorage deleteEntryWithName:keyEntries[0].name completion:^(NSError *error) {
+                    XCTAssert([error.domain isEqualToString:VSKCloudKeyStorageErrorDomain] && error.code == VSKCloudKeyStorageErrorCloudStorageOutOfSync);
+                    
+                    [self.keyStorage deleteEntriesWithNames:@[keyEntries[0].name, keyEntries[1].name] completion:^(NSError *error) {
+                        XCTAssert([error.domain isEqualToString:VSKCloudKeyStorageErrorDomain] && error.code == VSKCloudKeyStorageErrorCloudStorageOutOfSync);
+                        
+                        [self.keyStorage updateRecipientsWithNewPublicKeys:@[self.keyPair.publicKey] newPrivateKey:self.keyPair.privateKey completion:^(NSError *error) {
+                            XCTAssert([error.domain isEqualToString:VSKCloudKeyStorageErrorDomain] && error.code == VSKCloudKeyStorageErrorCloudStorageOutOfSync);
+                            
+                            [ex fulfill];
+                        }];
+                    }];
+                }];
+            }];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:timeout + numberOfKeys / 4 handler:^(NSError *error) {
+        if (error != nil)
+            XCTFail(@"Expectation failed: %@", error);
+    }];
+}
+
+- (void)test11_KTC41_deleteInvalidValue {
+    XCTestExpectation *ex = [self expectationWithDescription:@""];
+    
+    [self.keyknoxManager pushValue:[[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding] previousHash:nil completion:^(VSKDecryptedKeyknoxValue *value, NSError *error) {
+        XCTAssert(value != nil && error == nil);
+        
         [self.keyStorage deleteAllEntriesWithCompletion:^(NSError *error) {
             XCTAssert(error == nil);
+            
             NSError *err;
             XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 0);
             XCTAssert(err == nil);
             
-            [self.keyStorage retrieveCloudEntriesWithCompletion:^(NSError *error) {
-                XCTAssert(error == nil);
-                NSError *err;
-                XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 0);
-                XCTAssert(err == nil);
-                
-                [ex fulfill];
-            }];
+            [ex fulfill];
         }];
     }];
     
