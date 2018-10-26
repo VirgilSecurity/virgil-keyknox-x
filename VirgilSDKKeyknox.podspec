@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                        = "VirgilSDKKeyknox"
-  s.version                     = "0.2.0"
+  s.version                     = "0.2.1"
   s.license                     = { :type => "BSD", :file => "LICENSE" }
   s.summary                     = "Virgil Keyknox SDK for Apple devices and languages."
   s.homepage                    = "https://github.com/VirgilSecurity/keyknox-x/"

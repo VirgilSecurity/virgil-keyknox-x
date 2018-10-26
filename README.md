@@ -47,7 +47,7 @@ To integrate Virgil Keyknox into your Xcode project using CocoaPods, specify it 
 target '<Your Target Name>' do
   use_frameworks!
 
-  pod 'VirgilSDKKeyknox', '~> 0.2.0'
+  pod 'VirgilSDKKeyknox', '~> 0.2.1'
 end
 ```
 
@@ -71,7 +71,7 @@ $ brew install carthage
 To integrate Virgil Keyknox into your Xcode project using Carthage, create an empty file with name *Cartfile* in your project's root folder and add following lines to your *Cartfile*
 
 ```
-github "VirgilSecurity/keyknox-x" ~> 0.2.0
+github "VirgilSecurity/keyknox-x" ~> 0.2.1
 ```
 
 #### Linking against prebuilt binaries
