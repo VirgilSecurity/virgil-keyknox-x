@@ -33,7 +33,7 @@ before_install:
   - xcodebuild -showsdks
 
 script:
-  - openssl aes-256-cbc -K $encrypted_a2cb4519b0db_key -iv $encrypted_a2cb4519b0db_iv -in config.tar.enc -out config.tar -d
+  - openssl aes-256-cbc -K $encrypted_25e20d2dd9dd_key -iv $encrypted_25e20d2dd9dd_iv -in config.tar.enc -out config.tar -d
   - tar xvf config.tar
   
   - |
@@ -98,7 +98,7 @@ deploy:
   # Upload framework to gh-releases for carthage
   - provider: releases
     api_key:
-      secure: Cl834HheeLOmRFdCFL6AYYViNanWXAIwk2KyZMXWumGXN6/y1sGGFHFt4Z9XuX594XC4itX5PwKyG9ysQFfX6N8r0ogGjW6lwS2AejUazK85pcAlvh044Dtfb7JabXG1PUI7ycVhuJ9nBZjgLSAWrMfnRkE0zR+nkt4d+Fh1CkUZE+j6qsiGIxFtOvbiX+wyLthakdnDVvTXjB3BFy9JTGWKR6jJKxbZN01Cytseh22+O2cjOr6qm+uNBVhsvi+9ZdOxl1PhxUhP22yH7z1Frq9911u57gs4vPfEu1FOpKKtZDfI6VwoFu05wKY6d6ekO+Dh/6QyddnVz9coYQTXXakjtqKY4RgYxzWidJEfRv/qwa0D7WUz1qWXL/wZax8QxYRliKqm1gxAxQp4uwNWnQm0qenQ3juVpduORT7RmbrPOEvGdkqOxhaw6HQu7eHY5Jd4qnRRgFCAK1ZUqwkMipvuCH6YcbxXS+rctVocZWMcmDfmNWN8y3XYY6KDGnmUX0mmXG7k5aBgCG+fhQKrje3BeSQWNYnmWQ5xdNSFVPwe4SZY0XwF+XeJgqHiMl2Bf05VswGg6zrqHL17JhOmACw29Fbvu9fO1jV5xriSOpb2HG0vmwvwxVZSPbDykoYz6XedqamE2kzpzH5W0OMU5Yn0mQncGIAtt26TXsjNpLA=
+      secure: MtYW/tOeS1BfnOVRfC3GEixTdFdA5DFxbf+1rLtjj1BthS5EifiYEcYSRDAi7mt+XDidEPI8tdIlKLq+UfwUk4gopH7DzlpCzpzo0TPQH3n5p6sm4EyaKyqSrgAnEDudcgaWiwrOE+j0BxbgWwxQbke05XaieyI9U/EmyHfLIIKU89gug98/eHrJ3AWioXvks/tJRPdlIzAZNs7DbKmlOA5uGoPVQrDQZDkaTM+2LlJq6fLXNMDQxbTAsiI9JdpjAkO2P/zrE2TDM+Fs+u5lZ5W3hIA7XGDjwcb3yekHr8rVS2cEcPm9mV61luUjLYmVGnttGJEheJmt3EBRtEUDxzFdb7WPUR3B/PBTFiWbwj4SK80Lflh/OptMUUFEy7f3N9o/gYC3ELuwHJr/O62H1AXQemYXV/Zu9xOXuWJcpmO8AHgJ7Ig3tRVKXaUeTHaHnONiMY79l3BmAPpqMfXaCrLpWW82/+lxZJc6zRAigEKdEsiePPjrZWTtZjMl93nUZBO/nFPEbv9yniHiAPXljoHMsAXUiITXU4huybb9nk3lf7gOyl+AbT/5O7M2PfhdWND6rhDmnUVW87qUiAjUykNAYAJ/Crbjf5lcR/1qscQuP7aPw/HSQpRjGJ5AkPnQKcrT0LsIqbTE14dXbkzAUvfRCIw7Mt7jAN/ibpfL6Cs=
     file: $FRAMEWORK_NAME.framework.zip
     skip_cleanup: true
     on:
