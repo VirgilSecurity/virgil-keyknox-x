@@ -128,7 +128,6 @@
 		42B5E02620C011380067F13E /* KeyknoxClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E01F20C011380067F13E /* KeyknoxClient.swift */; };
 		42B5E02720C011380067F13E /* KeynoxClient+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E02020C011380067F13E /* KeynoxClient+Queries.swift */; };
 		42B5E02820C011380067F13E /* KeyknoxData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E02220C011380067F13E /* KeyknoxData.swift */; };
-		42D056A520EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D056A420EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift */; };
 		42D056CA20EA5FC900FC544E /* VSK001_ClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E0B620C01C9B0067F13E /* VSK001_ClientTests.m */; };
 		42D056CB20EA5FCC00FC544E /* VSK002_KeyknoxManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8B820C5488C00CE1D4F /* VSK002_KeyknoxManagerTests.m */; };
 		42D056CC20EA5FCC00FC544E /* VSK003_CloudKeyStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 425EF8CF20C5A03200CE1D4F /* VSK003_CloudKeyStorageTests.m */; };
@@ -201,7 +200,6 @@
 		42D0583D20EAA6EF00FC544E /* VSK004_SyncKeyStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */; };
 		42D0583E20EAA6EF00FC544E /* VSK005_CloudEntrySerializerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */; };
 		42D0583F20EAA6EF00FC544E /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */; };
-		42D0584020EAA6EF00FC544E /* VSK007_KeyStorageWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D056A420EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift */; };
 		42D0584F20EB755900FC544E /* Cloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 421A612320D41AFF00BBF05D /* Cloud.json */; };
 		42D0585020EB755900FC544E /* TestConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42B5E0BA20C01E5A0067F13E /* TestConfig.plist */; };
 		42D0585120EB755900FC544E /* TestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5E0BB20C01E5A0067F13E /* TestConfig.swift */; };
@@ -211,7 +209,6 @@
 		42D0585520EB755900FC544E /* VSK004_SyncKeyStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */; };
 		42D0585620EB755900FC544E /* VSK005_CloudEntrySerializerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */; };
 		42D0585720EB755900FC544E /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */; };
-		42D0585820EB755900FC544E /* VSK007_KeyStorageWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D056A420EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift */; };
 		42D0585C20EB76BD00FC544E /* VirgilSDKKeyknox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 42D0576220EAA0CC00FC544E /* VirgilSDKKeyknox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -392,7 +389,6 @@
 		42B5E0B620C01C9B0067F13E /* VSK001_ClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VSK001_ClientTests.m; sourceTree = "<group>"; };
 		42B5E0BA20C01E5A0067F13E /* TestConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestConfig.plist; sourceTree = "<group>"; };
 		42B5E0BB20C01E5A0067F13E /* TestConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestConfig.swift; sourceTree = "<group>"; };
-		42D056A420EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSK007_KeyStorageWrapperTests.swift; sourceTree = "<group>"; };
 		42D0571F20EA9FBC00FC544E /* VirgilSDKKeyknox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VirgilSDKKeyknox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42D0576220EAA0CC00FC544E /* VirgilSDKKeyknox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VirgilSDKKeyknox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42D0578220EAA16500FC544E /* VirgilSDKKeyknox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VirgilSDKKeyknox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -618,7 +614,6 @@
 				42011DE320CACFEE00B84755 /* VSK004_SyncKeyStorageTests.swift */,
 				421A612120D4071500BBF05D /* VSK005_CloudEntrySerializerTests.swift */,
 				428B15BB20D7F0AB0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift */,
-				42D056A420EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1078,7 +1073,6 @@
 				42D056CB20EA5FCC00FC544E /* VSK002_KeyknoxManagerTests.m in Sources */,
 				42D056CA20EA5FC900FC544E /* VSK001_ClientTests.m in Sources */,
 				42011EA020CE901900B84755 /* TestConfig.swift in Sources */,
-				42D056A520EA5B5D00FC544E /* VSK007_KeyStorageWrapperTests.swift in Sources */,
 				428B161E20E118AD0041CA75 /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */,
 				42D056CC20EA5FCC00FC544E /* VSK003_CloudKeyStorageTests.m in Sources */,
 				42D056CD20EA5FCC00FC544E /* VSK005_CloudEntrySerializerTests.swift in Sources */,
@@ -1227,7 +1221,6 @@
 				42D0583E20EAA6EF00FC544E /* VSK005_CloudEntrySerializerTests.swift in Sources */,
 				42D0583F20EAA6EF00FC544E /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */,
 				42D0583920EAA6EF00FC544E /* TestConfig.swift in Sources */,
-				42D0584020EAA6EF00FC544E /* VSK007_KeyStorageWrapperTests.swift in Sources */,
 				42D0583B20EAA6EF00FC544E /* VSK002_KeyknoxManagerTests.m in Sources */,
 				42D0583C20EAA6EF00FC544E /* VSK003_CloudKeyStorageTests.m in Sources */,
 			);
@@ -1239,7 +1232,6 @@
 			files = (
 				42D0585520EB755900FC544E /* VSK004_SyncKeyStorageTests.swift in Sources */,
 				42D0585120EB755900FC544E /* TestConfig.swift in Sources */,
-				42D0585820EB755900FC544E /* VSK007_KeyStorageWrapperTests.swift in Sources */,
 				42D0585320EB755900FC544E /* VSK002_KeyknoxManagerTests.m in Sources */,
 				42D0585720EB755900FC544E /* VSK006_SyncKeyStorageKeychainUtilsTests.swift in Sources */,
 				42D0585620EB755900FC544E /* VSK005_CloudEntrySerializerTests.swift in Sources */,
