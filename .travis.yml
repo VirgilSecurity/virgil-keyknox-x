@@ -45,7 +45,7 @@ script:
 
 
   - carthage version
-  - carthage bootstrap --no-build
+  - carthage bootstrap
 
   - |
     if [ $SWIFT_LINT == "YES" ]; then
