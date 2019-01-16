@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -71,6 +71,8 @@ import Foundation
         super.init()
     }
 
+    // swiftlint:disable explicit_enum_raw_value
+
     /// CodingKeys
     ///
     /// - name: name
@@ -85,8 +87,11 @@ import Foundation
         case modificationDate = "modification_date"
         case meta
     }
+
+    // swiftlint:enable explicit_enum_raw_value
 }
 
+// swiftlint:disable missing_docs
 // MARK: - Equatable implementation
 public extension CloudEntry {
     static func == (lhs: CloudEntry, rhs: CloudEntry) -> Bool {

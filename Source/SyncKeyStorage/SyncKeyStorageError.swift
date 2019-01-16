@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -51,16 +51,16 @@ import Foundation
 /// - inconsistentStateError: Inconsistent state error
 /// - entrySavingError: Error while saving entry
 @objc(VSKSyncKeyStorageError) public enum SyncKeyStorageError: Int, Error {
-    case keychainEntryNotFoundWhileUpdating
-    case cloudEntryNotFoundWhileUpdating
-    case cloudEntryNotFoundWhileDeleting
-    case keychainEntryNotFoundWhileComparing
-    case keychainEntryAlreadyExistsWhileStoring
-    case cloudEntryAlreadyExistsWhileStoring
-    case invalidModificationDateInKeychainEntry
-    case invalidCreationDateInKeychainEntry
-    case noMetaInKeychainEntry
-    case invalidKeysInEntryMeta
-    case inconsistentStateError
-    case entrySavingError
+    case keychainEntryNotFoundWhileUpdating = 1
+    case cloudEntryNotFoundWhileUpdating = 2
+    case cloudEntryNotFoundWhileDeleting = 3
+    case keychainEntryNotFoundWhileComparing = 4
+    case keychainEntryAlreadyExistsWhileStoring = 5
+    case cloudEntryAlreadyExistsWhileStoring = 6
+    case invalidModificationDateInKeychainEntry = 7
+    case invalidCreationDateInKeychainEntry = 8
+    case noMetaInKeychainEntry = 9
+    case invalidKeysInEntryMeta = 10
+    case inconsistentStateError = 11
+    case entrySavingError = 12
 }

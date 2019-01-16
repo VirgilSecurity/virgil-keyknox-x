@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -43,8 +43,8 @@ import Foundation
 /// - serverRespondedWithTamperedValue: Value pushed to Keyknox and returned from Keyknox doesn't match
 /// - dataIsEmpty: Data is empty
 @objc(VSKKeyknoxManagerError) public enum KeyknoxManagerError: Int, Error {
-    case noPublicKeys = 0
-    case keysShouldBeUpdated = 1
-    case serverRespondedWithTamperedValue = 2
-    case dataIsEmpty
+    case noPublicKeys = 1
+    case keysShouldBeUpdated = 2
+    case serverRespondedWithTamperedValue = 3
+    case dataIsEmpty = 4
 }
