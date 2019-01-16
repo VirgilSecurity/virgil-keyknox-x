@@ -50,6 +50,16 @@ import VirgilCryptoAPI
     internal let keychainUtils: KeychainUtils
 
     private let queue = DispatchQueue(label: "SyncKeyStorageQueue")
+    
+    /// Creates local key storage isntance, to read keys withoud connecting to the Cloud
+    ///
+    /// - Parameters:
+    ///   - identity: User's identity to separate keys in Keychain
+    ///   - keychainStorage: KeychainStorageProtocol implementation
+    /// - Returns: returns KeychainStorageProtocol
+    public static func makeLocalStorage(identity: String, keychainStorage: KeychainStorageProtocol) -> KeychainStorageProtocol {
+        return SandboxedKeychainStorage(identity: identity, keychainStorage: keychainStorage)
+    }
 
     /// Init
     ///
