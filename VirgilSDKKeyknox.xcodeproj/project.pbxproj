@@ -434,10 +434,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				424A7EC721EF4E2B006BED3F /* VirgilSDK.framework in Frameworks */,
 				424A7EC421EF4E2B006BED3F /* VirgilCryptoApiImpl.framework in Frameworks */,
 				424A7EC521EF4E2B006BED3F /* VirgilCrypto.framework in Frameworks */,
 				424A7EC621EF4E2B006BED3F /* VSCCrypto.framework in Frameworks */,
-				424A7EC721EF4E2B006BED3F /* VirgilSDK.framework in Frameworks */,
 				424A7EC821EF4E2B006BED3F /* VirgilCryptoAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
