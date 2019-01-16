@@ -60,7 +60,7 @@ import VirgilCryptoAPI
     public init(identity: String, keychainStorage: KeychainStorageProtocol,
                 cloudKeyStorage: CloudKeyStorageProtocol) {
         self.identity = identity
-        self.keychainStorage = KeychainStorageWrapper(identity: identity, keychainStorage: keychainStorage)
+        self.keychainStorage = SandboxedKeychainStorage(identity: identity, keychainStorage: keychainStorage)
         self.cloudKeyStorage = cloudKeyStorage
         self.keychainUtils = KeychainUtils()
 
