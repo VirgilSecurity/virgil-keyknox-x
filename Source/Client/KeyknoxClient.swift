@@ -71,7 +71,11 @@ import VirgilSDK
     ///
     /// - Parameter serviceUrl: URL of service client will use
     @objc public convenience init(serviceUrl: URL) {
-        self.init(serviceUrl: serviceUrl, connection: HttpConnection())
+        let version = VersionUtils.getVersion(bundleIdentitifer: "com.virgilsecurity.VirgilSDKKeyknox")
+
+        let connection = HttpConnection(adapters: [VirgilAgentAdapter(product: "keyknox", version: version)])
+
+        self.init(serviceUrl: serviceUrl, connection: connection)
     }
 
     /// Handles error from Keyknox Service
