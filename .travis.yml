@@ -43,7 +43,6 @@ script:
       cp TestConfig_stg.plist Tests/Data/TestConfig.plist
     fi
 
-
   - carthage version
   - carthage bootstrap
 
@@ -89,7 +88,7 @@ before_deploy:
 
 after_success:
   # Generate and publish docs
-  - if [ -n "${TRAVIS_TAG}" ] && [ $PUBLISH_DOCS == "YES" ]; then
+  - if [ $PUBLISH_DOCS == "YES" ]; then
       ./CI/publish-docs.sh;
     fi
 
@@ -110,5 +109,5 @@ deploy:
     github-token: $GITHUB_TOKEN
     local_dir: "docs"
     on:
-      tags: true
+      tags: false
       condition: $PUBLISH_DOCS = "YES"
