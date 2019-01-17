@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -48,10 +48,10 @@ import VirgilCryptoAPI
     @objc public let keyknoxClient: KeyknoxClientProtocol
 
     /// Public keys used for encryption and signature verification
-    @objc internal(set) public var publicKeys: [PublicKey]
+    @objc public internal(set) var publicKeys: [PublicKey]
 
     /// Private key used for decryption and signing
-    @objc internal(set) public var privateKey: PrivateKey
+    @objc public internal(set) var privateKey: PrivateKey
 
     /// KeyknoxCryptoProtocol implementation
     public let crypto: KeyknoxCryptoProtocol
@@ -105,7 +105,8 @@ import VirgilCryptoAPI
                                   retryOnUnauthorized: Bool = false) throws {
         try self.init(accessTokenProvider: accessTokenProvider,
                       keyknoxClient: keyknoxClient,
-                      publicKeys: publicKeys, privateKey: privateKey,
+                      publicKeys: publicKeys,
+                      privateKey: privateKey,
                       crypto: KeyknoxCrypto(),
                       retryOnUnauthorized: retryOnUnauthorized)
     }

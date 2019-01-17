@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -102,7 +102,8 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         do {
             decryptedData = try cipher.decryptData(encryptedKeyknoxValue.value,
                                                    recipientId: virgilPrivateKey.identifier,
-                                                   privateKey: privateKeyData, keyPassword: nil)
+                                                   privateKey: privateKeyData,
+                                                   keyPassword: nil)
         }
         catch {
             throw KeyknoxCryptoError.decryptionFailed
@@ -128,7 +129,8 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
             throw KeyknoxCryptoError.signatureVerificationFailed
         }
 
-        return DecryptedKeyknoxValue(meta: meta, value: decryptedData,
+        return DecryptedKeyknoxValue(meta: meta,
+                                     value: decryptedData,
                                      version: encryptedKeyknoxValue.version,
                                      keyknoxHash: encryptedKeyknoxValue.keyknoxHash)
     }
@@ -166,7 +168,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         try cipher.setData(virgilPrivateKey.identifier, forKey: VirgilCrypto.CustomParamKeySignerId)
         try cipher.setData(signature, forKey: VirgilCrypto.CustomParamKeySignature)
         try virgilPublicKeys
-            .map { return ($0.identifier, self.crypto.exportPublicKey($0)) }
+            .map { ($0.identifier, self.crypto.exportPublicKey($0)) }
             .forEach { try cipher.addKeyRecipient($0, publicKey: $1) }
         let encryptedData = try cipher.encryptData(data, embedContentInfo: false)
         let meta = try cipher.contentInfo()

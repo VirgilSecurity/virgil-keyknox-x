@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -43,8 +43,8 @@ import Foundation
 /// - entryAlreadyExists: Entry already exists
 /// - cloudStorageOutOfSync: Sync this storage before any other operations
 @objc(VSKCloudKeyStorageError) public enum CloudKeyStorageError: Int, Error {
-    case entryNotFound
-    case entrySavingError
-    case entryAlreadyExists
-    case cloudStorageOutOfSync
+    case entryNotFound = 1
+    case entrySavingError = 2
+    case entryAlreadyExists = 3
+    case cloudStorageOutOfSync = 4
 }

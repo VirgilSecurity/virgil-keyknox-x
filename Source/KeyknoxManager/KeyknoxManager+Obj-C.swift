@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -90,8 +90,10 @@ extension KeyknoxManager {
                                      newPublicKeys: [PublicKey]? = nil,
                                      newPrivateKey: PrivateKey? = nil,
                                      completion: @escaping (DecryptedKeyknoxValue?, Error?) -> Void) {
-        self.updateRecipients(value: value, previousHash: previousHash,
+        self.updateRecipients(value: value,
+                              previousHash: previousHash,
                               newPublicKeys: newPublicKeys,
-                              newPrivateKey: newPrivateKey).start(completion: completion)
+                              newPrivateKey: newPrivateKey)
+            .start(completion: completion)
     }
 }

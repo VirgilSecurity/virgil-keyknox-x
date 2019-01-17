@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -50,6 +50,16 @@ import VirgilCryptoAPI
     internal let keychainUtils: KeychainUtils
 
     private let queue = DispatchQueue(label: "SyncKeyStorageQueue")
+    
+    /// Creates local key storage isntance, to read keys withoud connecting to the Cloud
+    ///
+    /// - Parameters:
+    ///   - identity: User's identity to separate keys in Keychain
+    ///   - keychainStorage: KeychainStorageProtocol implementation
+    /// - Returns: returns KeychainStorageProtocol
+    public static func makeLocalStorage(identity: String, keychainStorage: KeychainStorageProtocol) -> KeychainStorageProtocol {
+        return SandboxedKeychainStorage(identity: identity, keychainStorage: keychainStorage)
+    }
 
     /// Init
     ///
@@ -60,7 +70,7 @@ import VirgilCryptoAPI
     public init(identity: String, keychainStorage: KeychainStorageProtocol,
                 cloudKeyStorage: CloudKeyStorageProtocol) {
         self.identity = identity
-        self.keychainStorage = KeychainStorageWrapper(identity: identity, keychainStorage: keychainStorage)
+        self.keychainStorage = SandboxedKeychainStorage(identity: identity, keychainStorage: keychainStorage)
         self.cloudKeyStorage = cloudKeyStorage
         self.keychainUtils = KeychainUtils()
 
@@ -88,10 +98,11 @@ import VirgilCryptoAPI
     ///   - publicKeys: Public keys used for encryption and signature verification
     ///   - privateKey: Private key used for decryption and signature generation
     /// - Throws: Rethrows from CloudKeyStorage and KeychainStorageParams
-    @objc convenience public init(identity: String, accessTokenProvider: AccessTokenProvider,
+    @objc public convenience init(identity: String, accessTokenProvider: AccessTokenProvider,
                                   publicKeys: [PublicKey], privateKey: PrivateKey) throws {
         let cloudKeyStorage = try CloudKeyStorage(accessTokenProvider: accessTokenProvider,
-                                                  publicKeys: publicKeys, privateKey: privateKey)
+                                                  publicKeys: publicKeys,
+                                                  privateKey: privateKey)
 
         try self.init(identity: identity, cloudKeyStorage: cloudKeyStorage)
     }
@@ -121,8 +132,12 @@ extension SyncKeyStorage {
                         throw SyncKeyStorageError.cloudEntryNotFoundWhileUpdating
                     }
 
-                    let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name, data: data,
-                                                                          meta: meta).startSync().getResult()
+                    let cloudEntry = try self.cloudKeyStorage.updateEntry(withName: name,
+                                                                          data: data,
+                                                                          meta: meta)
+                        .startSync()
+                        .getResult()
+
                     let meta = try self.keychainUtils.createMetaForKeychain(from: cloudEntry)
                     try self.keychainStorage.updateEntry(withName: name, data: data, meta: meta)
 
@@ -299,8 +314,12 @@ extension SyncKeyStorage {
                 syncOperation.addDependency(retrieveCloudEntriesOperation)
                 syncOperation.addDependency(retrieveKeychainEntriesOperation)
 
-                let operations = [retrieveCloudEntriesOperation, retrieveKeychainEntriesOperation,
-                                  syncOperation]
+                let operations = [
+                    retrieveCloudEntriesOperation,
+                    retrieveKeychainEntriesOperation,
+                    syncOperation
+                ]
+
                 let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
                 operations.forEach {
                     completionOperation.addDependency($0)

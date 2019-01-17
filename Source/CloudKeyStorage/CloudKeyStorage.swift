@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -68,10 +68,11 @@ import VirgilSDK
     ///   - publicKeys: Public keys used for encryption and signature verification
     ///   - privateKey: Private key used for decryption and signature verification
     /// - Throws: Rethrows from KeyknoxManager
-    @objc convenience public init(accessTokenProvider: AccessTokenProvider,
+    @objc public convenience init(accessTokenProvider: AccessTokenProvider,
                                   publicKeys: [PublicKey], privateKey: PrivateKey) throws {
         let keyknoxManager = try KeyknoxManager(accessTokenProvider: accessTokenProvider,
-                                                publicKeys: publicKeys, privateKey: privateKey)
+                                                publicKeys: publicKeys,
+                                                privateKey: privateKey)
 
         self.init(keyknoxManager: keyknoxManager)
     }
@@ -92,8 +93,11 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         var cloudEntries = [CloudEntry]()
         for entry in keyEntries {
             let now = Date()
-            let cloudEntry = CloudEntry(name: entry.name, data: entry.data,
-                                        creationDate: now, modificationDate: now, meta: entry.meta)
+            let cloudEntry = CloudEntry(name: entry.name,
+                                        data: entry.data,
+                                        creationDate: now,
+                                        modificationDate: now,
+                                        meta: entry.meta)
 
             cloudEntries.append(cloudEntry)
             self.cache[entry.name] = cloudEntry
@@ -102,7 +106,8 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
         let data = try self.cloudEntrySerializer.serialize(dict: self.cache)
 
         let response = try self.keyknoxManager.pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
-            .startSync().getResult()
+            .startSync()
+            .getResult()
 
         self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
         self.decryptedKeyknoxData = response
@@ -172,8 +177,11 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
                     let now = Date()
                     let creationDate = self.cache[name]?.creationDate ?? now
 
-                    let cloudEntry = CloudEntry(name: name, data: data,
-                                                creationDate: creationDate, modificationDate: now, meta: meta)
+                    let cloudEntry = CloudEntry(name: name,
+                                                data: data,
+                                                creationDate: creationDate,
+                                                modificationDate: now,
+                                                meta: meta)
 
                     self.cache[name] = cloudEntry
 
@@ -181,7 +189,8 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
 
                     let response = try self.keyknoxManager
                         .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
-                        .startSync().getResult()
+                        .startSync()
+                        .getResult()
 
                     self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
@@ -271,7 +280,8 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
 
                     let response = try self.keyknoxManager
                         .pushValue(data, previousHash: self.decryptedKeyknoxData?.keyknoxHash)
-                        .startSync().getResult()
+                        .startSync()
+                        .getResult()
 
                     self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response
@@ -331,8 +341,10 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
                     let response = try self.keyknoxManager
                         .updateRecipients(value: decryptedKeyknoxData.value,
                                           previousHash: decryptedKeyknoxData.keyknoxHash,
-                                          newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey)
-                        .startSync().getResult()
+                                          newPublicKeys: newPublicKeys,
+                                          newPrivateKey: newPrivateKey)
+                        .startSync()
+                        .getResult()
 
                     self.cache = try self.cloudEntrySerializer.deserialize(data: response.value)
                     self.decryptedKeyknoxData = response

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -61,7 +61,8 @@ extension KeyknoxManager {
                 let data: (Data, Data) = try operation.findDependencyResult()
                 let encryptedKeyknoxData: EncryptedKeyknoxValue = try operation.findDependencyResult()
 
-                let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
+                let response = try self.keyknoxClient.pushValue(meta: data.0,
+                                                                value: data.1,
                                                                 previousHash: encryptedKeyknoxData.keyknoxHash,
                                                                 token: token.stringRepresentation())
 
@@ -83,7 +84,8 @@ extension KeyknoxManager {
                 let token: AccessToken = try operation.findDependencyResult()
                 let data: (Data, Data) = try operation.findDependencyResult()
 
-                let response = try self.keyknoxClient.pushValue(meta: data.0, value: data.1,
+                let response = try self.keyknoxClient.pushValue(meta: data.0,
+                                                                value: data.1,
                                                                 previousHash: previousHash,
                                                                 token: token.stringRepresentation())
 
@@ -124,7 +126,8 @@ extension KeyknoxManager {
                 let keyknoxData: EncryptedKeyknoxValue = try operation.findDependencyResult()
 
                 let result = try self.crypto.decrypt(encryptedKeyknoxValue: keyknoxData,
-                                                     privateKey: self.privateKey, publicKeys: self.publicKeys)
+                                                     privateKey: self.privateKey,
+                                                     publicKeys: self.publicKeys)
 
                 completion(result, nil)
             }
@@ -150,7 +153,8 @@ extension KeyknoxManager {
                     self.privateKey = newPrivateKey
                 }
 
-                completion(try self.crypto.encrypt(data: data, privateKey: self.privateKey,
+                completion(try self.crypto.encrypt(data: data,
+                                                   privateKey: self.privateKey,
                                                    publicKeys: self.publicKeys), nil)
             }
             catch {

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -51,8 +51,10 @@ import Foundation
     @objc public let keyknoxHash: Data
 
     internal convenience init(keyknoxData: KeyknoxData, keyknoxHash: Data) {
-        self.init(meta: keyknoxData.meta, value: keyknoxData.value,
-                  version: keyknoxData.version, keyknoxHash: keyknoxHash)
+        self.init(meta: keyknoxData.meta,
+                  value: keyknoxData.value,
+                  version: keyknoxData.version,
+                  keyknoxHash: keyknoxHash)
     }
 
     internal init(meta: Data, value: Data, version: String, keyknoxHash: Data) {

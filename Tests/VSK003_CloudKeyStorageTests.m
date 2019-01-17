@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -75,7 +75,7 @@ static const NSTimeInterval timeout = 20.;
     VSSJwtGenerator *generator = [[VSSJwtGenerator alloc] initWithApiKey:apiKey apiPublicKeyIdentifier:self.config.ApiPublicKeyId accessTokenSigner:[[VSMVirgilAccessTokenSigner alloc] initWithVirgilCrypto:self.crypto] appId:self.config.AppId ttl:600];
     NSString *identity = [[NSUUID alloc] init].UUIDString;
     
-    id<VSSAccessTokenProvider> provider = [[VSSCachingJwtProvider alloc] initWithRenewJwtCallback:^(VSSTokenContext *context, void (^completion)(VSSJwt *jwt, NSError *error)) {
+    id<VSSAccessTokenProvider> provider = [[VSSCachingJwtProvider alloc] initWithInitialJwt:nil  renewJwtCallback:^(VSSTokenContext *context, void (^completion)(VSSJwt *jwt, NSError *error)) {
         VSSJwt *jwt = [generator generateTokenWithIdentity:identity additionalData:nil error:nil];
         
         completion(jwt, nil);

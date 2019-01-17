@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -78,7 +78,7 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         self.keychainStorage = KeychainStorage(storageParams: params)
         try! self.keychainStorage.deleteAllEntries()
         
-        self.keychainStorageWrapper = KeychainStorageWrapper(identity: identity, keychainStorage: self.keychainStorage)
+        self.keychainStorageWrapper = SandboxedKeychainStorage(identity: identity, keychainStorage: self.keychainStorage)
     }
     
     func test01_KTC29_syncStorage() {

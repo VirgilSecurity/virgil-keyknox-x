@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -58,20 +58,24 @@ import VirgilSDK
     /// - Parameters:
     ///   - serviceUrl: URL of service client will use
     ///   - connection: custom HTTPConnection
-    public override init(serviceUrl: URL = KeyknoxClient.defaultURL, connection: HttpConnectionProtocol) {
+    override public init(serviceUrl: URL = KeyknoxClient.defaultURL, connection: HttpConnectionProtocol) {
         super.init(serviceUrl: serviceUrl, connection: connection)
     }
 
     /// Initializes a new `KeyknoxClient` instance
-    @objc convenience public init() {
+    @objc public convenience init() {
         self.init(serviceUrl: KeyknoxClient.defaultURL)
     }
 
     /// Initializes a new `KeyknoxClient` instance
     ///
     /// - Parameter serviceUrl: URL of service client will use
-    @objc convenience public init(serviceUrl: URL) {
-        self.init(serviceUrl: serviceUrl, connection: HttpConnection())
+    @objc public convenience init(serviceUrl: URL) {
+        let version = VersionUtils.getVersion(bundleIdentitifer: "com.virgilsecurity.VirgilSDKKeyknox")
+
+        let connection = HttpConnection(adapters: [VirgilAgentAdapter(product: "keyknox", version: version)])
+
+        self.init(serviceUrl: serviceUrl, connection: connection)
     }
 
     /// Handles error from Keyknox Service

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015-2018 Virgil Security Inc.
+// Copyright (C) 2015-2019 Virgil Security Inc.
 //
 // All rights reserved.
 //
@@ -80,9 +80,9 @@ internal final class KeychainUtils {
         ]
 
         if let meta = cloudEntry.meta {
-            try additionalDict.merge(meta, uniquingKeysWith: { _, _ in
+            try additionalDict.merge(meta) { _, _ in
                 throw SyncKeyStorageError.invalidKeysInEntryMeta
-            })
+            }
         }
 
         return additionalDict
