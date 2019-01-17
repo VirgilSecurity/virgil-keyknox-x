@@ -51,7 +51,7 @@ import VirgilCryptoAPI
 
     private let queue = DispatchQueue(label: "SyncKeyStorageQueue")
     
-    /// Creates local key storage isntance, to read keys withoud connecting to the Cloud
+    /// Creates local key storage instance, to read keys withoud connecting to the Cloud
     ///
     /// - Parameters:
     ///   - identity: User's identity to separate keys in Keychain
