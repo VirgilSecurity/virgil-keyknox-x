@@ -1,7 +1,7 @@
 # Virgil KeyKnox Objective-C/Swift SDK
 
 [![Build Status](https://api.travis-ci.com/VirgilSecurity/virgil-keyknox-x.svg?branch=master)](https://travis-ci.com/VirgilSecurity/virgil-keyknox-x)
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/VirgilSDKKeyknox.svg)](https://img.shields.io/cocoapods/v/VirgilSDKKeyknox.svg)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/VirgilSDKKeyknox.svg)](https://cocoapods.org/pods/VirgilSDKKeyknox)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Platform](https://img.shields.io/cocoapods/p/VirgilSDKKeyknox.svg?style=flat)](http://cocoadocs.org/docsets/VirgilSDKKeyknox)
 [![GitHub license](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://github.com/VirgilSecurity/virgil/blob/master/LICENSE)
