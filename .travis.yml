@@ -88,10 +88,10 @@ before_deploy:
   - carthage archive
 
 after_success:
-# Generate and publish docs
-- if [ -n "${TRAVIS_TAG}" ] && [ $PUBLISH_DOCS == "YES" ]; then
-    ./CI/publish-docs.sh;
-  fi
+  # Generate and publish docs
+  - if [ -n "${TRAVIS_TAG}" ] && [ $PUBLISH_DOCS == "YES" ]; then
+      ./CI/publish-docs.sh;
+    fi
 
 deploy:
   # Upload framework to gh-releases for carthage
@@ -104,7 +104,7 @@ deploy:
       tags: true
       condition: $PUBLISH_CARTHAGE = "YES"
 
-      # Upload docs to gh-pages
+  # Upload docs to gh-pages
   - provider: pages
     skip_cleanup: true
     github-token: $GITHUB_TOKEN
