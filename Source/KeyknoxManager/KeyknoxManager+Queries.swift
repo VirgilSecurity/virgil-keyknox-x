@@ -138,11 +138,11 @@ extension KeyknoxManager {
                     let tokenContext = TokenContext(service: "keyknox", operation: "delete", forceReload: force)
                     let getTokenOperation = OperationUtils.makeGetTokenOperation(
                         tokenContext: tokenContext, accessTokenProvider: self.accessTokenProvider)
-                    let pullValueOperation = self.makeResetValueOperation()
+                    let resetValueOperation = self.makeResetValueOperation()
 
-                    pullValueOperation.addDependency(getTokenOperation)
+                    resetValueOperation.addDependency(getTokenOperation)
 
-                    let operations = [getTokenOperation, pullValueOperation]
+                    let operations = [getTokenOperation, resetValueOperation]
                     let completionOperation = OperationUtils.makeCompletionOperation(completion: completion)
                     operations.forEach {
                         completionOperation.addDependency($0)
