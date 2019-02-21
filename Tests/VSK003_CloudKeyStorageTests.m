@@ -614,7 +614,23 @@ static const NSTimeInterval timeout = 20.;
             XCTAssert([self.keyStorage retrieveAllEntriesAndReturnError:&err].count == 0);
             XCTAssert(err == nil);
             
-            [ex fulfill];
+            NSString *name = [[NSUUID alloc] init].UUIDString;
+            NSData *data = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+            
+            [self.keyStorage storeEntryWithName:name data:data meta:nil completion:^(NSError *error) {
+                XCTAssert(error == nil);
+                
+                NSError *err;
+                
+                VSKCloudEntry *entry = [self.keyStorage retrieveEntryWithName:name error:&err];
+                
+                XCTAssert(err == nil);
+                XCTAssert(entry != nil);
+                XCTAssert([entry.name isEqualToString:name]);
+                XCTAssert([entry.data isEqualToData:data]);
+                
+                [ex fulfill];
+            }];
         }];
     }];
     
