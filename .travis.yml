@@ -48,7 +48,7 @@ script:
   - SCHEME="VirgilSDKKeyknox ${PREFIX}"
 
   
-- |
+  - |
     if [ $BUILD == "2" ]; then
       # Build Framework
       xcodebuild -verbose -project "$PROJECT" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug clean build-for-testing | xcpretty;
