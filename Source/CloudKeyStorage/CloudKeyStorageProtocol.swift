@@ -36,7 +36,7 @@
 
 import Foundation
 import VirgilSDK
-import VirgilCryptoAPI
+import VirgilCrypto
 
 /// Cloud KeyStorage protocol
 public protocol CloudKeyStorageProtocol {
@@ -112,5 +112,5 @@ public protocol CloudKeyStorageProtocol {
     ///   - newPublicKeys: New public keys
     ///   - newPrivateKey: New private key
     /// - Returns: GenericOperation<Void>
-    func updateRecipients(newPublicKeys: [PublicKey]?, newPrivateKey: PrivateKey?) -> GenericOperation<Void>
+    func updateRecipients(newPublicKeys: [VirgilPublicKey]?, newPrivateKey: VirgilPrivateKey?) -> GenericOperation<Void>
 }

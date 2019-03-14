@@ -36,7 +36,7 @@
 
 import Foundation
 import VirgilSDK
-import VirgilCryptoAPI
+import VirgilCrypto
 
 /// Class responsible for managing Keyknox value with E2EE
 @objc(VSKKeyknoxManager) open class KeyknoxManager: NSObject {
@@ -48,10 +48,10 @@ import VirgilCryptoAPI
     @objc public let keyknoxClient: KeyknoxClientProtocol
 
     /// Public keys used for encryption and signature verification
-    @objc public internal(set) var publicKeys: [PublicKey]
+    @objc public internal(set) var publicKeys: [VirgilPublicKey]
 
     /// Private key used for decryption and signing
-    @objc public internal(set) var privateKey: PrivateKey
+    @objc public internal(set) var privateKey: VirgilPrivateKey
 
     /// KeyknoxCryptoProtocol implementation
     public let crypto: KeyknoxCryptoProtocol
@@ -73,8 +73,8 @@ import VirgilCryptoAPI
     /// - Throws: KeyknoxManagerError.noPublicKeys if public keys array is empty
     public init(accessTokenProvider: AccessTokenProvider,
                 keyknoxClient: KeyknoxClientProtocol = KeyknoxClient(),
-                publicKeys: [PublicKey], privateKey: PrivateKey,
-                crypto: KeyknoxCryptoProtocol = KeyknoxCrypto(),
+                publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
+                crypto: KeyknoxCryptoProtocol? = nil,
                 retryOnUnauthorized: Bool = false) throws {
         guard !publicKeys.isEmpty else {
             throw KeyknoxManagerError.noPublicKeys
@@ -84,7 +84,12 @@ import VirgilCryptoAPI
         self.keyknoxClient = keyknoxClient
         self.publicKeys = publicKeys
         self.privateKey = privateKey
-        self.crypto = crypto
+        if let crypto = crypto {
+            self.crypto = crypto
+        }
+        else {
+            self.crypto = KeyknoxCrypto(crypto: try VirgilCrypto())
+        }
         self.retryOnUnauthorized = retryOnUnauthorized
 
         super.init()
@@ -101,13 +106,13 @@ import VirgilCryptoAPI
     /// - Throws: KeyknoxManagerError.noPublicKeys
     @objc public convenience init(accessTokenProvider: AccessTokenProvider,
                                   keyknoxClient: KeyknoxClientProtocol = KeyknoxClient(),
-                                  publicKeys: [PublicKey], privateKey: PrivateKey,
+                                  publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey,
                                   retryOnUnauthorized: Bool = false) throws {
         try self.init(accessTokenProvider: accessTokenProvider,
                       keyknoxClient: keyknoxClient,
                       publicKeys: publicKeys,
                       privateKey: privateKey,
-                      crypto: KeyknoxCrypto(),
+                      crypto: KeyknoxCrypto(crypto: try VirgilCrypto()),
                       retryOnUnauthorized: retryOnUnauthorized)
     }
 }

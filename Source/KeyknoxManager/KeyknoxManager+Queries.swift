@@ -36,7 +36,7 @@
 
 import Foundation
 import VirgilSDK
-import VirgilCryptoAPI
+import VirgilCrypto
 
 // MARK: - Queries
 extension KeyknoxManager {
@@ -169,8 +169,8 @@ extension KeyknoxManager {
     ///   - newPublicKeys: New public keys that will be used for encryption and signature verification
     ///   - newPrivateKey: New private key that will be used for decryption and signature generation
     /// - Returns: CallbackOperation<DecryptedKeyknoxValue>
-    open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
-                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
+    open func updateRecipients(newPublicKeys: [VirgilPublicKey]? = nil,
+                               newPrivateKey: VirgilPrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             CallbackOperation { _, completion in
                 self.queue.async {
@@ -271,8 +271,8 @@ extension KeyknoxManager {
     ///   - newPrivateKey: New private key that will be used for decryption and signature generation
     /// - Returns: CallbackOperation<DecryptedKeyknoxValue>
     open func updateRecipients(value: Data, previousHash: Data,
-                               newPublicKeys: [PublicKey]? = nil,
-                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
+                               newPublicKeys: [VirgilPublicKey]? = nil,
+                               newPrivateKey: VirgilPrivateKey? = nil) -> GenericOperation<DecryptedKeyknoxValue> {
         let makeAggregateOperation: (Bool) -> GenericOperation<DecryptedKeyknoxValue> = { force in
             CallbackOperation { _, completion in
                 self.queue.async {

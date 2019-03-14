@@ -39,7 +39,6 @@
 @import VirgilSDK;
 @import VirgilSDKKeyknox;
 @import VirgilCrypto;
-@import VirgilCryptoApiImpl;
 
 #if TARGET_OS_IOS
     #import "VirgilSDKKeyknox_AppTests_iOS-Swift.h"
@@ -64,10 +63,10 @@
     [super setUp];
     
     self.config = [TestConfig readFromBundle];
-    self.crypto = [[VSMVirgilCrypto alloc] initWithDefaultKeyType:VSCKeyTypeFAST_EC_ED25519 useSHA256Fingerprints:NO];
+    self.crypto = [[VSMVirgilCrypto alloc] initWithDefaultKeyType:VSMKeyPairTypeEd25519 useSHA256Fingerprints:NO error:nil];
     self.keyknoxClient = [[VSKKeyknoxClient alloc] initWithServiceUrl:[[NSURL alloc] initWithString:self.config.ServiceURL]];
     
-    VSMVirgilPrivateKey *apiKey = [self.crypto importPrivateKeyFrom:[[NSData alloc] initWithBase64EncodedString:self.config.ApiPrivateKey options:0] password:nil error:nil];
+    VSMVirgilPrivateKey *apiKey = [self.crypto importPrivateKeyFrom:[[NSData alloc] initWithBase64EncodedString:self.config.ApiPrivateKey options:0] error:nil].privateKey;
     VSSJwtGenerator *generator = [[VSSJwtGenerator alloc] initWithApiKey:apiKey apiPublicKeyIdentifier:self.config.ApiPublicKeyId accessTokenSigner:[[VSMVirgilAccessTokenSigner alloc] initWithVirgilCrypto:self.crypto] appId:self.config.AppId ttl:600];
     
     NSString *identity = [[NSUUID alloc] init].UUIDString;
@@ -81,23 +80,8 @@
 }
 
 - (void)test01_KTC1_pushValue {
-    NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-    NSData *privateKeyData = [self.crypto exportPrivateKey:keyPair.privateKey];
-    NSData *publicKeyData = [self.crypto exportPublicKey:keyPair.publicKey];
-    
-    VSCSigner *signer = [[VSCSigner alloc] initWithHash:kVSCHashNameSHA512];
-    NSData *signature = [signer signData:someData privateKey:privateKeyData keyPassword:nil error:nil];
-    
-    VSCCipher *cipher = [[VSCCipher alloc] init];
-    
-    [cipher addKeyRecipient:keyPair.publicKey.identifier publicKey:publicKeyData error:nil];
-    [cipher setData:signature forKey:@"VIRGIL-DATA-SIGNATURE" error:nil];
-    [cipher setData:keyPair.privateKey.identifier forKey:@"VIRGIL-DATA-SIGNER-ID" error:nil];
-    
-    NSData *encryptedData = [cipher encryptData:someData embedContentInfo:NO error:nil];
-    NSData *meta = [cipher contentInfoWithError:nil];
+    NSData *encryptedData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *meta =  [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
     NSError *error;
     VSKEncryptedKeyknoxValue *response = [self.keyknoxClient pushValueWithMeta:meta value:encryptedData previousHash:nil token:self.tokenStr error:&error];
@@ -118,39 +102,15 @@
 }
 
 - (void)test02_KTC2_updateData {
-    NSData *someData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *someData2 = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    VSMVirgilKeyPair *keyPair = [self.crypto generateKeyPairOfType:VSCKeyTypeFAST_EC_ED25519 error:nil];
-    NSData *privateKeyData = [self.crypto exportPrivateKey:keyPair.privateKey];
-    NSData *publicKeyData = [self.crypto exportPublicKey:keyPair.publicKey];
-    
-    VSCSigner *signer = [[VSCSigner alloc] initWithHash:kVSCHashNameSHA512];
-    NSData *signature = [signer signData:someData privateKey:privateKeyData keyPassword:nil error:nil];
-    
-    VSCCipher *cipher = [[VSCCipher alloc] init];
-    
-    [cipher addKeyRecipient:keyPair.publicKey.identifier publicKey:publicKeyData error:nil];
-    [cipher setData:signature forKey:@"VIRGIL-DATA-SIGNATURE" error:nil];
-    [cipher setData:keyPair.privateKey.identifier forKey:@"VIRGIL-DATA-SIGNER-ID" error:nil];
-    
-    NSData *encryptedData = [cipher encryptData:someData embedContentInfo:NO error:nil];
-    NSData *meta = [cipher contentInfoWithError:nil];
+    NSData *encryptedData = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *meta =  [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
     NSError *error;
     VSKEncryptedKeyknoxValue *response = [self.keyknoxClient pushValueWithMeta:meta value:encryptedData previousHash:nil token:self.tokenStr error:&error];
     XCTAssert(response != nil && error == nil);
     
-    NSData *signature2 = [signer signData:someData2 privateKey:privateKeyData keyPassword:nil error:nil];
-    
-    VSCCipher *cipher2 = [[VSCCipher alloc] init];
-    
-    [cipher2 addKeyRecipient:keyPair.publicKey.identifier publicKey:publicKeyData error:nil];
-    [cipher2 setData:signature2 forKey:@"VIRGIL-DATA-SIGNATURE" error:nil];
-    [cipher2 setData:keyPair.privateKey.identifier forKey:@"VIRGIL-DATA-SIGNER-ID" error:nil];
-    
-    NSData *encryptedData2 = [cipher2 encryptData:someData2 embedContentInfo:NO error:nil];
-    NSData *meta2 = [cipher2 contentInfoWithError:nil];
+    NSData *encryptedData2 = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *meta2 = [[[NSUUID alloc] init].UUIDString dataUsingEncoding:NSUTF8StringEncoding];
     
     VSKEncryptedKeyknoxValue *response2 = [self.keyknoxClient pushValueWithMeta:meta2 value:encryptedData2 previousHash:response.keyknoxHash token:self.tokenStr error:&error];
     XCTAssert(response2 != nil && error == nil);

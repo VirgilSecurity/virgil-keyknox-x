@@ -38,7 +38,7 @@ import Foundation
 @testable import VirgilSDKKeyknox
 import XCTest
 import VirgilSDK
-import VirgilCryptoApiImpl
+import VirgilCrypto
 
 class VSK004_SyncKeyStorageTests: XCTestCase {
     private var syncKeyStorage: SyncKeyStorage!
@@ -51,11 +51,11 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         super.setUp()
         
         let config = TestConfig.readFromBundle()
-        let crypto = VirgilCrypto()
+        let crypto = try! VirgilCrypto()
         self.crypto = crypto
-        let apiKey = try! crypto.importPrivateKey(from: Data(base64Encoded: config.ApiPrivateKey)!)
+        let apiKey = try! crypto.importPrivateKey(from: Data(base64Encoded: config.ApiPrivateKey)!).privateKey
         
-        let generator = JwtGenerator(apiKey: apiKey, apiPublicKeyIdentifier: config.ApiPublicKeyId, accessTokenSigner: VirgilAccessTokenSigner(), appId: config.AppId, ttl: 100)
+        let generator = JwtGenerator(apiKey: apiKey, apiPublicKeyIdentifier: config.ApiPublicKeyId, accessTokenSigner: VirgilAccessTokenSigner(virgilCrypto: crypto), appId: config.AppId, ttl: 100)
         let identity = NSUUID().uuidString
         let provider = GeneratorJwtProvider(jwtGenerator: generator, defaultIdentity: identity)
         let client = KeyknoxClient(serviceUrl: URL(string: config.ServiceURL)!)
@@ -252,9 +252,9 @@ class VSK004_SyncKeyStorageTests: XCTestCase {
         _ = try! self.syncKeyStorage.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).startSync().getResult()
 
         let keyknoxManager = (self.syncKeyStorage.cloudKeyStorage as! CloudKeyStorage).keyknoxManager
-        let pubIds = (keyknoxManager.publicKeys as! [VirgilPublicKey]).map { $0.identifier }
+        let pubIds = (keyknoxManager.publicKeys).map { $0.identifier }
         XCTAssert(pubIds == newPublicKeys.map { $0.identifier })
-        XCTAssert((keyknoxManager.privateKey as! VirgilPrivateKey).identifier == newPrivateKey.identifier)
+        XCTAssert((keyknoxManager.privateKey).identifier == newPrivateKey.identifier)
 
         let keychainEntry2 = try! self.syncKeyStorage.retrieveEntry(withName: name)
         XCTAssert(keychainEntry2.name == name)

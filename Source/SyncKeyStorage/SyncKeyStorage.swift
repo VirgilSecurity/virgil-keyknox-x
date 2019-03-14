@@ -36,7 +36,7 @@
 
 import Foundation
 import VirgilSDK
-import VirgilCryptoAPI
+import VirgilCrypto
 
 /// Class responsible for synchronization between Keychain and Keyknox Cloud
 @objc(VSKSyncKeyStorage) open class SyncKeyStorage: NSObject {
@@ -99,7 +99,7 @@ import VirgilCryptoAPI
     ///   - privateKey: Private key used for decryption and signature generation
     /// - Throws: Rethrows from CloudKeyStorage and KeychainStorageParams
     @objc public convenience init(identity: String, accessTokenProvider: AccessTokenProvider,
-                                  publicKeys: [PublicKey], privateKey: PrivateKey) throws {
+                                  publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey) throws {
         let cloudKeyStorage = try CloudKeyStorage(accessTokenProvider: accessTokenProvider,
                                                   publicKeys: publicKeys,
                                                   privateKey: privateKey)
@@ -337,8 +337,8 @@ extension SyncKeyStorage {
     ///   - newPublicKeys: New public keys
     ///   - newPrivateKey: New private key
     /// - Returns: GenericOperation<Void>
-    open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
-                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<Void> {
+    open func updateRecipients(newPublicKeys: [VirgilPublicKey]? = nil,
+                               newPrivateKey: VirgilPrivateKey? = nil) -> GenericOperation<Void> {
         return self.cloudKeyStorage.updateRecipients(newPublicKeys: newPublicKeys,
                                                      newPrivateKey: newPrivateKey)
     }

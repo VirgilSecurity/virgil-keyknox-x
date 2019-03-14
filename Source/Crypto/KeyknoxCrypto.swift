@@ -35,9 +35,8 @@
 //
 
 import Foundation
-import VirgilCryptoAPI
-import VirgilCryptoApiImpl
 import VirgilCrypto
+import VirgilCryptoFoundation
 
 /// Declares error types and codes for KeyknoxCrypto
 ///
@@ -47,8 +46,6 @@ import VirgilCrypto
 /// - emptyPublicKeysList: Public keys list is empty
 /// - emptyData: Trying to encrypt empty data
 @objc(VSKKeyknoxCryptoError) public enum KeyknoxCryptoError: Int, Error {
-    case signerNotFound = 1
-    case signatureVerificationFailed = 2
     case decryptionFailed = 3
     case emptyPublicKeysList = 4
     case emptyData = 5
@@ -62,7 +59,7 @@ open class KeyknoxCrypto {
     /// Init
     ///
     /// - Parameter crypto: VirgilCrypto instance
-    public init(crypto: VirgilCrypto = VirgilCrypto()) {
+    public init(crypto: VirgilCrypto) {
         self.crypto = crypto
     }
 }
@@ -76,13 +73,15 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
     ///   - privateKey: private key to decrypt data. Should be of type VirgilPrivateKey
     ///   - publicKeys: allowed public keys to verify signature. Should be of type VirgilPublicKey
     /// - Returns: DecryptedKeyknoxValue
-    /// - Throws: VirgilCryptoError.passedKeyIsNotVirgil if passed keys have wrong type
+    /// - Throws: KeyknoxCryptoError.emptyPublicKeysList is public keys list is empty
     ///           KeyknoxManagerError.decryptionFailed if decryption failed
-    ///           KeyknoxManagerError.signerNotFound if data signer is not present in PublicKeys array
-    ///           KeyknoxManagerError.signatureVerificationFailed signature is not verified
     ///           Rethrows from Cipher
-    open func decrypt(encryptedKeyknoxValue: EncryptedKeyknoxValue, privateKey: PrivateKey,
-                      publicKeys: [PublicKey]) throws -> DecryptedKeyknoxValue {
+    open func decrypt(encryptedKeyknoxValue: EncryptedKeyknoxValue, privateKey: VirgilPrivateKey,
+                      publicKeys: [VirgilPublicKey]) throws -> DecryptedKeyknoxValue {
+        guard !publicKeys.isEmpty else {
+            throw KeyknoxCryptoError.emptyPublicKeysList
+        }
+
         if encryptedKeyknoxValue.value.isEmpty && encryptedKeyknoxValue.meta.isEmpty {
             return DecryptedKeyknoxValue(meta: Data(),
                                          value: Data(),
@@ -90,46 +89,17 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
                                          keyknoxHash: encryptedKeyknoxValue.keyknoxHash)
         }
 
-        guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
-            let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
-                throw VirgilCryptoError.passedKeyIsNotVirgil
-        }
-
-        let cipher = Cipher()
-        try cipher.setContentInfo(encryptedKeyknoxValue.meta)
-        let privateKeyData = self.crypto.exportPrivateKey(virgilPrivateKey)
         let decryptedData: Data
         do {
-            decryptedData = try cipher.decryptData(encryptedKeyknoxValue.value,
-                                                   recipientId: virgilPrivateKey.identifier,
-                                                   privateKey: privateKeyData,
-                                                   keyPassword: nil)
+            decryptedData = try self.crypto.decryptThenVerify(encryptedKeyknoxValue.meta + encryptedKeyknoxValue.value,
+                                                              with: privateKey,
+                                                              usingOneOf: publicKeys)
         }
         catch {
             throw KeyknoxCryptoError.decryptionFailed
         }
 
-        let meta = try cipher.contentInfo()
-
-        let signedId = try cipher.data(forKey: VirgilCrypto.CustomParamKeySignerId)
-        let signature = try cipher.data(forKey: VirgilCrypto.CustomParamKeySignature)
-
-        let signer = Signer(hash: kHashNameSHA512)
-
-        guard let publicKey = virgilPublicKeys.first(where: { $0.identifier == signedId }) else {
-            throw KeyknoxCryptoError.signerNotFound
-        }
-
-        let publicKeyData = self.crypto.exportPublicKey(publicKey)
-
-        do {
-            try signer.verifySignature(signature, data: decryptedData, publicKey: publicKeyData)
-        }
-        catch {
-            throw KeyknoxCryptoError.signatureVerificationFailed
-        }
-
-        return DecryptedKeyknoxValue(meta: meta,
+        return DecryptedKeyknoxValue(meta: encryptedKeyknoxValue.meta,
                                      value: decryptedData,
                                      version: encryptedKeyknoxValue.version,
                                      keyknoxHash: encryptedKeyknoxValue.keyknoxHash)
@@ -142,36 +112,40 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
     ///   - privateKey: Private key to sign data. Should be of type VirgilPrivateKey
     ///   - publicKeys: Public keys to encrypt data. Should be of type VirgilPublicKey
     /// - Returns: Meta information and encrypted blob
-    /// - Throws: VirgilCryptoError.passedKeyIsNotVirgil if passed keys have wrong type
-    ///           KeyknoxCryptoError.emptyPublicKeysList is public keys list is empty
+    /// - Throws: KeyknoxCryptoError.emptyPublicKeysList is public keys list is empty
     ///           KeyknoxCryptoError.emptyData if data if empty
     ///           Rethrows from Cipher, Signer
-    open func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data) {
-        guard let virgilPrivateKey = privateKey as? VirgilPrivateKey,
-            let virgilPublicKeys = publicKeys as? [VirgilPublicKey] else {
-                throw VirgilCryptoError.passedKeyIsNotVirgil
-        }
-
-        guard !virgilPublicKeys.isEmpty else {
+    open func encrypt(data: Data, privateKey: VirgilPrivateKey, publicKeys: [VirgilPublicKey]) throws -> (Data, Data) {
+        guard !publicKeys.isEmpty else {
             throw KeyknoxCryptoError.emptyPublicKeysList
         }
 
         guard !data.isEmpty else {
             throw KeyknoxCryptoError.emptyData
         }
-
-        let signer = Signer(hash: kHashNameSHA512)
-        let privateKeyData = self.crypto.exportPrivateKey(virgilPrivateKey)
-        let signature = try signer.sign(data, privateKey: privateKeyData, keyPassword: nil)
-
-        let cipher = Cipher()
-        try cipher.setData(virgilPrivateKey.identifier, forKey: VirgilCrypto.CustomParamKeySignerId)
-        try cipher.setData(signature, forKey: VirgilCrypto.CustomParamKeySignature)
-        try virgilPublicKeys
-            .map { ($0.identifier, self.crypto.exportPublicKey($0)) }
-            .forEach { try cipher.addKeyRecipient($0, publicKey: $1) }
-        let encryptedData = try cipher.encryptData(data, embedContentInfo: false)
-        let meta = try cipher.contentInfo()
+        
+        let signature = try self.crypto.generateSignature(of: data, using: privateKey)
+        
+        let aesGcm = Aes256Gcm()
+        let cipher = RecipientCipher()
+        
+        cipher.setEncryptionCipher(encryptionCipher: aesGcm)
+        cipher.setRandom(random: self.crypto.rng)
+        
+        publicKeys.forEach {
+            cipher.addKeyRecipient(recipientId: $0.identifier, publicKey: $0.publicKey)
+        }
+        
+        cipher.customParams().addData(key: VirgilCrypto.CustomParamKeySignature, value: signature)
+        cipher.customParams().addData(key: VirgilCrypto.CustomParamKeySignerId, value: privateKey.identifier)
+        
+        try cipher.startEncryption()
+        
+        let meta = cipher.packMessageInfo()
+        
+        var encryptedData = try cipher.processEncryption(data: data)
+        
+        encryptedData += try cipher.finishEncryption()
 
         return (meta, encryptedData)
     }

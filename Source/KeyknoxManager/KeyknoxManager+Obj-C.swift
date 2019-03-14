@@ -35,7 +35,7 @@
 //
 
 import Foundation
-import VirgilCryptoAPI
+import VirgilCrypto
 
 // MARK: - Obj-C extension
 extension KeyknoxManager {
@@ -71,8 +71,8 @@ extension KeyknoxManager {
     ///   - newPublicKeys: New public keys that will be used for encryption and signature verification
     ///   - newPrivateKey: New private key that will be used for decryption and signature generation
     ///   - completion: Completion handler
-    @objc open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
-                                     newPrivateKey: PrivateKey? = nil,
+    @objc open func updateRecipients(newPublicKeys: [VirgilPublicKey]? = nil,
+                                     newPrivateKey: VirgilPrivateKey? = nil,
                                      completion: @escaping (DecryptedKeyknoxValue?, Error?) -> Void) {
         self.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start(completion: completion)
     }
@@ -87,8 +87,8 @@ extension KeyknoxManager {
     ///   - newPrivateKey: New private key that will be used for decryption and signature generation
     ///   - completion: Completion handler
     @objc open func updateRecipients(value: Data, previousHash: Data,
-                                     newPublicKeys: [PublicKey]? = nil,
-                                     newPrivateKey: PrivateKey? = nil,
+                                     newPublicKeys: [VirgilPublicKey]? = nil,
+                                     newPrivateKey: VirgilPrivateKey? = nil,
                                      completion: @escaping (DecryptedKeyknoxValue?, Error?) -> Void) {
         self.updateRecipients(value: value,
                               previousHash: previousHash,

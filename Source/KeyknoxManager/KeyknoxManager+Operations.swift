@@ -36,7 +36,7 @@
 
 import Foundation
 import VirgilSDK
-import VirgilCryptoAPI
+import VirgilCrypto
 
 extension KeyknoxManager {
     internal func makePullValueOperation() -> GenericOperation<EncryptedKeyknoxValue> {
@@ -137,8 +137,8 @@ extension KeyknoxManager {
         }
     }
 
-    internal func makeEncryptOperation(newPublicKeys: [PublicKey]? = nil,
-                                       newPrivateKey: PrivateKey? = nil) -> GenericOperation<(Data, Data)> {
+    internal func makeEncryptOperation(newPublicKeys: [VirgilPublicKey]? = nil,
+                                       newPrivateKey: VirgilPrivateKey? = nil) -> GenericOperation<(Data, Data)> {
         return CallbackOperation { operation, completion in
             do {
                 let data: Data = try operation.findDependencyResult()
