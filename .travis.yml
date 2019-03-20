@@ -1,36 +1,28 @@
-language: swift
+language: objective-c
 osx_image: xcode10.1
 
 env:
   global:
     - LC_CTYPE=en_US.UTF-8
     - PROJECT=VirgilSDKKeyknox.xcodeproj
-    - IOS_FRAMEWORK_SCHEME="VirgilSDKKeyknox iOS"
-    - MACOS_FRAMEWORK_SCHEME="VirgilSDKKeyknox macOS"
-    - TVOS_FRAMEWORK_SCHEME="VirgilSDKKeyknox tvOS"
-    - WATCHOS_FRAMEWORK_SCHEME="VirgilSDKKeyknox watchOS"
-    - IOS_TEST_SCHEME="KeyknoxTestApp iOS"
-    - TVOS_TEST_SCHEME="KeyknoxTestApp tvOS"
     - IOS_SDK=iphonesimulator12.1
     - MACOS_SDK=macosx10.14
     - TVOS_SDK=appletvsimulator12.1
     - WATCHOS_SDK=watchsimulator5.1
     - FRAMEWORK_NAME=VirgilSDKKeyknox
+    - REPO=VirgilSecurity/virgil-keyknox-x
+    - REPO_PATH=https://github.com/VirgilSecurity/virgil-keyknox-x.git
 
   matrix:
-    - DESTINATION="OS=12.1,name=iPhone SE"                     ENABLE_BUILD="YES"    SCHEME="$IOS_FRAMEWORK_SCHEME"        SDK="$IOS_SDK"        TWO_STEP_BUILD_ENABLED="YES"    RUN_TESTS="YES"    ADDITIONAL_TESTS_SCHEME="$IOS_TEST_SCHEME"    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="NO"
-    - DESTINATION="arch=x86_64"                                ENABLE_BUILD="YES"    SCHEME="$MACOS_FRAMEWORK_SCHEME"      SDK="$MACOS_SDK"      TWO_STEP_BUILD_ENABLED="YES"    RUN_TESTS="YES"    ADDITIONAL_TESTS_SCHEME=""                    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="NO"
-    - DESTINATION="OS=12.1,name=Apple TV 4K"                   ENABLE_BUILD="YES"    SCHEME="$TVOS_FRAMEWORK_SCHEME"       SDK="$TVOS_SDK"       TWO_STEP_BUILD_ENABLED="YES"    RUN_TESTS="YES"    ADDITIONAL_TESTS_SCHEME="$TVOS_TEST_SCHEME"   PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="NO"
-    - DESTINATION="OS=5.1,name=Apple Watch Series 4 - 44mm"    ENABLE_BUILD="YES"    SCHEME="$WATCHOS_FRAMEWORK_SCHEME"    SDK="$WATCHOS_SDK"    TWO_STEP_BUILD_ENABLED="NO"     RUN_TESTS="NO"     ADDITIONAL_TESTS_SCHEME=""                    PUBLISH_DOCS="NO"     PUBLISH_CARTHAGE="NO"     POD_LIB_LINT="NO"    SWIFT_LINT="NO"
-    - DESTINATION=""                                           ENABLE_BUILD="NO"     SCHEME=""                             SDK=""                TWO_STEP_BUILD_ENABLED=""       RUN_TESTS="YES"    ADDITIONAL_TESTS_SCHEME=""                    PUBLISH_DOCS="YES"    PUBLISH_CARTHAGE="YES"    POD_LIB_LINT="YES"   SWIFT_LINT="YES"
+    - DESTINATION=""                                         PREFIX=""         SDK=""              BUILD="0"  PUBLISH_CARTHAGE="YES"  CARTHAGE_PLATFORM_NAME="Mac"      PUBLISH_POD="NO"  PUBLISH_DOCS="YES"  SWIFT_LINT="YES"
+    - DESTINATION="OS=12.1,name=iPhone SE"                   PREFIX="iOS"      SDK="$IOS_SDK"      BUILD="2"  PUBLISH_CARTHAGE="NO"   CARTHAGE_PLATFORM_NAME="iOS"      PUBLISH_POD="NO"  PUBLISH_DOCS="NO"   SWIFT_LINT="NO"
+    - DESTINATION="arch=x86_64"                              PREFIX="macOS"    SDK="$MACOS_SDK"    BUILD="2"  PUBLISH_CARTHAGE="NO"   CARTHAGE_PLATFORM_NAME="Mac"      PUBLISH_POD="NO"  PUBLISH_DOCS="NO"   SWIFT_LINT="NO"
+    - DESTINATION="OS=12.1,name=Apple TV 4K"                 PREFIX="tvOS"     SDK="$TVOS_SDK"     BUILD="2"  PUBLISH_CARTHAGE="NO"   CARTHAGE_PLATFORM_NAME="tvOS"     PUBLISH_POD="NO"  PUBLISH_DOCS="NO"   SWIFT_LINT="NO"
+    - DESTINATION="OS=5.1,name=Apple Watch Series 4 - 44mm"  PREFIX="watchOS"  SDK="$WATCHOS_SDK"  BUILD="1"  PUBLISH_CARTHAGE="NO"   CARTHAGE_PLATFORM_NAME="watchOS"  PUBLISH_POD="NO"  PUBLISH_DOCS="NO"   SWIFT_LINT="NO"
 
 before_install:
   - set -e
   - set -o pipefail
-  - brew update
-  - brew outdated carthage || brew upgrade carthage
-  - xcodebuild -version
-  - xcodebuild -showsdks
 
 script:
   - openssl aes-256-cbc -K $encrypted_25e20d2dd9dd_key -iv $encrypted_25e20d2dd9dd_iv -in config.tar.enc -out config.tar -d
@@ -45,71 +37,63 @@ script:
 
 
   - carthage version
-  - carthage bootstrap
+  - carthage bootstrap --platform ${CARTHAGE_PLATFORM_NAME}
 
   - |
     if [ $SWIFT_LINT == "YES" ]; then
       brew outdated swiftlint || brew upgrade swiftlint
       swiftlint
     fi
+
+  - SCHEME="VirgilSDKKeyknox ${PREFIX}"
+
   
   - |
-    if [ $ENABLE_BUILD == "YES" ]; then
-      if [ $TWO_STEP_BUILD_ENABLED == "YES" ]; then
-        # Build Framework
-        xcodebuild -verbose -project "$PROJECT" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release clean build | xcpretty;
-        # Build Framework in Release and Run Tests if specified
-        if [ $RUN_TESTS == "YES" ]; then
-          if [ -n "$ADDITIONAL_TESTS_SCHEME" ]; then
-            xcodebuild -verbose -project "$PROJECT" -scheme "$ADDITIONAL_TESTS_SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug clean test;
-          else
-            xcodebuild -verbose -project "$PROJECT" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug clean test;
-          fi
-        fi
-      else
-        # Build Framework
-        xcodebuild -verbose -project "$PROJECT" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release clean build | xcpretty;
-      fi
+    if [ $BUILD == "2" ]; then
+      # Build Framework
+      xcodebuild -verbose -project "$PROJECT" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug clean build-for-testing | xcpretty;
+      # Run Tests
+      xcodebuild -verbose -project "$PROJECT" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug test-without-building | xcpretty;
+    elif [ $BUILD == "1" ]; then
+      # Build Framework
+      xcodebuild -verbose -project "$PROJECT" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release clean build | xcpretty;
     fi
 
   # Build with carthage
   - if [ $PUBLISH_CARTHAGE == "YES" ]; then
       carthage build --no-skip-current;
+      carthage archive;
     fi
   
-  # Check pod lib
-  - if [ -n "$TRAVIS_TAG" ] && [ $POD_LIB_LINT == "YES" ]; then
-      gem install cocoapods --pre;
-      pod repo update;
-      pod lib lint;
+    # Generate and publish docs
+  - if [[ $PUBLISH_DOCS = "YES" && $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+      ./CI/publish-docs.sh;
     fi
-
-before_deploy:
-  - carthage archive
-
-after_success:
-# Generate and publish docs
-- if [ -n "${TRAVIS_TAG}" ] && [ $PUBLISH_DOCS == "YES" ]; then
-    ./CI/publish-docs.sh;
-  fi
 
 deploy:
   # Upload framework to gh-releases for carthage
   - provider: releases
-    api_key:
-      secure: MtYW/tOeS1BfnOVRfC3GEixTdFdA5DFxbf+1rLtjj1BthS5EifiYEcYSRDAi7mt+XDidEPI8tdIlKLq+UfwUk4gopH7DzlpCzpzo0TPQH3n5p6sm4EyaKyqSrgAnEDudcgaWiwrOE+j0BxbgWwxQbke05XaieyI9U/EmyHfLIIKU89gug98/eHrJ3AWioXvks/tJRPdlIzAZNs7DbKmlOA5uGoPVQrDQZDkaTM+2LlJq6fLXNMDQxbTAsiI9JdpjAkO2P/zrE2TDM+Fs+u5lZ5W3hIA7XGDjwcb3yekHr8rVS2cEcPm9mV61luUjLYmVGnttGJEheJmt3EBRtEUDxzFdb7WPUR3B/PBTFiWbwj4SK80Lflh/OptMUUFEy7f3N9o/gYC3ELuwHJr/O62H1AXQemYXV/Zu9xOXuWJcpmO8AHgJ7Ig3tRVKXaUeTHaHnONiMY79l3BmAPpqMfXaCrLpWW82/+lxZJc6zRAigEKdEsiePPjrZWTtZjMl93nUZBO/nFPEbv9yniHiAPXljoHMsAXUiITXU4huybb9nk3lf7gOyl+AbT/5O7M2PfhdWND6rhDmnUVW87qUiAjUykNAYAJ/Crbjf5lcR/1qscQuP7aPw/HSQpRjGJ5AkPnQKcrT0LsIqbTE14dXbkzAUvfRCIw7Mt7jAN/ibpfL6Cs=
-    file: $FRAMEWORK_NAME.framework.zip
+    api_key: $GITHUB_ACCESS_TOKEN
+    file: "$FRAMEWORK_NAME.framework.zip"
     skip_cleanup: true
     on:
-      repo: VirgilSecurity/virgil-keyknox-x
+      repo: $REPO
       tags: true
       condition: $PUBLISH_CARTHAGE = "YES"
 
-      # Upload docs to gh-pages
+  - provider: script
+    script: bash CI/publish-cocoapods.sh
+    on:
+      repo: $REPO
+      tags: true
+      condition: $PUBLISH_POD == "YES" && $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+
+
+  # Upload docs to gh-pages
   - provider: pages
     skip_cleanup: true
-    github-token: $GITHUB_TOKEN
+    github-token: $GITHUB_ACCESS_TOKEN
     local_dir: "docs"
     on:
+      repo: $REPO
       tags: true
-      condition: $PUBLISH_DOCS = "YES"
+      condition: $PUBLISH_DOCS == "YES" && $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+

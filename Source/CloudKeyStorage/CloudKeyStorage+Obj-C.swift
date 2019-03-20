@@ -35,7 +35,7 @@
 //
 
 import Foundation
-import VirgilCryptoAPI
+import VirgilCrypto
 
 // MARK: - Obj-C extension
 extension CloudKeyStorage {
@@ -136,8 +136,8 @@ extension CloudKeyStorage {
     ///   - newPublicKeys: New public keys
     ///   - newPrivateKey: New private key
     ///   - completion: Completion handler
-    @objc open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
-                                     newPrivateKey: PrivateKey? = nil,
+    @objc open func updateRecipients(newPublicKeys: [VirgilPublicKey]? = nil,
+                                     newPrivateKey: VirgilPrivateKey? = nil,
                                      completion: @escaping (Error?) -> Void) {
         self.updateRecipients(newPublicKeys: newPublicKeys, newPrivateKey: newPrivateKey).start { _, error in
             completion(error)

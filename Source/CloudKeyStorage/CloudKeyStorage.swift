@@ -35,7 +35,7 @@
 //
 
 import Foundation
-import VirgilCryptoAPI
+import VirgilCrypto
 import VirgilSDK
 
 /// Class responsible for storing Keys in Cloud using E2EE
@@ -69,7 +69,7 @@ import VirgilSDK
     ///   - privateKey: Private key used for decryption and signature verification
     /// - Throws: Rethrows from KeyknoxManager
     @objc public convenience init(accessTokenProvider: AccessTokenProvider,
-                                  publicKeys: [PublicKey], privateKey: PrivateKey) throws {
+                                  publicKeys: [VirgilPublicKey], privateKey: VirgilPrivateKey) throws {
         let keyknoxManager = try KeyknoxManager(accessTokenProvider: accessTokenProvider,
                                                 publicKeys: publicKeys,
                                                 privateKey: privateKey)
@@ -323,8 +323,8 @@ extension CloudKeyStorage: CloudKeyStorageProtocol {
     ///   - newPublicKeys: New public keys
     ///   - newPrivateKey: New private key
     /// - Returns: GenericOperation<Void>
-    open func updateRecipients(newPublicKeys: [PublicKey]? = nil,
-                               newPrivateKey: PrivateKey? = nil) -> GenericOperation<Void> {
+    open func updateRecipients(newPublicKeys: [VirgilPublicKey]? = nil,
+                               newPrivateKey: VirgilPrivateKey? = nil) -> GenericOperation<Void> {
         return CallbackOperation { _, completion in
             self.queue.async {
                 do {

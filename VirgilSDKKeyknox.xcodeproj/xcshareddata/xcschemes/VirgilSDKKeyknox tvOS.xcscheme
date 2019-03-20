@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "42D0584420EB754C00FC544E"
+               BuildableName = "VirgilSDKKeyknox AppTests tvOS.xctest"
+               BlueprintName = "VirgilSDKKeyknox AppTests tvOS"
+               ReferencedContainer = "container:VirgilSDKKeyknox.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "42D0576120EAA0CC00FC544E"
+            BuildableName = "VirgilSDKKeyknox.framework"
+            BlueprintName = "VirgilSDKKeyknox tvOS"
+            ReferencedContainer = "container:VirgilSDKKeyknox.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>

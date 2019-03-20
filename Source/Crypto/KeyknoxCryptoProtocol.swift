@@ -35,7 +35,7 @@
 //
 
 import Foundation
-import VirgilCryptoAPI
+import VirgilCrypto
 
 /// Protocol with crypto operations needed for Keyknox
 public protocol KeyknoxCryptoProtocol: class {
@@ -47,8 +47,8 @@ public protocol KeyknoxCryptoProtocol: class {
     ///   - publicKeys: allowed public keys to verify signature
     /// - Returns: DecryptedKeyknoxValue
     /// - Throws: Depends on implementation
-    func decrypt(encryptedKeyknoxValue: EncryptedKeyknoxValue, privateKey: PrivateKey,
-                 publicKeys: [PublicKey]) throws -> DecryptedKeyknoxValue
+    func decrypt(encryptedKeyknoxValue: EncryptedKeyknoxValue, privateKey: VirgilPrivateKey,
+                 publicKeys: [VirgilPublicKey]) throws -> DecryptedKeyknoxValue
 
     /// Encrypts data for Keyknox
     ///
@@ -58,5 +58,5 @@ public protocol KeyknoxCryptoProtocol: class {
     ///   - publicKeys: Public keys to encrypt data
     /// - Returns: Meta information and encrypted blob
     /// - Throws: Depends on implementation
-    func encrypt(data: Data, privateKey: PrivateKey, publicKeys: [PublicKey]) throws -> (Data, Data)
+    func encrypt(data: Data, privateKey: VirgilPrivateKey, publicKeys: [VirgilPublicKey]) throws -> (Data, Data)
 }
