@@ -123,28 +123,28 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         guard !data.isEmpty else {
             throw KeyknoxCryptoError.emptyData
         }
-        
+
         let signature = try self.crypto.generateSignature(of: data, using: privateKey)
-        
+
         let aesGcm = Aes256Gcm()
         let cipher = RecipientCipher()
-        
+
         cipher.setEncryptionCipher(encryptionCipher: aesGcm)
         cipher.setRandom(random: self.crypto.rng)
-        
+
         publicKeys.forEach {
             cipher.addKeyRecipient(recipientId: $0.identifier, publicKey: $0.publicKey)
         }
-        
+
         cipher.customParams().addData(key: VirgilCrypto.CustomParamKeySignature, value: signature)
         cipher.customParams().addData(key: VirgilCrypto.CustomParamKeySignerId, value: privateKey.identifier)
-        
+
         try cipher.startEncryption()
-        
+
         let meta = cipher.packMessageInfo()
-        
+
         var encryptedData = try cipher.processEncryption(data: data)
-        
+
         encryptedData += try cipher.finishEncryption()
 
         return (meta, encryptedData)
