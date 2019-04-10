@@ -29,7 +29,7 @@ Virgil Keyknox SDK is provided as a set of frameworks. These frameworks are dist
 
 Frameworks are available for:
 - iOS 9.0+
-- macOS 10.10+
+- macOS 10.11+
 - tvOS 9.0+
 - watchOS 2.0+
 
@@ -47,7 +47,7 @@ To integrate Virgil Keyknox into your Xcode project using CocoaPods, specify it 
 target '<Your Target Name>' do
   use_frameworks!
 
-  pod 'VirgilSDKKeyknox', '~> 0.4.0'
+  pod 'VirgilSDKKeyknox', '~> 0.4.1'
 end
 ```
 
@@ -71,7 +71,7 @@ $ brew install carthage
 To integrate Virgil Keyknox into your Xcode project using Carthage, create an empty file with name *Cartfile* in your project's root folder and add following lines to your *Cartfile*
 
 ```
-github "VirgilSecurity/virgil-keyknox-x" ~> 0.4.0
+github "VirgilSecurity/virgil-keyknox-x" ~> 0.4.1
 ```
 
 #### Linking against prebuilt binaries
