@@ -133,7 +133,7 @@ extension KeyknoxCrypto: KeyknoxCryptoProtocol {
         cipher.setRandom(random: self.crypto.rng)
 
         publicKeys.forEach {
-            cipher.addKeyRecipient(recipientId: $0.identifier, publicKey: $0.publicKey)
+            cipher.addKeyRecipient(recipientId: $0.identifier, publicKey: $0.key)
         }
 
         cipher.customParams().addData(key: VirgilCrypto.CustomParamKeySignature, value: signature)
