@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SyncKeyStorageError Enumeration Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Enum/SyncKeyStorageError" class="dashAnchor"></a>
+    <a title="SyncKeyStorageError Enumeration Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">VirgilSDKKeyknox Docs</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">VirgilSDKKeyknox Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        SyncKeyStorageError Enumeration Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/CloudEntry.html">CloudEntry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CloudEntry/CodingKeys.html">– CodingKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CloudKeyStorage.html">CloudKeyStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKEncryptedKeyknoxValue">EncryptedKeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyEntry.html">KeyEntry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyknoxClient.html">KeyknoxClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyknoxCrypto.html">KeyknoxCrypto</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyknoxManager.html">KeyknoxManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyknoxValue.html">KeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SyncKeyStorage.html">SyncKeyStorage</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/CloudKeyStorageError.html">CloudKeyStorageError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeychainStorageWrapperError.html">KeychainStorageWrapperError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeyknoxClientError.html">KeyknoxClientError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeyknoxCryptoError.html">KeyknoxCryptoError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeyknoxManagerError.html">KeyknoxManagerError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SyncKeyStorageError.html">SyncKeyStorageError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/CloudKeyStorageProtocol.html">CloudKeyStorageProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeychainStorageProtocol.html">KeychainStorageProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeyknoxClientProtocol.html">KeyknoxClientProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeyknoxCryptoProtocol.html">KeyknoxCryptoProtocol</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>SyncKeyStorageError</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">@objc(VSKSyncKeyStorageError)</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">SyncKeyStorageError</span> <span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">Error</span></code></pre>
+
+                </div>
+              </div>
+            <p>Declares error types and codes for SyncKeyStorage</p>
+
+<ul>
+<li>keychainEntryNotFoundWhileUpdating: KeychainEntry not found while updating</li>
+<li>cloudEntryNotFoundWhileUpdating: CloudEntry not found while updating</li>
+<li>cloudEntryNotFoundWhileDeleting: CloudEntry notfound while deleting</li>
+<li>keychainEntryNotFoundWhileComparing: KeychainEntry not found while comparing</li>
+<li>keychainEntryAlreadyExistsWhileStoring: KeychainEntry already exists while storing</li>
+<li>cloudEntryAlreadyExistsWhileStoring: CloudEntry already exists while storing</li>
+<li>invalidModificationDateInKeychainEntry: Invalid modificationDate in KeychainEntry</li>
+<li>invalidCreationDateInKeychainEntry: Invalid creationDate in KeychainEntry</li>
+<li>noMetaInKeychainEntry: No meta in keychainEntry</li>
+<li>invalidKeysInEntryMeta: Invalid keys in entry meta</li>
+<li>inconsistentStateError: Inconsistent state error</li>
+<li>entrySavingError: Error while saving entry</li>
+</ul>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorKeychainEntryNotFoundWhileUpdating"></a>
+                    <a name="//apple_ref/swift/Element/keychainEntryNotFoundWhileUpdating" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorKeychainEntryNotFoundWhileUpdating">keychainEntryNotFoundWhileUpdating</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">keychainEntryNotFoundWhileUpdating</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorCloudEntryNotFoundWhileUpdating"></a>
+                    <a name="//apple_ref/swift/Element/cloudEntryNotFoundWhileUpdating" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorCloudEntryNotFoundWhileUpdating">cloudEntryNotFoundWhileUpdating</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">cloudEntryNotFoundWhileUpdating</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorCloudEntryNotFoundWhileDeleting"></a>
+                    <a name="//apple_ref/swift/Element/cloudEntryNotFoundWhileDeleting" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorCloudEntryNotFoundWhileDeleting">cloudEntryNotFoundWhileDeleting</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">cloudEntryNotFoundWhileDeleting</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorKeychainEntryNotFoundWhileComparing"></a>
+                    <a name="//apple_ref/swift/Element/keychainEntryNotFoundWhileComparing" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorKeychainEntryNotFoundWhileComparing">keychainEntryNotFoundWhileComparing</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">keychainEntryNotFoundWhileComparing</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorKeychainEntryAlreadyExistsWhileStoring"></a>
+                    <a name="//apple_ref/swift/Element/keychainEntryAlreadyExistsWhileStoring" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorKeychainEntryAlreadyExistsWhileStoring">keychainEntryAlreadyExistsWhileStoring</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">keychainEntryAlreadyExistsWhileStoring</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorCloudEntryAlreadyExistsWhileStoring"></a>
+                    <a name="//apple_ref/swift/Element/cloudEntryAlreadyExistsWhileStoring" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorCloudEntryAlreadyExistsWhileStoring">cloudEntryAlreadyExistsWhileStoring</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">cloudEntryAlreadyExistsWhileStoring</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorInvalidModificationDateInKeychainEntry"></a>
+                    <a name="//apple_ref/swift/Element/invalidModificationDateInKeychainEntry" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorInvalidModificationDateInKeychainEntry">invalidModificationDateInKeychainEntry</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">invalidModificationDateInKeychainEntry</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorInvalidCreationDateInKeychainEntry"></a>
+                    <a name="//apple_ref/swift/Element/invalidCreationDateInKeychainEntry" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorInvalidCreationDateInKeychainEntry">invalidCreationDateInKeychainEntry</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">invalidCreationDateInKeychainEntry</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorNoMetaInKeychainEntry"></a>
+                    <a name="//apple_ref/swift/Element/noMetaInKeychainEntry" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorNoMetaInKeychainEntry">noMetaInKeychainEntry</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">noMetaInKeychainEntry</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorInvalidKeysInEntryMeta"></a>
+                    <a name="//apple_ref/swift/Element/invalidKeysInEntryMeta" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorInvalidKeysInEntryMeta">invalidKeysInEntryMeta</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">invalidKeysInEntryMeta</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorInconsistentStateError"></a>
+                    <a name="//apple_ref/swift/Element/inconsistentStateError" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorInconsistentStateError">inconsistentStateError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">inconsistentStateError</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorEntrySavingError"></a>
+                    <a name="//apple_ref/swift/Element/entrySavingError" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@E@VSKSyncKeyStorageError@VSKSyncKeyStorageErrorEntrySavingError">entrySavingError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">entrySavingError</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2018 <a class="link" href="https://virgilsecurity.com/" target="_blank" rel="external">Virgil Security</a>. All rights reserved. (Last updated: 2018-10-11)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

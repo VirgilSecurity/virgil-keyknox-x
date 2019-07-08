@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>KeyknoxManager Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/KeyknoxManager" class="dashAnchor"></a>
+    <a title="KeyknoxManager Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">VirgilSDKKeyknox Docs</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">VirgilSDKKeyknox Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        KeyknoxManager Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/CloudEntry.html">CloudEntry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CloudEntry/CodingKeys.html">– CodingKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/CloudKeyStorage.html">CloudKeyStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKEncryptedKeyknoxValue">EncryptedKeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyEntry.html">KeyEntry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyknoxClient.html">KeyknoxClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyknoxCrypto.html">KeyknoxCrypto</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyknoxManager.html">KeyknoxManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/KeyknoxValue.html">KeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SyncKeyStorage.html">SyncKeyStorage</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/CloudKeyStorageError.html">CloudKeyStorageError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeychainStorageWrapperError.html">KeychainStorageWrapperError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeyknoxClientError.html">KeyknoxClientError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeyknoxCryptoError.html">KeyknoxCryptoError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeyknoxManagerError.html">KeyknoxManagerError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SyncKeyStorageError.html">SyncKeyStorageError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/CloudKeyStorageProtocol.html">CloudKeyStorageProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeychainStorageProtocol.html">KeychainStorageProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeyknoxClientProtocol.html">KeyknoxClientProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/KeyknoxCryptoProtocol.html">KeyknoxCryptoProtocol</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>KeyknoxManager</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">@objc(VSKKeyknoxManager)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">KeyknoxManager</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>Class responsible for managing Keyknox value with E2EE</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)accessTokenProvider"></a>
+                    <a name="//apple_ref/swift/Property/accessTokenProvider" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)accessTokenProvider">accessTokenProvider</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>AccessTokenProvider instance used for getting Access Token
+when performing queries</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">let</span> <span class="nv">accessTokenProvider</span><span class="p">:</span> <span class="kt">AccessTokenProvider</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)keyknoxClient"></a>
+                    <a name="//apple_ref/swift/Property/keyknoxClient" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)keyknoxClient">keyknoxClient</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>KeyknoxClient instance used for performing queries</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">let</span> <span class="nv">keyknoxClient</span><span class="p">:</span> <span class="kt"><a href="../Protocols/KeyknoxClientProtocol.html">KeyknoxClientProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)publicKeys"></a>
+                    <a name="//apple_ref/swift/Property/publicKeys" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)publicKeys">publicKeys</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Public keys used for encryption and signature verification</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">internal(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">publicKeys</span><span class="p">:</span> <span class="p">[</span><span class="kt">PublicKey</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)privateKey"></a>
+                    <a name="//apple_ref/swift/Property/privateKey" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)privateKey">privateKey</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Private key used for decryption and signing</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">internal(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">privateKey</span><span class="p">:</span> <span class="kt">PrivateKey</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16VirgilSDKKeyknox14KeyknoxManagerC6cryptoAA0C14CryptoProtocol_pvp"></a>
+                    <a name="//apple_ref/swift/Property/crypto" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16VirgilSDKKeyknox14KeyknoxManagerC6cryptoAA0C14CryptoProtocol_pvp">crypto</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>KeyknoxCryptoProtocol implementation</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">crypto</span><span class="p">:</span> <span class="kt"><a href="../Protocols/KeyknoxCryptoProtocol.html">KeyknoxCryptoProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)retryOnUnauthorized"></a>
+                    <a name="//apple_ref/swift/Property/retryOnUnauthorized" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(py)retryOnUnauthorized">retryOnUnauthorized</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Retry on 401 error</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">let</span> <span class="nv">retryOnUnauthorized</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16VirgilSDKKeyknox14KeyknoxManagerC19accessTokenProvider13keyknoxClient10publicKeys10privateKey6crypto19retryOnUnauthorizedAC0A3SDK06AccessfG0_p_AA0cI8Protocol_pSay0A9CryptoAPI06PublicM0_pGAM07PrivateM0_pAA0cuT0_pSbtKcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(accessTokenProvider:keyknoxClient:publicKeys:privateKey:crypto:retryOnUnauthorized:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16VirgilSDKKeyknox14KeyknoxManagerC19accessTokenProvider13keyknoxClient10publicKeys10privateKey6crypto19retryOnUnauthorizedAC0A3SDK06AccessfG0_p_AA0cI8Protocol_pSay0A9CryptoAPI06PublicM0_pGAM07PrivateM0_pAA0cuT0_pSbtKcfc">init(accessTokenProvider:keyknoxClient:publicKeys:privateKey:crypto:retryOnUnauthorized:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Init</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    KeyknoxManagerError.noPublicKeys if public keys array is empty
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">accessTokenProvider</span><span class="p">:</span> <span class="kt">AccessTokenProvider</span><span class="p">,</span>
+            <span class="nv">keyknoxClient</span><span class="p">:</span> <span class="kt"><a href="../Protocols/KeyknoxClientProtocol.html">KeyknoxClientProtocol</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/KeyknoxClient.html">KeyknoxClient</a></span><span class="p">(),</span>
+            <span class="nv">publicKeys</span><span class="p">:</span> <span class="p">[</span><span class="kt">PublicKey</span><span class="p">],</span> <span class="nv">privateKey</span><span class="p">:</span> <span class="kt">PrivateKey</span><span class="p">,</span>
+            <span class="nv">crypto</span><span class="p">:</span> <span class="kt"><a href="../Protocols/KeyknoxCryptoProtocol.html">KeyknoxCryptoProtocol</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/KeyknoxCrypto.html">KeyknoxCrypto</a></span><span class="p">(),</span>
+            <span class="nv">retryOnUnauthorized</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessTokenProvider</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>AccessTokenProvider implementation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>keyknoxClient</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>KeyknoxClientProtocol implementation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>publicKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Public keys used for encryption and signature verification</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>privateKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Private key used for decryption and signing</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>crypto</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>KeyknoxCryptoProtocol implementation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retryOnUnauthorized</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Retry on 401 error</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)initWithAccessTokenProvider:keyknoxClient:publicKeys:privateKey:retryOnUnauthorized:error:"></a>
+                    <a name="//apple_ref/swift/Method/init(accessTokenProvider:keyknoxClient:publicKeys:privateKey:retryOnUnauthorized:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)initWithAccessTokenProvider:keyknoxClient:publicKeys:privateKey:retryOnUnauthorized:error:">init(accessTokenProvider:keyknoxClient:publicKeys:privateKey:retryOnUnauthorized:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Init</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    KeyknoxManagerError.noPublicKeys
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">accessTokenProvider</span><span class="p">:</span> <span class="kt">AccessTokenProvider</span><span class="p">,</span>
+                        <span class="nv">keyknoxClient</span><span class="p">:</span> <span class="kt"><a href="../Protocols/KeyknoxClientProtocol.html">KeyknoxClientProtocol</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/KeyknoxClient.html">KeyknoxClient</a></span><span class="p">(),</span>
+                        <span class="nv">publicKeys</span><span class="p">:</span> <span class="p">[</span><span class="kt">PublicKey</span><span class="p">],</span> <span class="nv">privateKey</span><span class="p">:</span> <span class="kt">PrivateKey</span><span class="p">,</span>
+                        <span class="nv">retryOnUnauthorized</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessTokenProvider</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>AccessTokenProvider implementation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>keyknoxClient</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>KeyknoxClientProtocol implementation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>publicKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Public keys used for encryption and signature verification</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>privateKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Private key used for decryption and signing</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retryOnUnauthorized</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Retry on 401 error</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Obj-C%20extension"></a>
+                <a name="//apple_ref/swift/Section/Obj-C extension" class="dashAnchor"></a>
+                <a href="#/Obj-C%20extension">
+                  <h3 class="section-name">Obj-C extension</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)pushValue:previousHash:completion:"></a>
+                    <a name="//apple_ref/swift/Method/pushValue(_:previousHash:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)pushValue:previousHash:completion:">pushValue(_:previousHash:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Signs then encrypts and pushed value to Keyknox service</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">pushValue</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">previousHash</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?,</span>
+                    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>value</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>value to push</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>previousHash</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>previous value hash</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)pullValueWithCompletion:"></a>
+                    <a name="//apple_ref/swift/Method/pullValue(completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)pullValueWithCompletion:">pullValue(completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Pull value, decrypt then verify signature</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">pullValue</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)resetValueWithCompletion:"></a>
+                    <a name="//apple_ref/swift/Method/resetValue(completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)resetValueWithCompletion:">resetValue(completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resets Keyknox value (makes it empty). Also increments version</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">resetValue</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping(DecryptedKeyknoxValue?, Error?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Completion handler</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)updateRecipientsWithNewPublicKeys:newPrivateKey:completion:"></a>
+                    <a name="//apple_ref/swift/Method/updateRecipients(newPublicKeys:newPrivateKey:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)updateRecipientsWithNewPublicKeys:newPrivateKey:completion:">updateRecipients(newPublicKeys:newPrivateKey:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Updates public keys for ecnryption and signature verification
+and private key for decryption and signature generation</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">updateRecipients</span><span class="p">(</span><span class="nv">newPublicKeys</span><span class="p">:</span> <span class="p">[</span><span class="kt">PublicKey</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                           <span class="nv">newPrivateKey</span><span class="p">:</span> <span class="kt">PrivateKey</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                           <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPublicKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New public keys that will be used for encryption and signature verification</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPrivateKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New private key that will be used for decryption and signature generation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)updateRecipientsWithValue:previousHash:newPublicKeys:newPrivateKey:completion:"></a>
+                    <a name="//apple_ref/swift/Method/updateRecipients(value:previousHash:newPublicKeys:newPrivateKey:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@VirgilSDKKeyknox@objc(cs)VSKKeyknoxManager(im)updateRecipientsWithValue:previousHash:newPublicKeys:newPrivateKey:completion:">updateRecipients(value:previousHash:newPublicKeys:newPrivateKey:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Updates public keys for ecnryption and signature verification
+and private key for decryption and signature generation</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">updateRecipients</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">previousHash</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
+                           <span class="nv">newPublicKeys</span><span class="p">:</span> <span class="p">[</span><span class="kt">PublicKey</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                           <span class="nv">newPrivateKey</span><span class="p">:</span> <span class="kt">PrivateKey</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                           <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>value</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Current Keyknox value</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>previousHash</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Previous Keyknox value hash</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPublicKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New public keys that will be used for encryption and signature verification</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPrivateKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New private key that will be used for decryption and signature generation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion handler</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Queries"></a>
+                <a name="//apple_ref/swift/Section/Queries" class="dashAnchor"></a>
+                <a href="#/Queries">
+                  <h3 class="section-name">Queries</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16VirgilSDKKeyknox14KeyknoxManagerC9pushValue_12previousHash0A3SDK16GenericOperationCyAA09DecryptedcF0CG10Foundation4DataV_ANSgtF"></a>
+                    <a name="//apple_ref/swift/Method/pushValue(_:previousHash:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16VirgilSDKKeyknox14KeyknoxManagerC9pushValue_12previousHash0A3SDK16GenericOperationCyAA09DecryptedcF0CG10Foundation4DataV_ANSgtF">pushValue(_:previousHash:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Signs then encrypts and pushed value to Keyknox service</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">pushValue</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">previousHash</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">GenericOperation</span><span class="o">&lt;</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>value</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>value to push</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>previousHash</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>previous value hash</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>CallbackOperation<DecryptedKeyknoxValue></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16VirgilSDKKeyknox14KeyknoxManagerC9pullValue0A3SDK16GenericOperationCyAA09DecryptedcF0CGyF"></a>
+                    <a name="//apple_ref/swift/Method/pullValue()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16VirgilSDKKeyknox14KeyknoxManagerC9pullValue0A3SDK16GenericOperationCyAA09DecryptedcF0CGyF">pullValue()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Pull value, decrypt then verify signature</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">pullValue</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">GenericOperation</span><span class="o">&lt;</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>CallbackOperation<DecryptedKeyknoxValue></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16VirgilSDKKeyknox14KeyknoxManagerC10resetValue0A3SDK16GenericOperationCyAA09DecryptedcF0CGyF"></a>
+                    <a name="//apple_ref/swift/Method/resetValue()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16VirgilSDKKeyknox14KeyknoxManagerC10resetValue0A3SDK16GenericOperationCyAA09DecryptedcF0CGyF">resetValue()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resets Keyknox value (makes it empty). Also increments version</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">resetValue</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">GenericOperation</span><span class="o">&lt;</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>GenericOperation<Void></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16VirgilSDKKeyknox14KeyknoxManagerC16updateRecipients13newPublicKeys0G10PrivateKey0A3SDK16GenericOperationCyAA09DecryptedC5ValueCGSay0A9CryptoAPI0hK0_pGSg_AM0jK0_pSgtF"></a>
+                    <a name="//apple_ref/swift/Method/updateRecipients(newPublicKeys:newPrivateKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16VirgilSDKKeyknox14KeyknoxManagerC16updateRecipients13newPublicKeys0G10PrivateKey0A3SDK16GenericOperationCyAA09DecryptedC5ValueCGSay0A9CryptoAPI0hK0_pGSg_AM0jK0_pSgtF">updateRecipients(newPublicKeys:newPrivateKey:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Updates public keys for ecnryption and signature verification
+and private key for decryption and signature generation</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">updateRecipients</span><span class="p">(</span><span class="nv">newPublicKeys</span><span class="p">:</span> <span class="p">[</span><span class="kt">PublicKey</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                           <span class="nv">newPrivateKey</span><span class="p">:</span> <span class="kt">PrivateKey</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">GenericOperation</span><span class="o">&lt;</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPublicKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New public keys that will be used for encryption and signature verification</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPrivateKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New private key that will be used for decryption and signature generation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>CallbackOperation<DecryptedKeyknoxValue></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16VirgilSDKKeyknox14KeyknoxManagerC16updateRecipients5value12previousHash13newPublicKeys0J10PrivateKey0A3SDK16GenericOperationCyAA09DecryptedC5ValueCG10Foundation4DataV_AQSay0A9CryptoAPI0kN0_pGSgAR0mN0_pSgtF"></a>
+                    <a name="//apple_ref/swift/Method/updateRecipients(value:previousHash:newPublicKeys:newPrivateKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16VirgilSDKKeyknox14KeyknoxManagerC16updateRecipients5value12previousHash13newPublicKeys0J10PrivateKey0A3SDK16GenericOperationCyAA09DecryptedC5ValueCG10Foundation4DataV_AQSay0A9CryptoAPI0kN0_pGSgAR0mN0_pSgtF">updateRecipients(value:previousHash:newPublicKeys:newPrivateKey:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Updates public keys for ecnryption and signature verification
+and private key for decryption and signature generation</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">updateRecipients</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">previousHash</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
+                           <span class="nv">newPublicKeys</span><span class="p">:</span> <span class="p">[</span><span class="kt">PublicKey</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                           <span class="nv">newPrivateKey</span><span class="p">:</span> <span class="kt">PrivateKey</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">GenericOperation</span><span class="o">&lt;</span><span class="kt"><a href="../Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>value</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Current Keyknox value</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>previousHash</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Previous Keyknox value hash</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPublicKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New public keys that will be used for encryption and signature verification</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPrivateKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New private key that will be used for decryption and signature generation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>CallbackOperation<DecryptedKeyknoxValue></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2018 <a class="link" href="https://virgilsecurity.com/" target="_blank" rel="external">Virgil Security</a>. All rights reserved. (Last updated: 2018-10-11)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>VirgilSDKKeyknox  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="VirgilSDKKeyknox  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">VirgilSDKKeyknox Docs</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">VirgilSDKKeyknox Reference</a>
+        <img id="carat" src="img/carat.png" />
+        VirgilSDKKeyknox  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/CloudEntry.html">CloudEntry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/CloudEntry/CodingKeys.html">– CodingKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/CloudKeyStorage.html">CloudKeyStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKDecryptedKeyknoxValue">DecryptedKeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes.html#/c:@M@VirgilSDKKeyknox@objc(cs)VSKEncryptedKeyknoxValue">EncryptedKeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/KeyEntry.html">KeyEntry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/KeyknoxClient.html">KeyknoxClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/KeyknoxCrypto.html">KeyknoxCrypto</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/KeyknoxManager.html">KeyknoxManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/KeyknoxValue.html">KeyknoxValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/SyncKeyStorage.html">SyncKeyStorage</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/CloudKeyStorageError.html">CloudKeyStorageError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/KeychainStorageWrapperError.html">KeychainStorageWrapperError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/KeyknoxClientError.html">KeyknoxClientError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/KeyknoxCryptoError.html">KeyknoxCryptoError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/KeyknoxManagerError.html">KeyknoxManagerError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/SyncKeyStorageError.html">SyncKeyStorageError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/CloudKeyStorageProtocol.html">CloudKeyStorageProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/KeychainStorageProtocol.html">KeychainStorageProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/KeyknoxClientProtocol.html">KeyknoxClientProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/KeyknoxCryptoProtocol.html">KeyknoxCryptoProtocol</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <h1 id='virgil-keyknox-objective-c-swift-sdk' class='heading'>Virgil KeyKnox Objective-C/Swift SDK</h1>
+
+<p><a href="https://travis-ci.org/VirgilSecurity/keyknox-x"><img src="https://api.travis-ci.org/VirgilSecurity/keyknox-x.svg?branch=master" alt="Build Status"></a>
+<a href="https://img.shields.io/cocoapods/v/VirgilKeyknox.svg"><img src="https://img.shields.io/cocoapods/v/VirgilKeyknox.svg" alt="CocoaPods Compatible"></a>
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible"></a>
+<a href="http://cocoadocs.org/docsets/VirgilKeyknox"><img src="https://img.shields.io/cocoapods/p/VirgilKeyknox.svg?style=flat" alt="Platform"></a>
+<a href="https://github.com/VirgilSecurity/virgil/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-BSD%203--Clause-blue.svg" alt="GitHub license"></a></p>
+
+<p><a href="#introduction">Introduction</a> | <a href="#sdk-features">SDK Features</a> | <a href="#install-and-configure-sdk">Install and configure SDK</a> | <a href="#docs">Docs</a> | <a href="#support">Support</a></p>
+<h2 id='introduction' class='heading'>Introduction</h2>
+
+<p><a href="https://developer.virgilsecurity.com/docs"><img width="230px" src="https://cdn.virgilsecurity.com/assets/images/github/logos/virgil-logo-red.png" align="left" hspace="10" vspace="6"></a><a href="https://virgilsecurity.com">Virgil Security</a> provides an SDK which allows you to communicate with Virgil Keyknox Service.
+Virgil Keyknox Service allows users to store their sensitive data (such as Private Key) encrypted (with end-to-end encryption) for using and sharing it between different devices.</p>
+<h2 id='sdk-features' class='heading'>SDK Features</h2>
+
+<ul>
+<li>use <a href="https://github.com/VirgilSecurity/virgil-crypto">Virgil Crypto library</a></li>
+<li>use <a href="https://github.com/VirgilSecurity/virgil-sdk-x">Virgil SDK</a></li>
+<li>upload encrypted sensitive data to Virgil Keyknox Service</li>
+<li>download the data from Virgil Keyknox Service</li>
+<li>update and synchronize the data</li>
+</ul>
+<h2 id='install-and-configure-sdk' class='heading'>Install and configure SDK</h2>
+<h3 id='installation' class='heading'>Installation</h3>
+
+<p>Virgil Keyknox SDK is provided as a set of frameworks. These frameworks are distributed via Carthage and CocoaPods. Also in this guide, you find one more package called VirgilCrypto (Virgil Crypto Library) that is used by the SDK to perform cryptographic operations.</p>
+
+<p>Frameworks are available for:</p>
+
+<ul>
+<li>iOS 9.0+</li>
+<li>macOS 10.10+</li>
+<li>tvOS 9.0+</li>
+<li>watchOS 2.0+</li>
+</ul>
+<h3 id='cocoapods' class='heading'>COCOAPODS</h3>
+
+<p><a href="http://cocoapods.org">CocoaPods</a> is a dependency manager for Cocoa projects. You can install it with the following command:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>gem install cocoapods
+</code></pre>
+
+<p>To integrate Virgil Keyknox into your Xcode project using CocoaPods, specify it in your <em>Podfile</em>:</p>
+<pre class="highlight shell"><code>target <span class="s1">'&lt;Your Target Name&gt;'</span> <span class="k">do
+  </span>use_frameworks!
+
+  pod <span class="s1">'VirgilKeyknox'</span>, <span class="s1">'~&gt; 0.2.0'</span>
+end
+</code></pre>
+
+<p>Then, run the following command:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>pod install
+</code></pre>
+<h3 id='carthage' class='heading'>Carthage</h3>
+
+<p><a href="https://github.com/Carthage/Carthage">Carthage</a> is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.</p>
+
+<p>You can install Carthage with <a href="http://brew.sh/">Homebrew</a> using the following command:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>brew update
+<span class="gp">$ </span>brew install carthage
+</code></pre>
+
+<p>To integrate Virgil Keyknox into your Xcode project using Carthage, create an empty file with name <em>Cartfile</em> in your project&rsquo;s root folder and add following lines to your <em>Cartfile</em></p>
+<pre class="highlight plaintext"><code>github "VirgilSecurity/keyknox-x" ~&gt; 0.2.0
+</code></pre>
+<h4 id='linking-against-prebuilt-binaries' class='heading'>Linking against prebuilt binaries</h4>
+
+<p>To link prebuilt frameworks to your app, run following command:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>carthage update
+</code></pre>
+
+<p>This will build each dependency or download a pre-compiled framework from github Releases.</p>
+<h5 id='building-for-ios-tvos-watchos' class='heading'>Building for iOS/tvOS/watchOS</h5>
+
+<p>On your application targets’ “General” settings tab, in the “Linked Frameworks and Libraries” section, add following frameworks from the <em>Carthage/Build</em> folder inside your project&rsquo;s folder:</p>
+
+<ul>
+<li>VirgilSDKKeyknox</li>
+<li>VirgilSDK</li>
+<li>VirgilCryptoAPI</li>
+<li>VirgilCryptoApiImpl</li>
+<li>VirgilCrypto</li>
+<li>VSCCrypto</li>
+</ul>
+
+<p>On your application targets’ “Build Phases” settings tab, click the “+” icon and choose “New Run Script Phase.” Create a Run Script in which you specify your shell (ex: <em>/bin/sh</em>), add the following contents to the script area below the shell:</p>
+<pre class="highlight shell"><code>/usr/local/bin/carthage copy-frameworks
+</code></pre>
+
+<p>and add the paths to the frameworks you want to use under “Input Files”, e.g.:</p>
+<pre class="highlight plaintext"><code>$(SRCROOT)/Carthage/Build/iOS/VirgilSDKKeyknox.framework
+$(SRCROOT)/Carthage/Build/iOS/VirgilSDK.framework
+$(SRCROOT)/Carthage/Build/iOS/VirgilCryptoAPI.framework
+$(SRCROOT)/Carthage/Build/iOS/VirgilCryptoAPIImpl.framework
+$(SRCROOT)/Carthage/Build/iOS/VirgilCrypto.framework
+$(SRCROOT)/Carthage/Build/iOS/VSCCrypto.framework
+</code></pre>
+<h5 id='building-for-macos' class='heading'>Building for macOS</h5>
+
+<p>On your application target&rsquo;s “General” settings tab, in the “Embedded Binaries” section, drag and drop following frameworks from the Carthage/Build folder on disk:</p>
+
+<ul>
+<li>VirgilSDKKeyknox</li>
+<li>VirgilSDK</li>
+<li>VirgilCryptoAPI</li>
+<li>VirgilCryptoApiImpl</li>
+<li>VirgilCrypto</li>
+<li>VSCCrypto</li>
+</ul>
+
+<p>Additionally, you&rsquo;ll need to copy debug symbols for debugging and crash reporting on macOS.</p>
+
+<p>On your application target’s “Build Phases” settings tab, click the “+” icon and choose “New Copy Files Phase”.
+Click the “Destination” drop-down menu and select “Products Directory”. For each framework, drag and drop corresponding dSYM file.</p>
+<h4 id='integrating-as-subproject' class='heading'>Integrating as subproject</h4>
+
+<p>It is possible to use carthage just for fetching the right sources for further integration into your project.
+Run following command:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>carthage update --no-build
+</code></pre>
+
+<p>This will fetch dependencies into a <em>Carthage/Checkouts</em> folder inside your project&rsquo;s folder. Then, drag and drop VirgilCrypto.xcodeproj, VirgilCryptoAPI.xcodeproj, VirgilSDK.xcodeproj and VirgilSDKKeyknox.xcodeproj from corresponding folders inside Carthage/Checkouts folder to your Xcode Project Navigator sidebar.</p>
+
+<p>Next, on your application target&rsquo;s “General” settings tab, in the “Embedded Binaries” section add the following frameworks from subprojects:</p>
+
+<ul>
+<li>VirgilSDKKeyknox</li>
+<li>VirgilSDK</li>
+<li>VirgilCryptoAPI</li>
+<li>VirgilCryptoApiImpl</li>
+<li>VirgilCrypto</li>
+<li>VSCCrypto</li>
+</ul>
+
+<p>### Configure SDK</p>
+
+<p>To begin using Virgil Keyknox SDK you&rsquo;ll need to initialize <code><a href="Classes/SyncKeyStorage.html">SyncKeyStorage</a></code> class. This class is responsible for synchronization between Keychain and Keyknox Cloud.
+In order to initialize <code><a href="Classes/SyncKeyStorage.html">SyncKeyStorage</a></code> class you&rsquo;ll need the following values:</p>
+
+<ul>
+<li><code>accessTokenProvider</code></li>
+<li><code>public keys</code> of all devices/users that should have access to data</li>
+<li><code>private key</code> of current device/user</li>
+<li><code>identity</code> of the user (the device can have different users)</li>
+</ul>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">VirgilSDK</span>
+<span class="kd">import</span> <span class="kt">VirgilSDKKeyknox</span>
+
+<span class="c1">// Setup Access Token provider to provide access token for Virgil services</span>
+<span class="c1">// Check https://github.com/VirgilSecurity/virgil-sdk-x</span>
+<span class="k">let</span> <span class="nv">accessTokenProvider</span> <span class="o">=</span> <span class="s">""</span>
+
+<span class="c1">// Download public keys of users that should have access to data from Virgil Cards service</span>
+<span class="c1">// Check https://github.com/VirgilSecurity/virgil-sdk-x</span>
+<span class="k">let</span> <span class="nv">publicKeys</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1">// Load private key from Keychain</span>
+<span class="k">let</span> <span class="nv">privateKey</span> <span class="o">=</span> <span class="s">""</span>
+
+<span class="k">let</span> <span class="nv">syncKeyStorage</span> <span class="o">=</span> <span class="kt">SyncKeyStorage</span><span class="p">(</span><span class="nv">identity</span><span class="p">:</span> <span class="s">"Alice"</span><span class="p">,</span>
+                                    <span class="nv">accessTokenProvider</span><span class="p">:</span> <span class="n">accessTokenProvider</span><span class="p">,</span>
+                                    <span class="nv">publicKeys</span><span class="p">:</span> <span class="n">publicKeys</span><span class="p">,</span> <span class="nv">privateKey</span><span class="p">:</span> <span class="n">privateKey</span><span class="p">)</span>
+</code></pre>
+<h2 id='docs' class='heading'>Docs</h2>
+
+<p>Virgil Security has a powerful set of APIs, and the documentation below can get you started today.</p>
+
+<ul>
+<li><a href="https://developer.virgilsecurity.com/">Virgil Security Documentation</a></li>
+</ul>
+<h2 id='license' class='heading'>License</h2>
+
+<p>This library is released under the <a href="LICENSE">3-clause BSD License</a>.</p>
+<h2 id='support' class='heading'>Support</h2>
+
+<p>Our developer support team is here to help you. Find out more information on our <a href="https://help.virgilsecurity.com/">Help Center</a>.</p>
+
+<p>You can find us on <a href="https://twitter.com/VirgilSecurity">Twitter</a> or send us email <a href="mailto:support@VirgilSecurity.com">support@VirgilSecurity.com</a>.</p>
+
+<p>Also, get extra help from our support team on <a href="https://virgilsecurity.slack.com/join/shared_invite/enQtMjg4MDE4ODM3ODA4LTc2OWQwOTQ3YjNhNTQ0ZjJiZDc2NjkzYjYxNTI0YzhmNTY2ZDliMGJjYWQ5YmZiOGU5ZWEzNmJiMWZhYWVmYTM">Slack</a>.</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2018 <a class="link" href="https://virgilsecurity.com/" target="_blank" rel="external">Virgil Security</a>. All rights reserved. (Last updated: 2018-10-11)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

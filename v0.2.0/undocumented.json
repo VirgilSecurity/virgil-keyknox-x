@@ -1,0 +1,243 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/Client/KeyknoxClient.swift",
+      "line": 45,
+      "symbol": "KeyknoxClientError.constructingUrl",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/Client/KeyknoxClient.swift",
+      "line": 46,
+      "symbol": "KeyknoxClientError.invalidPreviousHashHeader",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudEntry.swift",
+      "line": 82,
+      "symbol": "CloudEntry.CodingKeys.name",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudEntry.swift",
+      "line": 83,
+      "symbol": "CloudEntry.CodingKeys.data",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudEntry.swift",
+      "line": 84,
+      "symbol": "CloudEntry.CodingKeys.creationDate",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudEntry.swift",
+      "line": 85,
+      "symbol": "CloudEntry.CodingKeys.modificationDate",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudEntry.swift",
+      "line": 86,
+      "symbol": "CloudEntry.CodingKeys.meta",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudEntry.swift",
+      "line": 92,
+      "symbol": "CloudEntry.==(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudKeyStorageError.swift",
+      "line": 46,
+      "symbol": "CloudKeyStorageError.entryNotFound",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudKeyStorageError.swift",
+      "line": 47,
+      "symbol": "CloudKeyStorageError.entrySavingError",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudKeyStorageError.swift",
+      "line": 48,
+      "symbol": "CloudKeyStorageError.entryAlreadyExists",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/CloudKeyStorage/CloudKeyStorageError.swift",
+      "line": 49,
+      "symbol": "CloudKeyStorageError.cloudStorageOutOfSync",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/Crypto/KeyknoxCrypto.swift",
+      "line": 50,
+      "symbol": "KeyknoxCryptoError.signerNotFound",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/Crypto/KeyknoxCrypto.swift",
+      "line": 51,
+      "symbol": "KeyknoxCryptoError.signatureVerificationFailed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/Crypto/KeyknoxCrypto.swift",
+      "line": 52,
+      "symbol": "KeyknoxCryptoError.decryptionFailed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/Crypto/KeyknoxCrypto.swift",
+      "line": 53,
+      "symbol": "KeyknoxCryptoError.emptyPublicKeysList",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/Crypto/KeyknoxCrypto.swift",
+      "line": 54,
+      "symbol": "KeyknoxCryptoError.emptyData",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/KeyknoxManager/KeyknoxManagerError.swift",
+      "line": 46,
+      "symbol": "KeyknoxManagerError.noPublicKeys",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/KeyknoxManager/KeyknoxManagerError.swift",
+      "line": 47,
+      "symbol": "KeyknoxManagerError.keysShouldBeUpdated",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/KeyknoxManager/KeyknoxManagerError.swift",
+      "line": 48,
+      "symbol": "KeyknoxManagerError.serverRespondedWithTamperedValue",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/KeyknoxManager/KeyknoxManagerError.swift",
+      "line": 49,
+      "symbol": "KeyknoxManagerError.dataIsEmpty",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/KeychainStorageWrapper.swift",
+      "line": 44,
+      "symbol": "KeychainStorageWrapperError.errorConvertingKeychainEntry",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 54,
+      "symbol": "SyncKeyStorageError.keychainEntryNotFoundWhileUpdating",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 55,
+      "symbol": "SyncKeyStorageError.cloudEntryNotFoundWhileUpdating",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 56,
+      "symbol": "SyncKeyStorageError.cloudEntryNotFoundWhileDeleting",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 57,
+      "symbol": "SyncKeyStorageError.keychainEntryNotFoundWhileComparing",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 58,
+      "symbol": "SyncKeyStorageError.keychainEntryAlreadyExistsWhileStoring",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 59,
+      "symbol": "SyncKeyStorageError.cloudEntryAlreadyExistsWhileStoring",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 60,
+      "symbol": "SyncKeyStorageError.invalidModificationDateInKeychainEntry",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 61,
+      "symbol": "SyncKeyStorageError.invalidCreationDateInKeychainEntry",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 62,
+      "symbol": "SyncKeyStorageError.noMetaInKeychainEntry",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 63,
+      "symbol": "SyncKeyStorageError.invalidKeysInEntryMeta",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 64,
+      "symbol": "SyncKeyStorageError.inconsistentStateError",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/travis/build/VirgilSecurity/keyknox-x/Source/SyncKeyStorage/SyncKeyStorageError.swift",
+      "line": 65,
+      "symbol": "SyncKeyStorageError.entrySavingError",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/travis/build/VirgilSecurity/keyknox-x"
+}
