@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                        = "VirgilSDKKeyknox"
-  s.version                     = "0.4.2"
+  s.version                     = "0.4.3"
   s.license                     = { :type => "BSD", :file => "LICENSE" }
   s.summary                     = "Virgil Keyknox SDK for Apple devices and languages."
   s.homepage                    = "https://github.com/VirgilSecurity/virgil-keyknox-x/"
@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target   = "2.0"
   s.source_files                = 'Source/**/*.{swift}'
   s.dependency "VirgilSDK", "~> 5.7"
-  s.dependency "VirgilCrypto", "~> 5.0.0-alpha5"
+  s.dependency "VirgilCrypto", "5.0.0-alpha5"
 end

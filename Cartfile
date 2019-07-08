@@ -1,2 +1,2 @@
 github "VirgilSecurity/virgil-sdk-x" ~> 5.7
-github "VirgilSecurity/virgil-crypto-x" ~> 5.0.0-alpha5
+github "VirgilSecurity/virgil-crypto-x" "5.0.0-alpha5"
